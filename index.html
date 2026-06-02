@@ -1219,7 +1219,7 @@ async function renderConfig(){
       return;
     }
   }
-  $('adminBody').innerHTML=  $('adminBody').innerHTML=`<div class="card"><h2>Courses & Access Setup</h2><p class="muted">Daily use me mostly <b>Group Links</b> edit karna hoga. Posts/Subjects/Plans advanced setup hain; unhe sirf course add/delete/change karte waqt edit karein.</p></div>
+  $('adminBody').innerHTML=`<div class="card"><h2>Courses & Access Setup</h2><p class="muted">Daily use me mostly <b>Group Links</b> edit karna hoga. Posts/Subjects/Plans advanced setup hain; unhe sirf course add/delete/change karte waqt edit karein.</p></div>
     <div class="adminSaveBar"><div><b>After edits:</b> Save Config → CLEAR_PUBLIC_CONFIG_CACHE_NOW()</div><button onclick="saveConfig()" class="ok">Save Config</button></div>
     ${renderEditableTable('Group Links','links',['link_id','post_id','subject_id','plan_id','whatsapp_link','telegram_link','telegram_chat_id','status'], true, 'Most used: Telegram chat IDs and WhatsApp links')}
     ${renderEditableTable('Plans','plans',['plan_id','post_id','subject_id','plan_name','amount','duration_days','status','sort_order'], false, 'Edit price, duration, active/hidden')}
