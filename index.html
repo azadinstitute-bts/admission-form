@@ -236,15 +236,23 @@ async function callServer(fn, ...args){
   try {
     // Map old Apps Script function names to new API actions
     const actionMap = {
-      'getPublicConfig': 'getPublicConfig',
-      'createRazorpayAdmissionSafe': 'createAdmission',
-      'checkRazorpayAccessStatusSafe': 'checkPaymentStatus',
-      'adminGetDataSafe': 'adminGetAdmissions',
-      'adminGetAdmissionsOnlySafe': 'adminGetAdmissions',
-      'adminUpdateAdmission': 'adminUpdateAdmission',
-      'adminSaveConfig': 'adminSaveConfig',
-      'adminGetConfig': 'adminGetConfig',
-    };
+  'getPublicConfig': 'getPublicConfig',
+  'createRazorpayAdmissionSafe': 'createAdmission',
+  'checkRazorpayAccessStatusSafe': 'checkPaymentStatus',
+  'adminGetDataSafe': 'adminGetAdmissions',
+  'adminGetAdmissionsOnlySafe': 'adminGetAdmissions',
+  'adminGetLiteSafe': 'adminGetAdmissions',
+  'adminUpdateAdmission': 'adminUpdateAdmission',
+  'adminSaveConfig': 'adminSaveConfig',
+  'adminGetConfig': 'adminGetConfig',
+  'adminValidateRememberTokenSafe': 'adminGetAdmissions',
+  'adminLoginWithRememberSafe': 'adminGetAdmissions',
+  'adminRevokeRememberTokenSafe': 'adminGetAdmissions',
+  'adminChangePassword': 'adminGetAdmissions',
+  'adminGetSystemHealth': 'adminGetAdmissions',
+  'adminRepairScreenshotFolder': 'adminGetAdmissions',
+  'adminGetWhatsAppLink': 'adminGetWhatsAppLink',
+};
 
     const action = actionMap[fn] || fn;
 
