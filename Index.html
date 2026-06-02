@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="BILASPUR ADMIN">
+  <style>
+    :root{
+      --bg:#f4f6fb; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0;
+      --primary:#1d4ed8; --primary2:#0f172a; --danger:#b91c1c; --ok:#1d4ed8; --warn:#b45309; --purple:#7c3aed;
+      --soft:#eff6ff; --shadow:0 10px 25px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text);-webkit-tap-highlight-color:transparent}
+    .wrap{max-width:1120px;margin:0 auto;padding:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;margin:12px 0;box-shadow:var(--shadow)}
+    h1{font-size:24px;margin:0 0 6px;letter-spacing:.2px} h2{font-size:18px;margin:0 0 12px} h3{font-size:16px;margin:18px 0 8px}
+    p{line-height:1.45}.muted{color:var(--muted);font-size:13px}.tiny{font-size:12px;color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    label{display:block;font-size:13px;font-weight:800;margin:10px 0 5px}
+    input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:white;font-size:15px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(37,99,235,.12)} textarea{min-height:74px}
+    button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;background:var(--primary);color:white;padding:11px 14px;font-weight:800;cursor:pointer;text-decoration:none;margin:4px 3px;min-height:42px}
+    button.secondary,.btn.secondary{background:#334155}button.ok,.btn.ok{background:var(--ok)}button.warn,.btn.warn{background:var(--warn)}button.danger,.btn.danger{background:var(--danger)}button.light,.btn.light{background:#e2e8f0;color:#0f172a}button:disabled{opacity:.55;cursor:not-allowed}.full{width:100%}
+    .notice{border-radius:14px;padding:12px;background:#eff6ff;border:1px solid #bfdbfe}.error{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}.success{background:#ecfdf5;border-color:#bbf7d0;color:#064e3b}.hide{display:none!important}.toast{position:fixed;right:18px;top:18px;z-index:9999;max-width:360px;background:#0f172a;color:white;border-radius:14px;padding:12px 14px;box-shadow:0 12px 30px rgba(15,23,42,.22);font-weight:800;opacity:0;transform:translateY(-8px);transition:.22s}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background:#1d4ed8}.toast.error{background:#b91c1c}
+    .amount{font-size:30px;font-weight:900;margin:8px 0}.qr{max-width:260px;width:100%;border:1px solid var(--border);border-radius:14px;background:white;padding:8px}
+    .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.mini{padding:13px;border:1px solid var(--border);border-radius:15px;background:#fff}.mini b{display:block;font-size:23px;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:13px;background:white}th,td{border:1px solid var(--border);padding:7px;text-align:left;vertical-align:top}th{background:#f9fafb}td input{padding:8px;border-radius:9px;min-width:115px}.tableBox{overflow:auto;max-height:520px;border:1px solid var(--border);border-radius:14px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tab{background:#e5e7eb;color:#111827}.tab.active{background:var(--primary);color:white}.small{font-size:12px;padding:8px 10px;min-height:36px}.status{font-weight:900}.SCREENSHOT_SUBMITTED,.PAYMENT_PENDING{color:var(--warn)}.VERIFIED,.GROUP_LINK_SENT{color:var(--ok)}.REJECTED{color:var(--danger)}.NEED_MORE_INFO{color:var(--purple)}
+
+    /* Mobile admin app-style UI */
+    .adminTop{position:sticky;top:0;z-index:10;background:white;color:var(--text);border:1px solid var(--border);border-radius:18px;padding:12px 14px;margin:0 0 12px;box-shadow:0 6px 18px rgba(15,23,42,.06)}
+    .adminTopRow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.adminTop h1{font-size:19px;margin:0}.adminTop .muted{font-size:12px;color:var(--muted)}.adminActions{display:flex;gap:6px;flex-wrap:wrap}.adminActions .btn,.adminActions button{background:#e2e8f0;color:#0f172a;border:1px solid var(--border);padding:8px 10px;min-height:36px;font-size:12px;margin:0}.adminActions .primaryMini{background:var(--primary);color:white;border-color:var(--primary)}
+    .quickGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quickCard{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(15,23,42,.05)}.quickCard span{font-size:12px;color:var(--muted);font-weight:700}.quickCard b{display:block;font-size:27px;margin-top:5px}
+    .adminBottomNav{position:sticky;bottom:0;z-index:15;background:white;border:1px solid var(--border);border-radius:22px;padding:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;box-shadow:0 -8px 22px rgba(15,23,42,.08);margin-top:12px}.adminBottomNav button{margin:0;padding:8px 3px;min-height:42px;background:#f1f5f9;color:#0f172a;font-size:11px;border-radius:15px}.adminBottomNav button.active{background:var(--primary);color:white}
+    .filters{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;align-items:end}.admCards{display:grid;grid-template-columns:1fr;gap:12px}.admCard{border:1px solid var(--border);border-radius:18px;background:white;padding:14px;box-shadow:0 8px 22px rgba(15,23,42,.06)}.admHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.admName{font-size:17px;font-weight:900}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#f1f5f9}.pill.SCREENSHOT_SUBMITTED,.pill.PAYMENT_PENDING{background:#fff7ed;color:#9a3412}.pill.VERIFIED,.pill.GROUP_LINK_SENT{background:#ecfdf5;color:#065f46}.pill.REJECTED{background:#fef2f2;color:#991b1b}.pill.NEED_MORE_INFO{background:#f5f3ff;color:#6d28d9}
+    .admMeta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.metaBox{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:9px}.metaBox span{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:3px}.admBtns{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.admBtns button,.admBtns .btn{margin:0;width:100%;font-size:12px;padding:9px;min-height:38px}.desktopOnly{display:block}.mobileOnly{display:none}
+    .installHint{border:1px dashed #93c5fd;background:#eff6ff;border-radius:16px;padding:12px;margin-top:10px}
+    .infoImages{display:grid;grid-template-columns:1fr;gap:12px;margin:12px 0 2px}.infoImages img{width:100%;max-height:520px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06)}.spinner{display:inline-block;width:17px;height:17px;border:3px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}.loadProgress{height:8px;border-radius:999px;background:#dbeafe;overflow:hidden;margin-top:10px}.loadProgress span{display:block;height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#1d4ed8,#60a5fa);animation:loadMove 1.05s ease-in-out infinite}.submitStatusBox{margin:12px 0 10px}.submitErrorBox{border-radius:14px;padding:12px;background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d;font-weight:800;margin:12px 0}.submitProgressBox{border-radius:14px;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;margin:12px 0}.submitProgressBox b{display:block;margin-bottom:5px}.progressBar{height:10px;border-radius:999px;background:#dbeafe;overflow:hidden;margin-top:10px}.progressBar span{display:block;height:100%;width:45%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#1d4ed8,#60a5fa);animation:loadMove 1.05s ease-in-out infinite}.fieldHelp{font-size:12px;color:var(--muted);margin-top:4px}.fieldErrorText{font-size:12px;color:#b91c1c;font-weight:800;margin-top:4px}.fieldInvalid{border-color:#ef4444!important;box-shadow:0 0 0 3px rgba(239,68,68,.12)!important}.adminMenuShell{position:sticky;top:0;z-index:16;display:flex;justify-content:flex-end;margin:0 0 10px;pointer-events:none}.adminMenuToggle{pointer-events:auto;background:#0f172a;color:white;border-radius:999px;padding:9px 13px;min-height:38px;box-shadow:0 8px 20px rgba(15,23,42,.18)}.adminMenuPanel{position:absolute;right:0;top:46px;width:min(360px,calc(100vw - 24px));background:white;color:var(--text);border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:0 14px 36px rgba(15,23,42,.18);display:none;pointer-events:auto}.adminMenuPanel.show{display:block}.adminMenuPanel h1{font-size:18px;margin:0 0 3px}.adminMenuPanel .adminActions{margin-top:10px}@keyframes loadMove{0%{transform:translateX(-120%)}100%{transform:translateX(260%)}}@keyframes spin{to{transform:rotate(360deg)}}
+
+
+    /* R7R3 Admin cleanup polish */
+    .adminHero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;border-radius:22px;padding:16px;margin:0 0 12px;box-shadow:0 12px 28px rgba(15,23,42,.18)}
+    .adminHeroRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.adminBrand{display:flex;gap:12px;align-items:center}.adminLogoMini{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:900;border:1px solid rgba(255,255,255,.25)}.adminHero h1{font-size:20px;margin:0}.adminHero .muted{color:#dbeafe}.adminHeroActions{display:flex;gap:8px;flex-wrap:wrap}.adminHeroActions .btn,.adminHeroActions button{margin:0;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:white;min-height:38px;padding:8px 11px}.adminHeroActions .primaryMini{background:white;color:#0f172a}
+    .adminQuickActions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.adminQuickActions button{margin:0;min-height:54px;border-radius:16px;justify-content:flex-start;text-align:left;padding:12px 14px}.adminQuickActions .primaryAction{background:#1d4ed8}.adminQuickActions .softAction{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.adminQuickActions .darkAction{background:#0f172a}.adminQuickActions .greenAction{background:#1d4ed8}.adminHint{background:#f8fafc;border:1px solid var(--border);border-radius:16px;padding:12px;color:#334155}.adminSection{border:1px solid var(--border);border-radius:18px;background:white;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}.adminSection summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center}.adminSection summary::-webkit-details-marker{display:none}.adminSection summary:after{content:'⌄';color:#64748b}.adminSection[open] summary:after{content:'⌃'}.adminSectionBody{padding:0 18px 18px}.adminMiniTag{display:inline-flex;border-radius:999px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:900;padding:5px 9px}.adminDangerText{color:#991b1b;font-weight:800}.adminCleanCard{border:1px solid var(--border);border-radius:18px;background:white;padding:14px;box-shadow:0 8px 22px rgba(15,23,42,.05)}.adminCleanTitle{font-size:18px;font-weight:900;margin-bottom:4px}.admPrimaryBtns{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.admPrimaryBtns button,.admPrimaryBtns .btn{margin:0;width:100%;font-size:12px;padding:10px;min-height:40px}.manualTools{margin-top:10px;border:1px dashed #cbd5e1;border-radius:14px;padding:0;background:#f8fafc}.manualTools summary{cursor:pointer;padding:10px 12px;font-size:12px;font-weight:900;color:#475569}.manualToolsBody{padding:0 10px 10px}.adminSaveBar{position:sticky;bottom:74px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:16px;padding:10px;margin:12px 0;z-index:12;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 26px rgba(15,23,42,.08)}
+    @media(max-width:760px){.adminQuickActions{grid-template-columns:1fr 1fr}.adminHero{margin-top:4px}.adminHeroRow{align-items:flex-start}.quickGrid{grid-template-columns:repeat(2,1fr)}.admPrimaryBtns{grid-template-columns:1fr}.adminSaveBar{bottom:82px}.adminBottomNav{grid-template-columns:repeat(5,1fr)}}
+
+    @media(max-width:760px){
+      body{background:#f8fafc}.wrap{padding:10px;padding-bottom:92px}.card{padding:14px;border-radius:18px;box-shadow:0 6px 18px rgba(15,23,42,.05)}h1{font-size:21px}.row,.row3,.filters{grid-template-columns:1fr}.cards,.quickGrid{grid-template-columns:repeat(2,1fr)}.desktopOnly{display:none!important}.mobileOnly{display:block}.admMeta{grid-template-columns:1fr}.admBtns{grid-template-columns:1fr 1fr}.adminMenuShell{margin:0 0 8px}.adminActions .btn,.adminActions button{min-height:34px;padding:7px 9px}.tableBox{max-height:none}button,.btn{min-height:44px}.small{min-height:38px}
+    }
+
+    /* R3 PAYMENT TRANSITION UI */
+    .payOverlay{position:fixed;inset:0;z-index:9998;background:rgba(15,23,42,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:18px;animation:fadeIn .25s ease-out}
+    .payOverlay.hide{display:none!important}
+    .payOverlayCard{background:white;border-radius:22px;padding:28px 22px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.32);animation:popIn .3s ease-out}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes popIn{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .payOverlayBrand{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:18px}
+    .payOverlayLogo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1d4ed8,#0f172a);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .payOverlayBrandText{text-align:left}
+    .payOverlayTitle{font-weight:900;font-size:14px;line-height:1.2}
+    .payOverlayTitleSub{font-size:11px;color:#64748b;margin-top:2px}
+    .payOverlaySpinner{width:56px;height:56px;border:4px solid #e2e8f0;border-top-color:#1d4ed8;border-radius:50%;animation:spin .9s linear infinite;margin:6px auto 16px}
+    .payOverlayStep{font-weight:800;font-size:15px;color:#0f172a;min-height:44px;line-height:1.4;transition:opacity .25s;padding:0 6px}
+    .payOverlayBar{height:6px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin:14px 0 12px;position:relative}
+    .payOverlayBar span{display:block;height:100%;width:35%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#1d4ed8,#60a5fa);animation:barSlide 1.4s ease-in-out infinite;position:absolute}
+    @keyframes barSlide{0%{left:-35%}100%{left:100%}}
+    .payOverlayHint{font-size:12.5px;color:#64748b;line-height:1.5;margin-top:8px}
+    .payOverlayHint b{color:#b45309}
+    .payOverlayTrust{display:flex;gap:6px;justify-content:center;align-items:center;font-size:11px;color:#64748b;margin-top:16px;font-weight:700;flex-wrap:wrap}
+    .payOverlayTrust span{display:inline-flex;align-items:center}
+
+    .payReadyCard{text-align:center;padding:26px 18px;border:1px solid var(--border);border-radius:18px;background:white;box-shadow:var(--shadow);margin:12px 0;animation:popIn .35s ease-out}
+    .payReadyIcon{width:68px;height:68px;border-radius:50%;background:#ecfdf5;color:#1d4ed8;display:inline-flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;margin-bottom:10px;border:3px solid #bbf7d0}
+    .payReadyTitle{font-size:22px;font-weight:900;margin:6px 0 4px;color:#0f172a}
+    .payReadySub{color:#64748b;font-size:14px;margin-bottom:18px;line-height:1.5;max-width:440px;margin-left:auto;margin-right:auto}
+    .paySummary{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:6px 14px;text-align:left;margin:0 auto 18px;max-width:440px}
+    .paySummaryRow{display:flex;justify-content:space-between;gap:8px;padding:10px 0;font-size:14px;border-bottom:1px dashed #e2e8f0}
+    .paySummaryRow:last-child{border-bottom:0}
+    .paySummaryRow span:first-child{color:#64748b}
+    .paySummaryRow b{font-weight:800;color:#0f172a;text-align:right}
+    .paySummaryAmt{font-size:18px;color:#1d4ed8;font-weight:900}
+    .payCta{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#059669,#1d4ed8);color:white;border:0;border-radius:14px;padding:18px 22px;font-weight:900;font-size:17px;text-decoration:none;width:100%;max-width:440px;box-shadow:0 12px 28px rgba(4,120,87,.32);animation:ctaPulse 1.8s ease-in-out infinite;min-height:60px;cursor:pointer}
+    .payCta:hover{filter:brightness(1.06)}
+    @keyframes ctaPulse{0%,100%{transform:scale(1);box-shadow:0 12px 28px rgba(4,120,87,.32)}50%{transform:scale(1.02);box-shadow:0 18px 36px rgba(4,120,87,.42)}}
+    .payCtaSub{font-size:12px;color:#64748b;margin-top:10px}
+    .paySteps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:18px auto 0;max-width:440px}
+    .payStep{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 8px;font-size:11.5px;color:#0f172a;line-height:1.35;text-align:center}
+    .payStepNum{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#1d4ed8;color:white;font-weight:900;font-size:11px;align-items:center;justify-content:center;margin-bottom:4px}
+    .payStep.active .payStepNum{background:#1d4ed8}
+    .payStep.done{background:#ecfdf5;border-color:#bbf7d0}
+    .payTrust{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#475569;font-weight:700}
+    .payTrust span{display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;padding:6px 11px;border-radius:999px;border:1px solid #e2e8f0}
+    .paySecondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:transparent;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px;font-weight:700;font-size:13px;text-decoration:none;margin-top:14px;cursor:pointer;min-height:42px}
+    .paySecondary:hover{background:#eff6ff}
+    @media(max-width:480px){
+      .payOverlayCard{padding:24px 18px}
+      .payReadyCard{padding:22px 14px}
+      .payReadyTitle{font-size:20px}
+      .paySteps{grid-template-columns:1fr;gap:6px}
+      .payStep{text-align:left;padding:10px 12px;display:flex;gap:10px;align-items:center}
+      .payStepNum{margin-bottom:0;flex-shrink:0}
+    }
+
+    /* R6R2 MOBILE-FIRST STUDENT UI POLISH */
+
+    /* R7R3 Admin cleanup polish */
+    .adminHero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;border-radius:22px;padding:16px;margin:0 0 12px;box-shadow:0 12px 28px rgba(15,23,42,.18)}
+    .adminHeroRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.adminBrand{display:flex;gap:12px;align-items:center}.adminLogoMini{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:900;border:1px solid rgba(255,255,255,.25)}.adminHero h1{font-size:20px;margin:0}.adminHero .muted{color:#dbeafe}.adminHeroActions{display:flex;gap:8px;flex-wrap:wrap}.adminHeroActions .btn,.adminHeroActions button{margin:0;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:white;min-height:38px;padding:8px 11px}.adminHeroActions .primaryMini{background:white;color:#0f172a}
+    .adminQuickActions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.adminQuickActions button{margin:0;min-height:54px;border-radius:16px;justify-content:flex-start;text-align:left;padding:12px 14px}.adminQuickActions .primaryAction{background:#1d4ed8}.adminQuickActions .softAction{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.adminQuickActions .darkAction{background:#0f172a}.adminQuickActions .greenAction{background:#1d4ed8}.adminHint{background:#f8fafc;border:1px solid var(--border);border-radius:16px;padding:12px;color:#334155}.adminSection{border:1px solid var(--border);border-radius:18px;background:white;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}.adminSection summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center}.adminSection summary::-webkit-details-marker{display:none}.adminSection summary:after{content:'⌄';color:#64748b}.adminSection[open] summary:after{content:'⌃'}.adminSectionBody{padding:0 18px 18px}.adminMiniTag{display:inline-flex;border-radius:999px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:900;padding:5px 9px}.adminDangerText{color:#991b1b;font-weight:800}.adminCleanCard{border:1px solid var(--border);border-radius:18px;background:white;padding:14px;box-shadow:0 8px 22px rgba(15,23,42,.05)}.adminCleanTitle{font-size:18px;font-weight:900;margin-bottom:4px}.admPrimaryBtns{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.admPrimaryBtns button,.admPrimaryBtns .btn{margin:0;width:100%;font-size:12px;padding:10px;min-height:40px}.manualTools{margin-top:10px;border:1px dashed #cbd5e1;border-radius:14px;padding:0;background:#f8fafc}.manualTools summary{cursor:pointer;padding:10px 12px;font-size:12px;font-weight:900;color:#475569}.manualToolsBody{padding:0 10px 10px}.adminSaveBar{position:sticky;bottom:74px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:16px;padding:10px;margin:12px 0;z-index:12;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 26px rgba(15,23,42,.08)}
+    @media(max-width:760px){.adminQuickActions{grid-template-columns:1fr 1fr}.adminHero{margin-top:4px}.adminHeroRow{align-items:flex-start}.quickGrid{grid-template-columns:repeat(2,1fr)}.admPrimaryBtns{grid-template-columns:1fr}.adminSaveBar{bottom:82px}.adminBottomNav{grid-template-columns:repeat(5,1fr)}}
+
+    @media(max-width:760px){
+      body{background:linear-gradient(180deg,#eef6ff 0%,#f8fafc 45%,#f6f8fb 100%)}
+      .wrap{padding:10px 9px 90px;max-width:560px}
+      #formTitle{font-size:22px;line-height:1.15;margin-bottom:4px}
+      #formSubtitle{font-size:13px;margin:0;color:#64748b}
+      #formCard,.card{border-radius:22px;border-color:#e5e7eb;box-shadow:0 12px 30px rgba(15,23,42,.08)}
+      label{font-size:12px;text-transform:none;letter-spacing:.1px;margin-top:9px}
+      input,select,textarea{min-height:48px;border-radius:15px;font-size:15px}
+      button,.btn{border-radius:16px;min-height:52px;font-size:15px;box-shadow:0 10px 24px rgba(37,99,235,.18)}
+      button.ok,.btn.ok{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+      #paymentBox{background:linear-gradient(180deg,#ffffff,#f8fafc);border-radius:22px}
+      #amountText{font-size:34px;color:#1d4ed8;text-align:center}
+      #razorpayPayBox .notice{font-size:13px;border-radius:16px}
+      #razorpayPayBtn{font-size:17px;min-height:58px}
+      .payReadyCard{border-radius:24px;padding:24px 14px}.payReadyTitle{font-size:21px}.paySummary{border-radius:18px}.payCta{border-radius:18px;min-height:62px}
+      .paySteps{display:none}.payTrust{font-size:11px}.payCtaSub{font-size:12px}
+    }
+
+
+    /* R7R1 BUYER TRUST MOBILE UI POLISH - UI ONLY */
+    .buyerHero{background:linear-gradient(135deg,#eff6ff,#ffffff);border:1px solid #bfdbfe;border-radius:22px;padding:16px;margin:10px 0 0}
+    .buyerHeroTop{display:flex;align-items:center;gap:12px}
+    .buyerLogo{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#0f172a);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 46px;overflow:hidden;border:1px solid rgba(255,255,255,.35)}
+    .buyerLogo img{width:100%;height:100%;object-fit:cover;display:block;background:white}.buyerLogo.logoFallback{letter-spacing:.2px}.payOverlayLogo img{width:100%;height:100%;object-fit:cover;display:block;background:white}
+    .buyerTitle{font-size:20px;font-weight:900;color:#0f172a;line-height:1.15}.buyerSub{font-size:12.5px;color:#475569;margin-top:3px}
+    .trustPills{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}.trustPill{background:white;border:1px solid #dbeafe;border-radius:14px;padding:9px 7px;text-align:center;font-size:11.5px;font-weight:800;color:#1e3a8a;line-height:1.25}.trustPill span{display:block;font-size:18px;margin-bottom:3px}.supportQuick{display:flex;justify-content:center;margin-top:10px}.supportQuick a{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:#ecfdf5;border:1px solid #bbf7d0;color:#1d4ed8;border-radius:999px;padding:8px 13px;font-size:12.5px;font-weight:900}.supportQuick a:hover{filter:brightness(.98)}
+    .sectionTitle{display:flex;align-items:center;gap:8px;margin:4px 0 10px}.sectionTitle .dot{width:28px;height:28px;border-radius:11px;background:#dbeafe;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-weight:900}.sectionTitle b{font-size:17px}
+    .selectedSummary{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:12px;margin:12px 0}.summaryLine{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed #e5e7eb}.summaryLine:last-child{border-bottom:0}.summaryLine span{color:#64748b;font-size:13px}.summaryLine b{text-align:right;color:#0f172a}.accessBadge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0;padding:5px 9px;font-size:12px;font-weight:900}
+    .paymentTrust{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0 2px}.paymentTrust span{display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#475569}
+    .miniFlow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.miniFlow div{background:white;border:1px solid #e2e8f0;border-radius:14px;padding:9px 7px;text-align:center;font-size:11.5px;font-weight:800;color:#334155}.miniFlow span{display:block;color:#1d4ed8;font-size:16px;margin-bottom:3px}
+
+    /* R7R3 Admin cleanup polish */
+    .adminHero{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;border-radius:22px;padding:16px;margin:0 0 12px;box-shadow:0 12px 28px rgba(15,23,42,.18)}
+    .adminHeroRow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.adminBrand{display:flex;gap:12px;align-items:center}.adminLogoMini{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-weight:900;border:1px solid rgba(255,255,255,.25)}.adminHero h1{font-size:20px;margin:0}.adminHero .muted{color:#dbeafe}.adminHeroActions{display:flex;gap:8px;flex-wrap:wrap}.adminHeroActions .btn,.adminHeroActions button{margin:0;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:white;min-height:38px;padding:8px 11px}.adminHeroActions .primaryMini{background:white;color:#0f172a}
+    .adminQuickActions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.adminQuickActions button{margin:0;min-height:54px;border-radius:16px;justify-content:flex-start;text-align:left;padding:12px 14px}.adminQuickActions .primaryAction{background:#1d4ed8}.adminQuickActions .softAction{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.adminQuickActions .darkAction{background:#0f172a}.adminQuickActions .greenAction{background:#1d4ed8}.adminHint{background:#f8fafc;border:1px solid var(--border);border-radius:16px;padding:12px;color:#334155}.adminSection{border:1px solid var(--border);border-radius:18px;background:white;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}.adminSection summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center}.adminSection summary::-webkit-details-marker{display:none}.adminSection summary:after{content:'⌄';color:#64748b}.adminSection[open] summary:after{content:'⌃'}.adminSectionBody{padding:0 18px 18px}.adminMiniTag{display:inline-flex;border-radius:999px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:900;padding:5px 9px}.adminDangerText{color:#991b1b;font-weight:800}.adminCleanCard{border:1px solid var(--border);border-radius:18px;background:white;padding:14px;box-shadow:0 8px 22px rgba(15,23,42,.05)}.adminCleanTitle{font-size:18px;font-weight:900;margin-bottom:4px}.admPrimaryBtns{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.admPrimaryBtns button,.admPrimaryBtns .btn{margin:0;width:100%;font-size:12px;padding:10px;min-height:40px}.manualTools{margin-top:10px;border:1px dashed #cbd5e1;border-radius:14px;padding:0;background:#f8fafc}.manualTools summary{cursor:pointer;padding:10px 12px;font-size:12px;font-weight:900;color:#475569}.manualToolsBody{padding:0 10px 10px}.adminSaveBar{position:sticky;bottom:74px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:16px;padding:10px;margin:12px 0;z-index:12;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 26px rgba(15,23,42,.08)}
+    @media(max-width:760px){.adminQuickActions{grid-template-columns:1fr 1fr}.adminHero{margin-top:4px}.adminHeroRow{align-items:flex-start}.quickGrid{grid-template-columns:repeat(2,1fr)}.admPrimaryBtns{grid-template-columns:1fr}.adminSaveBar{bottom:82px}.adminBottomNav{grid-template-columns:repeat(5,1fr)}}
+
+    @media(max-width:760px){.buyerHero{padding:15px;border-radius:24px}.trustPills{grid-template-columns:1fr;gap:7px}.trustPill{text-align:left;display:flex;align-items:center;gap:9px;font-size:12px}.trustPill span{margin:0}.supportQuick{justify-content:stretch}.supportQuick a{width:100%;border-radius:14px}.miniFlow{grid-template-columns:1fr}.miniFlow div{text-align:left;display:flex;align-items:center;gap:9px}.miniFlow span{margin:0}.summaryLine{display:block}.summaryLine b{display:block;text-align:left;margin-top:2px}}
+
+  </style>
+</head>
+<script>
+window.addEventListener('load', function(){
+  var loader = document.getElementById('pageLoader');
+  if(loader) loader.style.display = 'none';
+});
+</script>
+<body>
+<div id="pageLoader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f0f9ff;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px">
+  <div style="width:48px;height:48px;background:#1d4ed8;border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:16px;font-family:sans-serif">BTS</div>
+  <div style="width:40px;height:4px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="width:40px;height:4px;background:#1d4ed8;border-radius:4px;animation:ldbar 1s ease infinite;transform-origin:left"></div></div>
+  <style>@keyframes ldbar{0%{transform:scaleX(0)}50%{transform:scaleX(1)}100%{transform:scaleX(0)}}</style>
+</div>
+<div class="wrap">
+  <div id="app"><div class="card"><h1>BILASPUR TEST SERIES</h1><div class="notice">App load ho raha hai...<div class="loadProgress"><span></span></div></div></div></div>
+</div>
+<script>
+(function(){
+  function showClientError(message, source, line, col){
+    try{
+      var app = document.getElementById('app');
+      if(!app){ return; }
+      var msg = String(message || 'Client script error');
+      var loc = line ? (' Line: ' + line + (col ? (':' + col) : '')) : '';
+      app.innerHTML = '<div class="card"><h1>BILASPUR TEST SERIES</h1><div class="notice error"><b>Page script load error.</b><br>' + msg.replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];}) + '<br><span class="tiny">Refresh karein. Agar error repeat ho to latest fixed deployment use karein.' + loc + '</span></div></div>';
+    }catch(e){}
+  }
+  window.__azadShowClientError = showClientError;
+  window.onerror = function(message, source, line, col, error){
+    showClientError(message || (error && error.message) || 'JavaScript error', source, line, col);
+    return false;
+  };
+  if(window.addEventListener){
+    window.addEventListener('unhandledrejection', function(event){
+      var reason = event && event.reason;
+      showClientError((reason && reason.message) || reason || 'Unhandled promise error', '', 0, 0);
+    });
+  }
+})();
+</script>
+<script>
+const PAGE = '<?= page ?>';
+const APP_VERSION = 'R6R13R8_R3R1_CONFIG_SAVE_RAZORPAY_PRESERVE_PATCH';
+const ADMIN_REMEMBER_STORAGE_KEY = 'AZAD_ADMIN_REMEMBER_DEVICE_TOKEN_R6R13';
+const ADMIN_REMEMBER_CREDENTIAL_PREFIX = 'AZAD_REMEMBER_TOKEN:';
+const CONFIG_FALLBACK_MS = 6500;
+const PUBLIC_CONFIG_TIMEOUT_MS = 2500;
+const IMAGE_FIRST_TIMEOUT_MS = 6000;
+const CONFIG_SLOW_MESSAGE = 'Server slow hai. कृपया Refresh करें या 1 minute बाद try करें.';
+let publicConfig = null;
+let adminPassword = '';
+let adminRememberToken = '';
+let adminData = null;
+let activeAdminTab = 'dashboard';
+let adminSearch = '';
+let adminStatus = 'ALL';
+
+function $(id){return document.getElementById(id)}
+function esc(v){return String(v ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]))}
+function val(id){const el=$(id); return el ? el.value.trim() : ''}
+function showMsg(id, msg, type){const el=$(id); if(!el)return; el.className='notice '+(type||''); el.innerHTML=msg; el.classList.remove('hide')}
+function showToast(msg, type, ms){
+  const t=document.createElement('div');
+  t.className='toast '+(type||'');
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add('show'),20);
+  setTimeout(()=>{t.classList.remove('show'); setTimeout(()=>{try{t.remove()}catch(e){}},260);}, ms||2400);
+}
+function normalizeClientError(err){
+  if(!err) return 'Request failed.';
+  if(typeof err === 'string') return err;
+  if(err.message) return err.message;
+  if(err.details) return err.details;
+  try{return JSON.stringify(err)}catch(e){return String(err)}
+}
+const SUPABASE_API = 'https://mqorslvouzmrvciubpoq.supabase.co/functions/v1/admission-api';
+
+async function callServer(fn, ...args){
+  try {
+    // Map old Apps Script function names to new API actions
+    const actionMap = {
+      'getPublicConfig': 'getPublicConfig',
+      'createRazorpayAdmissionSafe': 'createAdmission',
+      'checkRazorpayAccessStatusSafe': 'checkPaymentStatus',
+      'adminGetDataSafe': 'adminGetAdmissions',
+      'adminGetAdmissionsOnlySafe': 'adminGetAdmissions',
+      'adminUpdateAdmission': 'adminUpdateAdmission',
+      'adminSaveConfig': 'adminSaveConfig',
+      'adminGetConfig': 'adminGetConfig',
+    };
+
+    const action = actionMap[fn] || fn;
+
+    // Build request body based on function
+    let body = { action };
+
+    if (fn === 'getPublicConfig') {
+      // No extra params needed
+    } else if (fn === 'createRazorpayAdmissionSafe') {
+      const payload = args[0] || {};
+      body = {
+        action: 'createAdmission',
+        name: payload.name,
+        mobile: payload.mobile,
+        email: payload.email,
+        district: payload.district,
+        post_id: payload.post_id,
+        subject_id: payload.subject_id,
+        plan_id: payload.plan_id,
+        admissionCode: payload.admissionCode,
+      };
+    } else if (fn === 'checkRazorpayAccessStatusSafe') {
+      body = {
+        action: 'checkPaymentStatus',
+        access_token: args[0] || '',
+        admission_id: args[1] || '',
+        mobile: args[2] || '',
+        session_token: args[3] || '',
+      };
+    } else if (fn === 'adminGetAdmissionsOnlySafe' || fn === 'adminGetDataSafe') {
+      body = {
+        action: 'adminGetAdmissions',
+        password: args[0] || '',
+      };
+    } else if (fn === 'adminUpdateAdmission') {
+      body = {
+        action: 'adminUpdateAdmission',
+        password: args[0] || '',
+        admission_id: args[1] || '',
+        status: args[2] || '',
+        remark: args[3] || '',
+      };
+    } else if (fn === 'adminSaveConfig') {
+      body = {
+        action: 'adminSaveConfig',
+        password: args[0] || '',
+        data: args[1] || {},
+      };
+    } else if (fn === 'adminGetConfig') {
+      body = {
+        action: 'adminGetConfig',
+        password: args[0] || '',
+      };
+    } else {
+      // Generic fallback
+      body = { action, password: args[0], ...( args[1] || {}) };
+    }
+
+    const res = await fetch(SUPABASE_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+
+    // Parse string responses (old Apps Script returned JSON strings)
+    if (typeof data === 'string') {
+      try { return JSON.parse(data); } catch { return data; }
+    }
+    return data;
+
+  } catch(err) {
+    throw err;
+  }
+}
+function callServerWithTimeout(ms, fn, ...args){
+  return new Promise((resolve,reject)=>{
+    let done=false;
+    const timer=setTimeout(()=>{ if(!done){done=true; reject(new Error('Server response slow.'));}}, ms);
+    callServer(fn, ...args).then(r=>{ if(done)return; done=true; clearTimeout(timer); resolve(r); }).catch(err=>{ if(done)return; done=true; clearTimeout(timer); reject(err); });
+  });
+}
+
+function getAdminRememberToken(){
+  try{return localStorage.getItem(ADMIN_REMEMBER_STORAGE_KEY)||'';}catch(err){return ''}
+}
+function saveAdminRememberToken(token){
+  token=String(token||'').trim();
+  if(!token)return;
+  try{localStorage.setItem(ADMIN_REMEMBER_STORAGE_KEY,token);}catch(err){}
+  adminRememberToken=token;
+}
+function clearAdminRememberToken(){
+  try{localStorage.removeItem(ADMIN_REMEMBER_STORAGE_KEY);}catch(err){}
+  adminRememberToken='';
+}
+function makeAdminRememberCredential(token){return ADMIN_REMEMBER_CREDENTIAL_PREFIX+String(token||'').trim()}
+function getAdminDeviceLabel(){return ((navigator.userAgent||'')+' | '+(screen.width||'')+'x'+(screen.height||'')).slice(0,180)}
+
+function init(){ if(PAGE === 'admin') initAdminPage(); else renderAdmissionShell(); }
+function initAdminPage(){
+  var token=getAdminRememberToken();
+  if(!token){renderAdminLogin(); return;}
+  $('app').innerHTML='<div class="card" style="max-width:520px;margin:40px auto"><h1>BILASPUR ADMIN</h1><div class="notice">Remembered device verify ho raha hai...<div class="loadProgress"><span></span></div></div></div>';
+  callServer('adminValidateRememberTokenSafe',token).then(function(raw){
+    adminData=(typeof raw==='string')?JSON.parse(raw):raw;
+    if(!adminData||!adminData.dashboard){ throw new Error('Remember login failed.'); }
+    adminPassword=makeAdminRememberCredential(token);
+    adminRememberToken=token;
+    renderAdmin();
+  }).catch(function(err){
+    clearAdminRememberToken();
+    adminPassword=''; adminData=null;
+    renderAdminLogin();
+    showMsg('adminLoginMsg','Remember device expired/invalid hai. Admin password se login karein.','error');
+  });
+}
+
+function renderAdmissionShell(){
+  $('app').innerHTML = `
+    <div class="buyerHero">
+      <div class="buyerHeroTop">
+        <div class="buyerLogo logoFallback" id="brandLogoShell">BTS</div>
+        <div>
+          <div class="buyerTitle" id="formTitle">BILASPUR TEST SERIES</div>
+          <div class="buyerSub" id="formSubtitle">Secure admission portal</div>
+        </div>
+      </div>
+      <div class="trustPills">
+        <div class="trustPill"><span>🔒</span>Razorpay secure payment</div>
+        <div class="trustPill"><span>⚡</span>Instant Telegram access</div>
+        <div class="trustPill"><span>✅</span>Full course includes WhatsApp</div>
+      </div>
+      <div id="supportQuickSlot"></div>
+      <div id="loadMsg" class="notice" style="margin-top:12px">Form taiyar ho raha hai...<div class="loadProgress"><span></span></div></div>
+    </div>
+    <div id="formCard" class="card hide"></div>`;
+
+  let formRendered = false;
+  const fallbackTimer = setTimeout(()=>{
+    if(!publicConfig){
+      showConfigSlowBlock();
+    }
+  }, CONFIG_FALLBACK_MS);
+
+  // Safety: do not open hardcoded payment config if Apps Script is slow/failed.
+  // The payment form renders only after a real server config returns successfully.
+  callServer('getPublicConfig').then(cfg=>{
+    if(!cfg || cfg.ok === false) throw new Error((cfg && cfg.error) || 'Config load failed.');
+    publicConfig = normalizePublicConfig(cfg);
+    clearTimeout(fallbackTimer);
+    if(!formRendered){
+      formRendered = true;
+      renderAdmissionForm();
+    } else {
+      applyLoadedConfigVisuals();
+    }
+  }).catch(err=>{
+    clearTimeout(fallbackTimer);
+    if(!publicConfig){
+      showConfigSlowBlock();
+    }
+  });
+}
+
+function showConfigSlowBlock(){
+  publicConfig = null;
+  const card = $('formCard');
+  if(card){ card.classList.add('hide'); card.innerHTML=''; }
+  showMsg('loadMsg', CONFIG_SLOW_MESSAGE, 'error');
+}
+
+function normalizePublicConfig(cfg){
+  cfg = cfg || {};
+  cfg.settings = cfg.settings || {};
+  cfg.payment = cfg.payment || {};
+  cfg.posts = Array.isArray(cfg.posts) ? cfg.posts : [];
+  cfg.subjects = Array.isArray(cfg.subjects) ? cfg.subjects : [];
+  cfg.plans = Array.isArray(cfg.plans) ? cfg.plans : [];
+  return cfg;
+}
+function getDefaultPublicConfig(){
+  // Kept only as a defensive no-payment placeholder. It must never expose UPI/plans.
+  return {
+    ok:false,
+    fallback:true,
+    settings:{FORM_TITLE:'BILASPUR TEST SERIES ADMISSION FORM',FORM_STATUS:'CLOSED',INFO_IMAGE_URLS:'',LOGO_IMAGE_URL:''},
+    payment:{UPI_ID:'',RECEIVER_NAME:'',QR_IMAGE_URL:'',PAYMENT_NOTE_PREFIX:'',SUPPORT_WHATSAPP:''},
+    posts:[],
+    subjects:[],
+    plans:[]
+  };
+}
+function getInfoImageUrls(settings){
+  return [];
+  const raw = String((settings && (settings.INFO_IMAGE_URLS || settings.INFO_IMAGES || settings.INFO_IMAGE_URL)) || '').trim();
+  if(!raw) return [];
+  return raw.split(/[\r\n,]+/).map(s=>s.trim()).filter(Boolean).slice(0,8);
+}
+function toDirectImageUrl(url){
+  url = String(url || '').trim();
+  if(!url) return '';
+  let m = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+  if(m && m[1]) return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(m[1]) + '&sz=w1600';
+  m = url.match(/[?&]id=([^&]+)/);
+  if(url.indexOf('drive.google.com') !== -1 && m && m[1]) return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(m[1]) + '&sz=w1600';
+  return url;
+}
+
+
+function getLogoImageUrl(settings){
+  const raw = String((settings && (settings.LOGO_IMAGE_URL || settings.LOGO_URL || settings.BRAND_LOGO_URL)) || '').trim();
+  return raw ? toDirectImageUrl(raw) : '';
+}
+function brandLogoHtml(settings, extraClass){
+  const u = getLogoImageUrl(settings);
+  const cls = 'buyerLogo ' + (u ? '' : 'logoFallback ') + (extraClass || '');
+  if(u) return '<div class="' + cls.trim() + '"><img src="' + esc(u) + '" alt="BTS logo" onerror="this.parentNode.classList.add(&quot;logoFallback&quot;);this.parentNode.textContent=&quot;BTS&quot;;"></div>';
+  return '<div class="' + cls.trim() + '">BTS</div>';
+}
+function applyBrandLogo(){
+  try{
+    const el = $('brandLogoShell');
+    if(!el) return;
+    const logo = brandLogoHtml((publicConfig && publicConfig.settings) || {}, '').replace(/^<div[^>]*>/,'').replace(/<\/div>$/,'');
+    const u = getLogoImageUrl((publicConfig && publicConfig.settings) || {});
+    el.className = 'buyerLogo ' + (u ? '' : 'logoFallback');
+    el.innerHTML = logo || 'BTS';
+  }catch(e){}
+}
+function payOverlayLogoHtml(){
+  const u = getLogoImageUrl((publicConfig && publicConfig.settings) || {});
+  if(u) return '<div class="payOverlayLogo"><img src="' + esc(u) + '" alt="BTS logo" onerror="this.parentNode.textContent=&quot;BTS&quot;;"></div>';
+  return '<div class="payOverlayLogo">BTS</div>';
+}
+
+
+function getSupportWhatsappDigits(){
+  var n = String((publicConfig && publicConfig.payment && publicConfig.payment.SUPPORT_WHATSAPP) || '').replace(/[^0-9]/g,'');
+  if(n.length === 10) n = '91' + n;
+  return n;
+}
+function supportWhatsappUrl(message){
+  var n = getSupportWhatsappDigits();
+  if(!n) return '';
+  return 'https://wa.me/' + n + '?text=' + encodeURIComponent(message || 'Namaste, mujhe BILASPUR TEST SERIES admission/payment me help chahiye.');
+}
+function renderSupportQuick(){
+  var slot = $('supportQuickSlot');
+  if(!slot) return;
+  var url = supportWhatsappUrl('Namaste, mujhe BILASPUR TEST SERIES admission/payment me help chahiye.');
+  slot.innerHTML = url ? '<div class="supportQuick"><a target="_blank" rel="noopener" href="' + esc(url) + '">💬 Need help? WhatsApp Support</a></div>' : '';
+}
+
+function renderInfoImages(settings){
+  const urls = getInfoImageUrls(settings).map(toDirectImageUrl).filter(Boolean);
+  if(!urls.length) return '';
+  return `<div class="infoImages">${urls.map((u,i)=>`<img src="${esc(u)}" alt="Information ${i+1}" loading="eager" fetchpriority="high" decoding="async">`).join('')}</div>`;
+}
+function applyLoadedConfigVisuals(){
+  try{
+    if(!publicConfig || !publicConfig.settings) return;
+    const titleEl = $('formTitle');
+    if(titleEl) titleEl.textContent = publicConfig.settings.FORM_TITLE || 'BILASPUR TEST SERIES ADMISSION FORM';
+    applyBrandLogo();
+    renderSupportQuick();
+    const slot = $('infoImagesSlot');
+    if(slot) slot.innerHTML = renderInfoImages(publicConfig.settings);
+  }catch(err){}
+}
+function showStudentFields(){
+  const wait = $('fieldLoading');
+  const fields = $('fieldsSlot');
+  const load = $('loadMsg');
+  if(wait) wait.classList.add('hide');
+  if(fields) fields.classList.remove('hide');
+  if(load) load.classList.add('hide');
+}
+function showStudentFieldsAfterImageReady(){
+  const imgs = Array.from(document.querySelectorAll('#infoImagesSlot img'));
+  if(!imgs.length){ showStudentFields(); return; }
+  let done = false;
+  let left = imgs.length;
+  function finish(){ if(done) return; done = true; showStudentFields(); }
+  imgs.forEach(img=>{
+    if(img.complete){ left -= 1; return; }
+    img.addEventListener('load', ()=>{ left -= 1; if(left <= 0) finish(); }, {once:true});
+    img.addEventListener('error', ()=>{ left -= 1; if(left <= 0) finish(); }, {once:true});
+  });
+  if(left <= 0) finish();
+  setTimeout(finish, IMAGE_FIRST_TIMEOUT_MS);
+}
+function getSelectText(id){
+  var el=$(id);
+  if(!el || el.selectedIndex < 0) return '';
+  return (el.options[el.selectedIndex].text || '').trim();
+}
+function getPlanAccessLabel(plan){
+  var name = String((plan && plan.plan_name) || '').toLowerCase();
+  var id = String((plan && plan.plan_id) || '').toLowerCase();
+  if(name.indexOf('full') >= 0 || id.indexOf('_full') >= 0) return 'Telegram + WhatsApp Group';
+  return 'Telegram Channel';
+}
+function renderSelectedPlanSummary(plan){
+  if(!plan) return '';
+  var postText=getSelectText('post');
+  var subjectText=getSelectText('subject');
+  var planText=getSelectText('plan');
+  var access=getPlanAccessLabel(plan);
+  return '<div class="selectedSummary" id="selectedPlanSummary">'
+    + '<div class="summaryLine"><span>Course</span><b>' + esc(postText || '-') + '</b></div>'
+    + '<div class="summaryLine"><span>Subject</span><b>' + esc(subjectText || '-') + '</b></div>'
+    + '<div class="summaryLine"><span>Plan</span><b>' + esc(planText || '-') + '</b></div>'
+    + '<div class="summaryLine"><span>Access</span><b><span class="accessBadge">✅ ' + esc(access) + '</span></b></div>'
+    + '</div>';
+}
+function renderStudentFieldHtml(cfg, codeRequired){
+  return `
+    <div class="sectionTitle"><span class="dot">1</span><b>Student Details</b></div>
+    <p class="muted" style="margin-top:-6px">Details bharein, course select karein, phir secure payment karein.</p>
+    <div id="studentMsg" class="notice hide"></div>
+    ${codeRequired ? `<label>Admission Code</label><input id="admissionCode" placeholder="Admission code">` : ''}
+    <div class="row"><div><label>Student Name *</label><input id="name" placeholder="Full name"></div><div><label>Mobile / WhatsApp Number *</label><input id="mobile" inputmode="numeric" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
+    <div class="row"><div><label>Email ID *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com"></div><div><label>District / City</label><input id="district" placeholder="District / City"></div></div>
+    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><b>Choose Course</b></div>
+    <div class="row3">
+      <div><label>Varg / Post *</label><select id="post" onchange="onPostChange()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
+      <div><label>Subject Group *</label><select id="subject" onchange="onSubjectChange()"><option value="">Select Varg first</option></select></div>
+      <div><label>Subscription Plan *</label><select id="plan" onchange="onPlanChange()"><option value="">Select Subject first</option></select></div>
+    </div>
+    <div id="paymentBox" class="card hide" style="margin-left:0;margin-right:0">
+      <div class="sectionTitle"><span class="dot">3</span><b>Secure Payment</b></div>
+      <div id="selectedPlanSlot"></div>
+      <div class="amount" id="amountText">₹0</div>
+      <div id="razorpayPayBox" class="hide">
+        <p><button id="razorpayPayBtn" class="ok full" onclick="startRazorpayAdmission()">Pay Securely</button></p>
+        <div class="paymentTrust"><span>🔒 Razorpay protected</span><span>⚡ Instant access after payment</span></div>
+        <div class="miniFlow"><div><span>1</span>Pay securely</div><div><span>2</span>Auto verification</div><div><span>3</span>Get access</div></div>
+      </div>
+      <div id="manualPayBox">
+        <p class="muted">UPI ID: <b id="upiText"></b> | Receiver: <b id="receiverText"></b></p>
+        <div id="qrBox"></div><p><a id="payBtn" class="btn" href="#" target="_blank">Pay Now</a></p>
+        <p id="paymentNoteHelp" class="muted">Payment note/remark me apna latest mobile number जरूर लिखें.</p>
+        <label>UTR / Transaction ID *</label><input id="utr" placeholder="Payment UTR / Transaction ID">
+        <label>Payment Screenshot / PDF *</label><input id="screenshot" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange="onScreenshotChange()"><div id="screenshotHelp" class="fieldHelp">Payment screenshot/PDF upload करना जरूरी है.</div>
+        <p class="muted">Screenshot/PDF max 5 MB. Payment verify hone ke baad group link bheja jayega.</p>
+      </div>
+    </div>
+    <div id="submitStatusBox" class="submitStatusBox"></div>
+    <button id="submitBtn" class="full" onclick="submitStudentForm()">Submit Admission Request</button>`;
+}
+
+function renderAdmissionForm(){
+  const cfg=publicConfig;
+  if(!cfg || cfg.fallback || cfg.ok === false){
+    showConfigSlowBlock();
+    return;
+  }
+  $('formTitle').textContent = cfg.settings.FORM_TITLE || 'BILASPUR TEST SERIES ADMISSION FORM';
+  renderSupportQuick();
+  applyBrandLogo();
+  if(String(cfg.settings.FORM_STATUS||'OPEN').toUpperCase() !== 'OPEN'){
+    showMsg('loadMsg','Admission form abhi CLOSED hai. Support se contact karein.','error'); return;
+  }
+  const codeRequired = String(cfg.settings.ADMISSION_CODE_REQUIRED||'NO').toUpperCase()==='YES';
+  $('formCard').classList.remove('hide');
+  const hasInfoImages = getInfoImageUrls(cfg.settings).length > 0;
+  if(hasInfoImages){
+    showMsg('loadMsg','Information image load ho rahi hai...<div class="loadProgress"><span></span></div>','');
+  } else {
+    $('loadMsg').classList.add('hide');
+  }
+  $('formCard').innerHTML = `
+    <div id="infoImagesSlot">${renderInfoImages(cfg.settings)}</div>
+    <div id="fieldLoading" class="notice hide">Information image load ho rahi hai...<div class="loadProgress"><span></span></div></div>
+    <div id="fieldsSlot" class="${hasInfoImages ? 'hide' : ''}">${renderStudentFieldHtml(cfg, codeRequired)}</div>`;
+  if(hasInfoImages) showStudentFieldsAfterImageReady(); else showStudentFields();
+}
+function onPostChange(){
+  const post=val('post'); const subs=publicConfig.subjects.filter(s=>String(s.post_id)===post);
+  $('subject').innerHTML='<option value="">Select Subject</option>'+subs.map(s=>`<option value="${esc(s.subject_id)}">${esc(s.subject_name)}</option>`).join('');
+  $('plan').innerHTML='<option value="">Select Subject first</option>'; $('paymentBox').classList.add('hide');
+}
+function onSubjectChange(){
+  const post=val('post'), sub=val('subject'); const plans=publicConfig.plans.filter(p=>String(p.post_id)===post && String(p.subject_id)===sub);
+  $('plan').innerHTML='<option value="">Select Plan</option>'+plans.map(p=>`<option value="${esc(p.plan_id)}">${esc(p.plan_name)} - ₹${esc(p.amount)}</option>`).join(''); $('paymentBox').classList.add('hide');
+}
+function isRazorpayEnabled(){
+  return !!(publicConfig && publicConfig.payment && String(publicConfig.payment.RAZORPAY_ENABLED||'FALSE').toUpperCase()==='TRUE' && String(publicConfig.payment.PAYMENT_PROVIDER||'').toUpperCase()==='RAZORPAY');
+}
+function onPlanChange(){
+  const plan=publicConfig.plans.find(p=>String(p.plan_id)===val('plan')); if(!plan){$('paymentBox').classList.add('hide');return}
+  $('paymentBox').classList.remove('hide'); $('amountText').textContent='₹'+plan.amount;
+  var slot=$('selectedPlanSlot'); if(slot) slot.innerHTML=renderSelectedPlanSummary(plan);
+  var payBtn=$('razorpayPayBtn'); if(payBtn) payBtn.innerHTML='🔒 Pay Securely ₹'+esc(plan.amount);
+  const manualBox=$('manualPayBox'), razorBox=$('razorpayPayBox'), submitBtn=$('submitBtn');
+  if(isRazorpayEnabled()){
+    if(manualBox) manualBox.classList.add('hide');
+    if(razorBox) razorBox.classList.remove('hide');
+    if(submitBtn) submitBtn.classList.add('hide');
+    return;
+  }
+  if(manualBox) manualBox.classList.remove('hide');
+  if(razorBox) razorBox.classList.add('hide');
+  if(submitBtn) submitBtn.classList.remove('hide');
+  $('upiText').textContent=publicConfig.payment.UPI_ID||''; $('receiverText').textContent=publicConfig.payment.RECEIVER_NAME||'';
+  const qr=publicConfig.payment.QR_IMAGE_URL||''; $('qrBox').innerHTML = qr ? `<img class="qr" src="${esc(qr)}" alt="Payment QR">` : `<div class="notice">QR image set nahi hai. Pay Now / UPI ID use karein.</div>`;
+  updateUpiPayLink();
+}
+function onMobileChange(){
+  updateUpiPayLink();
+  var m=$('mobile');
+  var help=$('mobileHelp');
+  if(!m || !help) return;
+  var digits=String(m.value||'').replace(/\D/g,'');
+  if(!digits){
+    m.classList.remove('fieldInvalid');
+    help.className='fieldHelp';
+    help.textContent='91 के साथ भी डाल सकते हैं, जैसे 919876543210';
+    return;
+  }
+  if(isValidIndianMobileInput(m.value)){
+    m.classList.remove('fieldInvalid');
+    help.className='fieldHelp';
+    help.textContent='Mobile number ठीक है.';
+  }else{
+    m.classList.add('fieldInvalid');
+    help.className='fieldErrorText';
+    help.textContent='कृपया सही 10 digit mobile number डालें. Example: 9876543210';
+  }
+}
+function onScreenshotChange(){
+  var f=$('screenshot') && $('screenshot').files ? $('screenshot').files[0] : null;
+  var help=$('screenshotHelp');
+  var el=$('screenshot');
+  if(!help || !el) return;
+  if(!f){
+    el.classList.remove('fieldInvalid');
+    help.className='fieldHelp';
+    help.textContent='Payment screenshot/PDF upload करना जरूरी है.';
+    return;
+  }
+  if(f.size>5*1024*1024){
+    el.classList.add('fieldInvalid');
+    help.className='fieldErrorText';
+    help.textContent='Screenshot/PDF 5 MB se chhota hona chahiye.';
+  }else if(!isAllowedProofFile(f)){
+    el.classList.add('fieldInvalid');
+    help.className='fieldErrorText';
+    help.textContent='Screenshot JPG/PNG/WEBP/PDF format me upload karein.';
+  }else{
+    el.classList.remove('fieldInvalid');
+    help.className='fieldHelp';
+    help.textContent='File selected: '+f.name;
+  }
+}
+function updateUpiPayLink(){
+  if(isRazorpayEnabled()) return;
+  const payBtn = $('payBtn');
+  if(!payBtn || !publicConfig || !publicConfig.payment) return;
+  const plan=(publicConfig.plans||[]).find(p=>String(p.plan_id)===val('plan'));
+  if(!plan) return;
+  const mobile = val('mobile') || 'MOBILE';
+  const note=(publicConfig.payment.PAYMENT_NOTE_PREFIX||'BILASPUR_TEST_SERIES')+'_'+mobile;
+  payBtn.href=`upi://pay?pa=${encodeURIComponent(publicConfig.payment.UPI_ID||'')}&pn=${encodeURIComponent(publicConfig.payment.RECEIVER_NAME||'BILASPUR TEST SERIES')}&am=${encodeURIComponent(plan.amount||'')}&cu=INR&tn=${encodeURIComponent(note)}`;
+  const help=$('paymentNoteHelp'); if(help) help.innerHTML='Payment note/remark me apna latest mobile number जरूर लिखें: <b>'+esc(mobile)+'</b>';
+}
+function isValidIndianMobileInput(mobile){
+  const digits=String(mobile||'').replace(/\D/g,'');
+  const n=(digits.length===12 && digits.startsWith('91')) ? digits.slice(2) : digits;
+  return /^[6-9][0-9]{9}$/.test(n) && !/^(\d)\1{9}$/.test(n);
+}
+function isAllowedProofFile(file){
+  if(!file) return false;
+  const name=String(file.name||'').toLowerCase();
+  const type=String(file.type||'').toLowerCase();
+  return ['image/jpeg','image/png','image/webp','application/pdf'].includes(type) || /\.(jpe?g|png|webp|pdf)$/.test(name);
+}
+function clearSubmitError(){
+  var box=$('submitStatusBox');
+  if(box) box.innerHTML='';
+}
+function showSubmitError(message, fieldId){
+  var safe=esc(message||'Details check karein.');
+  var box=$('submitStatusBox');
+  if(box){
+    box.innerHTML='<div class="submitErrorBox">'+safe+'</div>';
+  }else{
+    showMsg('studentMsg',safe,'error');
+  }
+  if(fieldId) markInvalidField(fieldId, message);
+  scrollToSubmitOrField(fieldId);
+}
+function showSubmitProgress(message, detail){
+  var box=$('submitStatusBox');
+  if(!box) return;
+  box.innerHTML='<div class="submitProgressBox"><b>'+esc(message||'Submit ho raha hai...')+'</b><div>'+esc(detail||'Payment screenshot/PDF upload ho raha hai. Page band na karein.')+'</div><div class="progressBar"><span></span></div></div>';
+}
+function markInvalidField(id, message){
+  var el=$(id);
+  if(el) el.classList.add('fieldInvalid');
+  if(id==='mobile'){
+    var mh=$('mobileHelp');
+    if(mh){mh.className='fieldErrorText'; mh.textContent=message || 'कृपया सही 10 digit mobile number डालें.';}
+  }
+  if(id==='screenshot'){
+    var sh=$('screenshotHelp');
+    if(sh){sh.className='fieldErrorText'; sh.textContent=message || 'Payment screenshot/PDF upload करना जरूरी है.';}
+  }
+}
+function clearInvalidField(id){
+  var el=$(id); if(el) el.classList.remove('fieldInvalid');
+}
+function clearAllFieldErrors(){
+  ['name','mobile','email','post','subject','plan','utr','screenshot','admissionCode'].forEach(clearInvalidField);
+  onMobileChange();
+  onScreenshotChange();
+}
+function scrollToSubmitOrField(fieldId){
+  var target=(fieldId && $(fieldId)) || $('submitStatusBox') || $('submitBtn');
+  if(target && target.scrollIntoView){
+    try{target.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){target.scrollIntoView();}
+  }
+  if(fieldId && $(fieldId) && $(fieldId).focus){try{$(fieldId).focus();}catch(e){}}
+}
+function requireStudentField(id, message){
+  if(!$(id) || !val(id)) throw {message:message, fieldId:id};
+}
+function isValidEmailInput(v){
+  v=String(v||'').trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+function readFileBase64(file){return new Promise((resolve,reject)=>{if(!file){reject(new Error('Payment screenshot/PDF upload करना जरूरी है.'));return} if(file.size>5*1024*1024){reject(new Error('Screenshot/PDF 5 MB se chhota hona chahiye.'));return} if(!isAllowedProofFile(file)){reject(new Error('Screenshot JPG/PNG/WEBP/PDF format me upload karein.'));return} const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=()=>reject(new Error('File read failed.')); r.readAsDataURL(file);});}
+/* R3 PAYMENT TRANSITION UI helpers
+   - showPayOverlay(): full-screen blocking modal during the server call.
+     Rotates step messages and guards against reload/back.
+   - hidePayOverlay(): cleans up timer + beforeunload listener.
+   - renderPayReadyCard(): replaces the form card with a clean payment summary
+     and a pulsing CTA. Form fields gone, so no accidental re-submit. */
+var PAY_OVERLAY_STEPS = [
+  'Saving admission details...',
+  'Opening secure Razorpay checkout...',
+  'Please wait a moment...'
+];
+var payOverlayStepIdx = 0;
+var payOverlayTimer = null;
+var payBeforeUnloadHandler = null;
+
+function attachBeforeUnloadGuard(){
+  if(payBeforeUnloadHandler) return;
+  payBeforeUnloadHandler = function(e){ e.preventDefault(); e.returnValue = ''; return ''; };
+  window.addEventListener('beforeunload', payBeforeUnloadHandler);
+}
+function detachBeforeUnloadGuard(){
+  if(!payBeforeUnloadHandler) return;
+  window.removeEventListener('beforeunload', payBeforeUnloadHandler);
+  payBeforeUnloadHandler = null;
+}
+
+function showPayOverlay(){
+  var el = $('payOverlay');
+  if(!el){
+    var div = document.createElement('div');
+    div.id = 'payOverlay';
+    div.className = 'payOverlay';
+    div.setAttribute('role','dialog');
+    div.setAttribute('aria-modal','true');
+    div.innerHTML = ''
+      + '<div class="payOverlayCard">'
+      + '<div class="payOverlayBrand">'
+      +   payOverlayLogoHtml()
+      +   '<div class="payOverlayBrandText">'
+      +     '<div class="payOverlayTitle">BILASPUR TEST SERIES</div>'
+      +     '<div class="payOverlayTitleSub">Secure Admission</div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="payOverlaySpinner"></div>'
+      + '<div class="payOverlayStep" id="payOverlayStep">' + esc(PAY_OVERLAY_STEPS[0]) + '</div>'
+      + '<div class="payOverlayBar"><span></span></div>'
+      + '<div class="payOverlayHint"><b>Please do not close this page.</b><br>Secure Razorpay checkout is opening.</div>'
+      + '<div class="payOverlayTrust"><span>&#x1F512; 256-bit SSL</span><span>&middot;</span><span>Razorpay Secured</span></div>'
+      + '</div>';
+    document.body.appendChild(div);
+    el = div;
+  }
+  el.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+  payOverlayStepIdx = 0;
+  if(payOverlayTimer) clearInterval(payOverlayTimer);
+  payOverlayTimer = setInterval(function(){
+    if(payOverlayStepIdx < PAY_OVERLAY_STEPS.length - 1) payOverlayStepIdx++;
+    var stepEl = $('payOverlayStep');
+    if(stepEl){
+      stepEl.style.opacity = '0';
+      setTimeout(function(){
+        stepEl.innerHTML = esc(PAY_OVERLAY_STEPS[payOverlayStepIdx]);
+        stepEl.style.opacity = '1';
+      }, 180);
+    }
+  }, 2400);
+  attachBeforeUnloadGuard();
+}
+
+function hidePayOverlay(){
+  var el = $('payOverlay');
+  if(el) el.classList.add('hide');
+  document.body.style.overflow = '';
+  if(payOverlayTimer){ clearInterval(payOverlayTimer); payOverlayTimer = null; }
+}
+
+function getPlanLabelFromForm(){
+  try{
+    var planSel = $('plan');
+    if(planSel && planSel.selectedIndex >= 0){
+      var txt = planSel.options[planSel.selectedIndex].text || '';
+      return txt.trim();
+    }
+  }catch(e){}
+  return '';
+}
+
+function renderPayReadyCard(res, payUrl){
+  var planText = getPlanLabelFromForm();
+  var nameText = val('name');
+  var mobileText = val('mobile');
+
+  var rowsHtml = ''
+    + '<div class="paySummaryRow"><span>Admission ID</span><b>' + esc(res.admission_id) + '</b></div>'
+    + (nameText   ? '<div class="paySummaryRow"><span>Name</span><b>'   + esc(nameText)   + '</b></div>' : '')
+    + (mobileText ? '<div class="paySummaryRow"><span>Mobile</span><b>' + esc(mobileText) + '</b></div>' : '')
+    + (planText   ? '<div class="paySummaryRow"><span>Plan</span><b>'   + esc(planText)   + '</b></div>' : '')
+    + '<div class="paySummaryRow"><span>Amount</span><span class="paySummaryAmt">&#8377;' + esc(res.amount) + '</span></div>';
+
+  var html = ''
+    + '<div class="payReadyCard" id="payReadyCard">'
+    +   '<div class="payReadyIcon">&#10003;</div>'
+    +   '<div class="payReadyTitle">Admission Details Saved</div>'
+    +   '<div class="payReadySub">Review your details and complete payment securely on Razorpay.</div>'
+    +   '<div class="paySummary">' + rowsHtml + '</div>'
+    +   '<a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
+    +     '<span>&#x1F512;</span> Pay Securely on Razorpay'
+    +   '</a>'
+    +   '<div class="payCtaSub">UPI, card and net banking supported · Access unlocks after successful payment</div>'
+    +   '<div class="payTrust"><span>&#x1F512; Razorpay secure checkout</span><span>&#x2705; Auto access after payment</span></div>'
+    +   '<button class="paySecondary" type="button" id="payCopyBtn">Copy Admission ID</button>'
+    + '</div>';
+
+  var formCard = $('formCard');
+  if(formCard){
+    formCard.insertAdjacentHTML('afterend', html);
+    formCard.style.display = 'none';
+  } else {
+    document.querySelector('.wrap').insertAdjacentHTML('afterbegin', html);
+  }
+
+  var copyBtn = $('payCopyBtn');
+  if(copyBtn){
+    copyBtn.onclick = function(){
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(String(res.admission_id || ''));
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = String(res.admission_id || '');
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand('copy'); }catch(e){}
+          document.body.removeChild(ta);
+        }
+        copyBtn.innerHTML = '&#10003; Copied';
+        setTimeout(function(){ copyBtn.innerHTML = 'Copy Admission ID'; }, 1800);
+      }catch(e){}
+    };
+  }
+
+  var ctaBtn = $('payCtaBtn');
+  if(ctaBtn){
+    ctaBtn.addEventListener('click', function(){
+      // User has tapped pay. Safe to drop the reload-guard now.
+      detachBeforeUnloadGuard();
+      ctaBtn.style.animation = 'none';
+      var sub = ctaBtn.nextElementSibling;
+      if(sub) sub.innerHTML = 'Secure payment tab opened. Complete payment to unlock access.';
+    });
+  }
+
+  try{
+    var newCard = $('payReadyCard');
+    if(newCard) newCard.scrollIntoView({behavior:'smooth', block:'start'});
+  }catch(e){}
+}
+
+async function startRazorpayAdmission(){
+  const btn=$('razorpayPayBtn');
+  try{
+    clearSubmitError();
+    clearAllFieldErrors();
+    if(!publicConfig || publicConfig.fallback || publicConfig.ok === false) throw {message:CONFIG_SLOW_MESSAGE};
+    requireStudentField('name','Student name डालना जरूरी है.');
+    if(!isValidIndianMobileInput(val('mobile'))) throw {message:'कृपया सही 10 digit mobile number डालें. Example: 9876543210', fieldId:'mobile'};
+    requireStudentField('email','Email ID डालना जरूरी है.');
+    if(!isValidEmailInput(val('email'))) throw {message:'Valid email ID डालें. Example: student@example.com', fieldId:'email'};
+    requireStudentField('post','Varg / Post select करें.');
+    requireStudentField('subject','Subject Group select करें.');
+    requireStudentField('plan','Subscription Plan select करें.');
+
+    // R3 ACCESS RETURN PATCH:
+    // NO blank-tab popups, NO document.write, NO popup doc manipulation.
+    // Full-screen overlay during the server call so the wait feels intentional,
+    // beforeunload guard so reload/back is not accidental.
+    // After success, the form is hidden and a clean pay-ready card is rendered.
+
+    if(btn){btn.disabled=true; btn.dataset.oldText=btn.innerHTML; btn.innerHTML='<span class="spinner"></span> Processing...';}
+    showPayOverlay();
+
+    const payload={admissionCode:val('admissionCode'),name:val('name'),mobile:val('mobile'),email:val('email'),district:val('district'),post_id:val('post'),subject_id:val('subject'),plan_id:val('plan')};
+    const raw=await callServerWithTimeout(60000,'createRazorpayAdmissionSafe', payload);
+    const res=(typeof raw==='string')?JSON.parse(raw):raw;
+    if(!res || res.ok===false){ throw {message:(res&&res.error)||'Razorpay Payment Link create failed.'}; }
+    var payUrl = String(res.payment_url || '').trim();
+    if(!/^https:\/\/(rzp\.io|razorpay\.com|pages\.razorpay\.com)\//i.test(payUrl)){
+      throw {message:'Razorpay Payment Link invalid hai: '+payUrl};
+    }
+
+    hidePayOverlay();
+    renderPayReadyCard(res, payUrl);
+
+  }catch(err){
+    hidePayOverlay();
+    detachBeforeUnloadGuard();
+    var em=normalizeClientError(err);
+    showSubmitError(em, err && err.fieldId ? err.fieldId : '');
+    showMsg('studentMsg', esc(em), 'error');
+    if(btn){btn.disabled=false; btn.innerHTML=btn.dataset.oldText||'Pay Securely';}
+  }
+}
+
+async function submitStudentForm(){
+  if(isRazorpayEnabled()) return startRazorpayAdmission();
+  const btn=$('submitBtn');
+  try{
+    clearSubmitError();
+    clearAllFieldErrors();
+    if(!publicConfig || publicConfig.fallback || publicConfig.ok === false) throw {message:CONFIG_SLOW_MESSAGE};
+    requireStudentField('name','Student name डालना जरूरी है.');
+    if(!isValidIndianMobileInput(val('mobile'))) throw {message:'कृपया सही 10 digit mobile number डालें. Example: 9876543210', fieldId:'mobile'};
+    requireStudentField('post','Varg / Post select करें.');
+    requireStudentField('subject','Subject Group select करें.');
+    requireStudentField('plan','Subscription Plan select करें.');
+    requireStudentField('utr','UTR / Transaction ID डालना जरूरी है.');
+    const f=$('screenshot').files[0];
+    if(!f) throw {message:'Payment screenshot/PDF upload करना जरूरी है.', fieldId:'screenshot'};
+    if(!isAllowedProofFile(f)) throw {message:'Screenshot JPG/PNG/WEBP/PDF format me upload karein.', fieldId:'screenshot'};
+    if(f.size>5*1024*1024) throw {message:'Screenshot/PDF 5 MB se chhota hona chahiye.', fieldId:'screenshot'};
+    if(btn){
+      btn.disabled=true;
+      const oldText=btn.innerHTML;
+      btn.dataset.oldText=oldText;
+      btn.innerHTML='<span class="spinner"></span> Submit ho raha hai...';
+    }
+    showMsg('studentMsg','Form submit ho raha hai. Payment screenshot/PDF upload hone tak page band na karein.','');
+    showSubmitProgress('Submit ho raha hai...', 'Payment screenshot/PDF upload ho raha hai. Thoda wait karein.');
+    const b64=await readFileBase64(f);
+    showSubmitProgress('Screenshot/PDF ready hai.', 'Admission request server par save ho raha hai. Page band na karein.');
+    const payload={admissionCode:val('admissionCode'),name:val('name'),mobile:val('mobile'),district:val('district'),post_id:val('post'),subject_id:val('subject'),plan_id:val('plan'),utr:val('utr'),screenshotBase64:b64,screenshotName:f?f.name:'',screenshotMime:f?f.type:''};
+    const raw=await callServerWithTimeout(90000,'submitAdmissionSafe', payload);
+    const res=(typeof raw==='string')?JSON.parse(raw):raw;
+    if(!res || res.ok===false){ throw {message:(res&&res.error)||'Admission submit failed. कृपया details check करके दोबारा try करें.'}; }
+    $('formCard').innerHTML=`<div class="notice success"><h2>Admission Request Received</h2><p>${esc(res.message)}</p><p><b>Admission ID:</b> ${esc(res.admission_id)}</p><p class="muted">Is ID ko save kar lein.</p></div>`;
+  }catch(err){
+    var em=normalizeClientError(err);
+    showSubmitError(em, err && err.fieldId ? err.fieldId : '');
+    showMsg('studentMsg', esc(em), 'error');
+    if(btn){btn.disabled=false; btn.innerHTML=btn.dataset.oldText||'Submit Admission Request';}
+  }
+}
+
+function renderAdminLogin(){
+  $('app').innerHTML=`<div class="card" style="max-width:520px;margin:40px auto">
+    <h1>BILASPUR ADMIN</h1><p class="muted">Admission dashboard खोलने के लिए admin password डालें.</p>
+    <div id="adminLoginMsg" class="notice hide"></div><label>Admin Password</label><input id="adminPassword" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter') adminLogin()">
+    <label style="display:flex;align-items:center;gap:8px;font-weight:800"><input id="rememberDevice" type="checkbox" style="width:auto"> Remember this device</label>
+    <button class="full" onclick="adminLogin()">Open Admin Panel</button>
+    <div class="installHint"><b>Phone shortcut:</b><br><span class="muted">Chrome में admin link खोलकर ⋮ → Add to Home screen करें. फिर यह app जैसा खुलेगा.</span></div>
+  </div>`;
+}
+async function adminLogin(){
+  adminPassword=val('adminPassword');
+  var remember=!!($('rememberDevice')&&$('rememberDevice').checked);
+  try{
+    showMsg('adminLoginMsg','Loading admin panel...','');
+    var raw;
+    if(remember){
+      raw=await callServer('adminLoginWithRememberSafe',adminPassword,true,getAdminDeviceLabel());
+    }else{
+      raw=await callServer('adminGetLiteSafe',adminPassword);
+    }
+    adminData=(typeof raw==='string')?JSON.parse(raw):raw;
+    if(!adminData||!adminData.dashboard){throw new Error('Admin data load failed. setupAdmissionSystem run karke New Version deploy karein.')}
+    if(remember && adminData.rememberToken){saveAdminRememberToken(adminData.rememberToken); delete adminData.rememberToken; delete adminData.rememberExpiresAt;}
+    renderAdmin();
+  }
+  catch(err){showMsg('adminLoginMsg',esc(err.message||err),'error')}
+}
+function adminLogout(){
+  var token=adminRememberToken||getAdminRememberToken();
+  clearAdminRememberToken();
+  function finishLogout(){
+    adminPassword=''; adminData=null; activeAdminTab='dashboard';
+    renderAdminLogin();
+    showMsg('adminLoginMsg','Device logout/forget ho gaya.','success');
+  }
+  if(token){
+    callServer('adminRevokeRememberTokenSafe',token).then(finishLogout).catch(finishLogout);
+  }else{
+    finishLogout();
+  }
+}
+
+function renderAdmin(){
+  const d=adminData.dashboard||{};
+  $('app').innerHTML=`
+    <div class="adminHero">
+      <div class="adminHeroRow">
+        <div class="adminBrand"><div class="adminLogoMini">BTS</div><div><h1>Admin Dashboard</h1><div class="muted">Admissions, courses aur student page controls</div></div></div>
+        <div class="adminHeroActions"><a class="btn" href="${esc(adminData.spreadsheetUrl)}" target="_blank">Open Sheet</a><button onclick="refreshAdmin()">Refresh</button><button class="primaryMini" onclick="switchAdminTab('security')">Security</button><button onclick="adminLogout()">Lock</button></div>
+      </div>
+    </div>
+    <div class="quickGrid">
+      ${dashCard('Total',d.total)}${dashCard('Pending',Number(d.pending||0)+Number(d.screenshot||0))}${dashCard('Verified',d.verified)}${dashCard('Need Info',d.needMoreInfo)}${dashCard('Rejected',d.rejected)}${dashCard('Link Sent',d.sent)}
+    </div>
+    ${adminData.defaultAdminPasswordActive ? '<div class="notice error"><b>Default admin password active hai.</b> Live se pehle password change karein.</div>' : ''}
+    <div id="adminMsg" class="notice hide"></div>
+    <div id="adminBody"></div>
+    <div class="adminBottomNav">
+      ${navBtn('dashboard','Home')}${navBtn('admissions','Students')}${navBtn('config','Courses')}${navBtn('payment','Page')}${navBtn('security','Security')}
+    </div>`;
+  renderAdminTab();
+}
+
+function dashCard(t,v){return `<div class="quickCard"><span>${esc(t)}</span><b>${esc(v||0)}</b></div>`}
+function toggleAdminMenu(){var p=$('adminMenuPanel'); if(p) p.classList.toggle('show')}
+function hideAdminMenu(){var p=$('adminMenuPanel'); if(p) p.classList.remove('show')}
+function navBtn(id,t){return `<button class="${activeAdminTab===id?'active':''}" onclick="switchAdminTab('${id}')">${t}</button>`}
+async function switchAdminTab(id){
+  hideAdminMenu();
+  activeAdminTab=id;
+  if(id==='admissions' && adminData && !adminData.admissionsLoaded){
+    renderAdmin();
+    await loadAdmissions();
+    return;
+  }
+  renderAdmin();
+}
+async function refreshAdmin(opts){
+  opts = opts || {};
+  try{
+    const needAdmissions = activeAdminTab==='admissions' || (adminData && adminData.admissionsLoaded);
+    const keepTab = activeAdminTab;
+    const raw=await callServer('adminGetLiteSafe',adminPassword);
+    adminData=(typeof raw==='string')?JSON.parse(raw):raw;
+    activeAdminTab=keepTab;
+    renderAdmin();
+    if(needAdmissions) await loadAdmissions();
+    else if(!opts.silent) showMsg('adminMsg','Refreshed.','success');
+    if(!opts.silent) showToast('Refresh successful ✓','success');
+  }catch(err){showMsg('adminMsg',esc(err.message||err),'error'); showToast('Refresh failed','error')}
+}
+async function loadAdmissions(){
+  try{
+    const body=$('adminBody');
+    if(body) body.innerHTML='<div class="card"><h2>Admission Requests</h2><div class="notice">Admissions load ho rahe hain...</div></div>';
+    const raw=await callServer('adminGetAdmissionsOnlySafe',adminPassword);
+    const data=(typeof raw==='string')?JSON.parse(raw):raw;
+    adminData.admissions=data.admissions||[];
+    adminData.dashboard=data.dashboard||adminData.dashboard||{};
+    if(typeof data.defaultAdminPasswordActive !== 'undefined') adminData.defaultAdminPasswordActive = data.defaultAdminPasswordActive;
+    adminData.admissionsLoaded=true;
+    renderAdmin();
+  }catch(err){
+    const body=$('adminBody');
+    if(body) body.innerHTML='<div class="card"><h2>Admission Requests</h2><div class="notice error">'+esc(err.message||err)+'</div><button onclick="loadAdmissions()">Retry Admissions Load</button></div>';
+    else showMsg('adminMsg',esc(err.message||err),'error');
+  }
+}
+function renderAdminTab(){ if(activeAdminTab==='dashboard') renderDashboard(); else if(activeAdminTab==='admissions') renderAdmissions(); else if(activeAdminTab==='config') renderConfig(); else if(activeAdminTab==='payment') renderPaymentSettings(); else renderSecurity(); }
+function renderDashboard(){
+  const rows=adminData.admissions||[];
+  const pending=rows.filter(a=>['PAYMENT_PENDING','SCREENSHOT_SUBMITTED','NEED_MORE_INFO'].includes(String(a.status||'').toUpperCase())).slice(0,6);
+  const pendingHtml = adminData.admissionsLoaded ? (pending.length?pending.map(admissionCard).join(''):'<div class="notice success">No pending action right now.</div>') : '<div class="adminHint">Fast mode active hai. Students list dekhne ke liye <b>Students</b> dabाएँ.</div>';
+  $('adminBody').innerHTML=`
+    <div class="card"><h2>Quick Actions</h2><div class="adminQuickActions"><button class="primaryAction" onclick="switchAdminTab('admissions')">👥 Students<br><span class="tiny" style="color:#dbeafe">admissions view</span></button><button class="greenAction" onclick="switchAdminTab('config')">📚 Courses<br><span class="tiny" style="color:#dcfce7">plans & groups</span></button><button class="softAction" onclick="switchAdminTab('payment')">🎨 Student Page<br><span class="tiny">logo, images, support</span></button><button class="darkAction" onclick="switchAdminTab('security')">🔐 Security<br><span class="tiny" style="color:#cbd5e1">links & password</span></button></div></div>
+    <div class="card"><h2>Recent Action Needed</h2><div class="admCards">${pendingHtml}</div></div>
+    <div class="card"><h2>Stable Flow</h2><div class="adminHint">Razorpay payment → auto verification → one-use Telegram invite → Full course WhatsApp access. Telegram webhook ki जरूरत नहीं है.</div></div>`;
+}
+
+function filteredAdmissions(){
+  const q=adminSearch.toLowerCase().trim();
+  return (adminData.admissions||[]).filter(a=>{
+    const st=String(a.status||'').toUpperCase();
+    const okStatus=adminStatus==='ALL'||st===adminStatus;
+    const hay=[a.admission_id,a.name,a.mobile,a.district,a.post_name,a.subject_name,a.plan_name,a.utr,a.status].join(' ').toLowerCase();
+    return okStatus && (!q || hay.includes(q));
+  });
+}
+function renderAdmissions(){
+  if(!adminData.admissionsLoaded){
+    $('adminBody').innerHTML=`<div class="card"><h2>Admission Requests</h2><div class="notice">Admissions list abhi load nahi hui hai.</div><button onclick="loadAdmissions()">Load Admissions</button></div>`;
+    return;
+  }
+  const rows=filteredAdmissions();
+  $('adminBody').innerHTML=`<div class="card"><h2>Admission Requests</h2>
+    <div class="filters"><input id="admSearch" placeholder="Search name/mobile/UTR" value="${esc(adminSearch)}" oninput="adminSearch=this.value;renderAdmissions()"><select id="admStatus" onchange="adminStatus=this.value;renderAdmissions()">${statusOptions()}</select><button class="secondary" onclick="adminSearch='';adminStatus='ALL';renderAdmissions()">Clear</button></div>
+    <p class="muted">Showing ${rows.length} admission(s)</p>
+    <div class="admCards">${rows.map(admissionCard).join('') || '<div class="notice">No admission found.</div>'}</div>
+    <div class="tableBox desktopOnly" style="margin-top:12px"><table><thead><tr><th>ID/Time</th><th>Student</th><th>Course</th><th>Payment</th><th>Status</th><th>Proof</th><th>Actions</th></tr></thead><tbody>${rows.map(admissionRow).join('')}</tbody></table></div>
+  </div>`;
+  if($('admStatus')) $('admStatus').value=adminStatus;
+}
+function statusOptions(){const opts=['ALL','PAYMENT_PENDING','SCREENSHOT_SUBMITTED','VERIFIED','REJECTED','NEED_MORE_INFO','GROUP_LINK_SENT']; return opts.map(o=>`<option value="${o}" ${adminStatus===o?'selected':''}>${o}</option>`).join('')}
+function canSendGroupLinkStatus(status){ status=String(status||'').toUpperCase(); return status==='VERIFIED' || status==='APPROVED'; }
+function sendGroupLinkActionHtml(a, small){
+  const id=esc(a.admission_id);
+  const st=String(a.status||'').toUpperCase();
+  const cls=small ? 'small secondary' : 'secondary';
+  if(canSendGroupLinkStatus(st)) return `<button class="${cls}" onclick="sendWa('${id}')">${small?'Send Link':'Send Group Link'}</button>`;
+  if(st==='GROUP_LINK_SENT') return `<button class="${cls}" disabled>Link Sent</button>`;
+  return `<button class="${cls}" disabled title="Pehle payment verify karein.">${small?'Send Link':'Send Group Link'}</button>`;
+}
+function admissionCard(a){
+  const st=esc(a.status||'');
+  const mobile=String(a.mobile||'').replace(/\D/g,'');
+  const tel=mobile?`tel:${mobile}`:'#';
+  const wa=`https://wa.me/${mobile.length===10?'91'+mobile:mobile}`;
+  const paidId = a.razorpay_payment_id || a.razorpay_payment_link_id || '';
+  return `<div class="admCard"><div class="admHead"><div><div class="admName">${esc(a.name||'No name')}</div><div class="tiny">${esc(a.admission_id)} • ${esc(a.timestamp)}</div></div><span class="pill ${st}">${st}</span></div>
+    <div class="admMeta"><div class="metaBox"><span>Mobile</span><b>${esc(a.mobile)}</b></div><div class="metaBox"><span>Course</span><b>${esc(a.post_name)} / ${esc(a.subject_name)}</b><br>${esc(a.plan_name)}</div><div class="metaBox"><span>Amount</span><b>₹${esc(a.amount)}</b><br>${paidId?('Razorpay: '+esc(paidId)):'Payment ID pending'}</div><div class="metaBox"><span>Access</span>Telegram: ${esc(a.telegram_invite_status||a.access_status||'-')}<br>WhatsApp: ${esc(a.link_sent||'NO')}</div></div>
+    <div class="admPrimaryBtns"><a class="btn secondary" target="_blank" href="${wa}">WhatsApp Student</a><a class="btn light" href="${tel}">Call</a>${sendGroupLinkActionHtml(a,false)}</div>
+    <details class="manualTools"><summary>Manual tools</summary><div class="manualToolsBody admBtns">
+      ${a.screenshot_file_url?`<a class="btn light" target="_blank" href="${esc(a.screenshot_file_url)}">Proof</a>`:''}<button class="ok" onclick="updateAdm('${esc(a.admission_id)}','VERIFIED')">Mark Verified</button><button class="warn" onclick="updateAdm('${esc(a.admission_id)}','NEED_MORE_INFO')">Need Info</button><button class="danger" onclick="updateAdm('${esc(a.admission_id)}','REJECTED')">Reject</button>
+    </div></details></div>`;
+}
+
+function admissionRow(a){
+  const st=esc(a.status||''); return `<tr><td><b>${esc(a.admission_id)}</b><br><span class="muted">${esc(a.timestamp)}</span></td><td>${esc(a.name)}<br><b>${esc(a.mobile)}</b><br><span class="muted">${esc(a.district)}</span></td><td>${esc(a.post_name)}<br>${esc(a.subject_name)}<br><b>${esc(a.plan_name)}</b></td><td>₹${esc(a.amount)}<br>UTR: <b>${esc(a.utr)}</b></td><td><span class="status ${st}">${st}</span><br><span class="muted">${esc(a.admin_remark||'')}</span><br>Link Sent: ${esc(a.link_sent||'NO')}</td><td>${a.screenshot_file_url?`<a target="_blank" href="${esc(a.screenshot_file_url)}">View Screenshot</a>`:'No file'}</td><td><button class="small ok" onclick="updateAdm('${esc(a.admission_id)}','VERIFIED')">Verify</button><button class="small danger" onclick="updateAdm('${esc(a.admission_id)}','REJECTED')">Reject</button><button class="small warn" onclick="updateAdm('${esc(a.admission_id)}','NEED_MORE_INFO')">Need Info</button>${sendGroupLinkActionHtml(a,true)}</td></tr>`;
+}
+async function updateAdm(id,status){const remark=prompt('Remark / note:',status==='VERIFIED'?'Payment verified':''); if(remark===null)return; try{await callServer('adminUpdateAdmission',adminPassword,id,status,remark,false); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
+async function sendWa(id){try{const row=(adminData.admissions||[]).find(a=>String(a.admission_id)===String(id)); if(row && !canSendGroupLinkStatus(row.status)) throw new Error('Pehle payment verify karein.'); const r=await callServer('adminGetWhatsAppLink',adminPassword,id); window.open(r.url,'_blank'); await callServer('adminUpdateAdmission',adminPassword,id,'GROUP_LINK_SENT','WhatsApp link opened for sending',true); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
+
+function renderConfig(){
+  $('adminBody').innerHTML=`<div class="card"><h2>Courses & Access Setup</h2><p class="muted">Daily use me mostly <b>Group Links</b> edit karna hoga. Posts/Subjects/Plans advanced setup hain; unhe sirf course add/delete/change karte waqt edit karein.</p></div>
+    <div class="adminSaveBar"><div><b>After edits:</b> Save Config → CLEAR_PUBLIC_CONFIG_CACHE_NOW()</div><button onclick="saveConfig()" class="ok">Save Config</button></div>
+    ${renderEditableTable('Group Links','links',['link_id','post_id','subject_id','plan_id','whatsapp_link','telegram_link','telegram_chat_id','status'], true, 'Most used: Telegram chat IDs and WhatsApp links')}
+    ${renderEditableTable('Plans','plans',['plan_id','post_id','subject_id','plan_name','amount','duration_days','status','sort_order'], false, 'Edit price, duration, active/hidden')}
+    ${renderEditableTable('Subjects','subjects',['subject_id','post_id','subject_name','status','sort_order'], false, 'Add/remove subject groups')}
+    ${renderEditableTable('Posts','posts',['post_id','post_name','status','sort_order'], false, 'Top-level course categories')}`;
+}
+
+function renderEditableTable(title,key,cols,openDefault,helpText){
+  const rows=adminData[key]||[];
+  return `<details class="adminSection" ${openDefault?'open':''}><summary><span>${esc(title)} <span class="adminMiniTag">${rows.length} rows</span></span><span class="tiny">${esc(helpText||'')}</span></summary><div class="adminSectionBody"><button class="small secondary" onclick="addRow('${key}', ${JSON.stringify(cols).replace(/"/g,'&quot;')})">Add Row</button><div class="tableBox"><table id="tbl_${key}" data-cols="${cols.join('|')}"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>Remove</th></tr></thead><tbody>${rows.map(r=>editRow(key,cols,r)).join('')}</tbody></table></div></div></details>`
+}
+
+function editRow(key,cols,r){return `<tr>${cols.map(c=>`<td><input data-col="${c}" value="${esc(r[c]||'')}"></td>`).join('')}<td><button class="small danger" onclick="this.closest('tr').remove()">Remove</button></td></tr>`}
+function addRow(key,cols){document.querySelector(`#tbl_${key} tbody`).insertAdjacentHTML('beforeend',editRow(key,cols,{}))}
+function collectTable(key){const t=$('tbl_'+key); if(!t)return adminData[key]||[]; const cols=t.dataset.cols.split('|'); return [...t.querySelectorAll('tbody tr')].map(tr=>{const o={}; cols.forEach(c=>o[c]=tr.querySelector(`[data-col="${c}"]`)?.value.trim()||''); return o;});}
+
+
+function renderSecurity(){
+  const appUrl = '<?= appUrl ?>';
+  const studentLink = appUrl || location.href.split('?')[0];
+  const adminLink = (studentLink.split('?')[0]) + '?page=admin';
+  const defaultWarning = adminData.defaultAdminPasswordActive ? '<div class="notice error"><b>Default admin password active hai. Live se pehle password change karein.</b></div>' : '';
+  $('adminBody').innerHTML=`${defaultWarning}<div class="card"><h2>Change Admin Password</h2><div id="passMsg" class="notice hide"></div><div class="row3"><div><label>Current Password</label><input id="curPass" type="password" placeholder="Current password"></div><div><label>New Password</label><input id="newPass" type="password" placeholder="Minimum 6 characters"></div><div><label>Confirm Password</label><input id="conPass" type="password" placeholder="Confirm new password"></div></div><button class="ok" onclick="changePassword()">Save Password</button><p class="muted">Password save hone ke baad code edit karne ki जरूरत नहीं पड़ेगी.</p></div><div class="card"><h2>Links & Health</h2><div id="healthBox" class="notice">Health check run nahi hua.</div><div class="row3"><button onclick="copyText('${esc(studentLink)}')">Copy Student Link</button><button class="secondary" onclick="copyText('${esc(adminLink)}')">Copy Admin Link</button><button class="secondary" onclick="checkHealth()">System Health</button></div><button class="warn" onclick="repairFolder()">Create/Repair Screenshot Folder</button><button class="secondary" onclick="adminLogout()">Logout / Forget this device</button><p class="muted">Agar screenshot folder delete ho gaya ho to Repair Screenshot Folder दबाएँ.</p></div>`;
+}
+async function changePassword(){
+  try{
+    const cur=val('curPass'), np=val('newPass'), cp=val('conPass');
+    const r=await callServer('adminChangePassword',adminPassword,cur,np,cp);
+    clearAdminRememberToken();
+    adminPassword=np;
+    adminData.defaultAdminPasswordActive=false;
+    showMsg('passMsg',esc(r.message||'Password changed successfully.'),'success');
+    $('curPass').value=''; $('newPass').value=''; $('conPass').value='';
+  }catch(err){showMsg('passMsg',esc(err.message||err),'error')}
+}
+async function checkHealth(){
+  try{
+    const h=await callServer('adminGetSystemHealth',adminPassword);
+    $('healthBox').className='notice success';
+    $('healthBox').innerHTML=`Database: <b>${esc(h.database)}</b><br>Screenshot Folder: <b>${esc(h.screenshotFolder)}</b><br>${h.databaseUrl?`<a target="_blank" href="${esc(h.databaseUrl)}">Open Database</a><br>`:''}${h.screenshotFolderUrl?`<a target="_blank" href="${esc(h.screenshotFolderUrl)}">Open Screenshot Folder</a>`:''}`;
+  }catch(err){showMsg('healthBox',esc(err.message||err),'error')}
+}
+async function repairFolder(){
+  if(!confirm('New screenshot folder create/reconnect karna hai?')) return;
+  try{const r=await callServer('adminRepairScreenshotFolder',adminPassword); $('healthBox').className='notice success'; $('healthBox').innerHTML='Screenshot folder ready: <a target="_blank" href="'+esc(r.folderUrl)+'">Open Folder</a>';}
+  catch(err){showMsg('healthBox',esc(err.message||err),'error')}
+}
+async function copyText(text){
+  try{await navigator.clipboard.writeText(text); showMsg('adminMsg','Link copied.','success')}
+  catch(err){prompt('Copy this link:',text)}
+}
+
+function renderPaymentSettings(){
+  const p=adminData.payment||{}, s=adminData.settings||{};
+  $('adminBody').innerHTML=`
+    <div class="card"><h2>Student Page</h2><p class="muted">Yahin se form title, logo, course details image aur support number manage करें.</p><div class="row"><div><label>Form Title</label><input id="set_FORM_TITLE" value="${esc(s.FORM_TITLE||'')}"></div><div><label>Support WhatsApp Number</label><input id="pay_SUPPORT_WHATSAPP" value="${esc(p.SUPPORT_WHATSAPP||'')}"></div></div><label>Logo Image URL</label><input id="set_LOGO_IMAGE_URL" value="${esc(s.LOGO_IMAGE_URL||s.LOGO_URL||'')}" placeholder="Public Drive/Image URL. Blank = BTS fallback"><label>Student Information Image URLs</label><textarea id="set_INFO_IMAGE_URLS" placeholder="One public image URL per line. Blank = no image.">${esc(s.INFO_IMAGE_URLS||'')}</textarea><div class="row3"><div><label>Form Status</label><select id="set_FORM_STATUS"><option ${s.FORM_STATUS==='OPEN'?'selected':''}>OPEN</option><option ${s.FORM_STATUS==='CLOSED'?'selected':''}>CLOSED</option></select></div><div><label>Duplicate Mobile Policy</label><select id="set_DUPLICATE_MOBILE_POLICY"><option ${s.DUPLICATE_MOBILE_POLICY==='BLOCK_SAME_PLAN'?'selected':''}>BLOCK_SAME_PLAN</option><option ${s.DUPLICATE_MOBILE_POLICY==='BLOCK'?'selected':''}>BLOCK</option><option ${s.DUPLICATE_MOBILE_POLICY==='ALLOW'?'selected':''}>ALLOW</option></select></div><div><label>Admission Code Required</label><select id="set_ADMISSION_CODE_REQUIRED"><option ${s.ADMISSION_CODE_REQUIRED==='NO'?'selected':''}>NO</option><option ${s.ADMISSION_CODE_REQUIRED==='YES'?'selected':''}>YES</option></select></div></div><details class="adminSection"><summary><span>Advanced / Legacy manual payment</span><span class="tiny">Normally not needed</span></summary><div class="adminSectionBody"><div class="row"><div><label>UPI ID</label><input id="pay_UPI_ID" value="${esc(p.UPI_ID||'')}"></div><div><label>Receiver Name</label><input id="pay_RECEIVER_NAME" value="${esc(p.RECEIVER_NAME||'')}"></div></div><label>QR Image URL</label><input id="pay_QR_IMAGE_URL" value="${esc(p.QR_IMAGE_URL||'')}"><div class="row"><div><label>Payment Note Prefix</label><input id="pay_PAYMENT_NOTE_PREFIX" value="${esc(p.PAYMENT_NOTE_PREFIX||'')}"></div><div><label>Admission Code</label><input id="set_ADMISSION_CODE" value="${esc(s.ADMISSION_CODE||'')}"></div></div></div></details><p><button id="savePaymentBtn" class="ok" onclick="saveConfig()">Save Student Page</button></p></div>
+    <div class="card"><h2>Razorpay Status</h2><div class="adminHint">Provider: <b>${esc(p.PAYMENT_PROVIDER||'')}</b> · Enabled: <b>${esc(p.RAZORPAY_ENABLED||'')}</b> · Mode: <b>${esc(p.PAYMENT_MODE||'')}</b><br>Razorpay keys Script Properties me rahengi, yahan nahi.</div></div>`;
+}
+
+async function saveConfig(){
+  const btn = $('savePaymentBtn');
+  const oldText = btn ? btn.textContent : '';
+  try{
+    if(btn){btn.disabled=true; btn.textContent='Saving...';}
+    const payment=Object.assign({}, adminData.payment || {});
+    payment.UPI_ID=val('pay_UPI_ID') || payment.UPI_ID || '';
+    payment.RECEIVER_NAME=val('pay_RECEIVER_NAME') || payment.RECEIVER_NAME || '';
+    payment.QR_IMAGE_URL=val('pay_QR_IMAGE_URL') || payment.QR_IMAGE_URL || '';
+    payment.PAYMENT_NOTE_PREFIX=val('pay_PAYMENT_NOTE_PREFIX') || payment.PAYMENT_NOTE_PREFIX || '';
+    payment.SUPPORT_WHATSAPP=val('pay_SUPPORT_WHATSAPP') || payment.SUPPORT_WHATSAPP || '';
+    // R3R1: preserve Razorpay keys when admin saves Setup/Payment settings.
+    // Without these, adminSaveConfig() overwrites CONFIG_PAYMENT and Razorpay becomes disabled.
+    payment.PAYMENT_PROVIDER=payment.PAYMENT_PROVIDER || 'RAZORPAY';
+    payment.RAZORPAY_ENABLED=payment.RAZORPAY_ENABLED || 'TRUE';
+    payment.PAYMENT_MODE=payment.PAYMENT_MODE || 'TEST';
+    payment.SHOW_GROUP_LINK_AFTER_VERIFIED=payment.SHOW_GROUP_LINK_AFTER_VERIFIED || 'TRUE';
+    const settings={FORM_TITLE:val('set_FORM_TITLE')||(adminData.settings||{}).FORM_TITLE||'BILASPUR TEST SERIES ADMISSION FORM',FORM_STATUS:val('set_FORM_STATUS')||(adminData.settings||{}).FORM_STATUS||'OPEN',ADMISSION_CODE_REQUIRED:val('set_ADMISSION_CODE_REQUIRED')||(adminData.settings||{}).ADMISSION_CODE_REQUIRED||'NO',ADMISSION_CODE:val('set_ADMISSION_CODE')||(adminData.settings||{}).ADMISSION_CODE||'AZAD2026',DUPLICATE_MOBILE_POLICY:val('set_DUPLICATE_MOBILE_POLICY')||(adminData.settings||{}).DUPLICATE_MOBILE_POLICY||'BLOCK',INFO_IMAGE_URLS:($('set_INFO_IMAGE_URLS')?val('set_INFO_IMAGE_URLS'):((adminData.settings||{}).INFO_IMAGE_URLS||'')),LOGO_IMAGE_URL:($('set_LOGO_IMAGE_URL')?val('set_LOGO_IMAGE_URL'):((adminData.settings||{}).LOGO_IMAGE_URL||''))};
+    const data={posts:collectTable('posts'),subjects:collectTable('subjects'),plans:collectTable('plans'),links:collectTable('links'),payment,settings};
+    await callServer('adminSaveConfig',adminPassword,data);
+    showToast('Changes saved ✓','success');
+    await refreshAdmin({silent:true});
+    showToast('Saved and refreshed ✓','success');
+  }
+  catch(err){showMsg('adminMsg',esc(err.message||err),'error'); showToast('Save failed','error')}
+  finally{if(btn){btn.disabled=false; btn.textContent=oldText || 'Save Payment/Settings';}}
+}
+
+document.addEventListener('DOMContentLoaded', function(){try{init();}catch(err){const app=document.getElementById('app'); if(app){app.innerHTML='<div class="card"><h1>BILASPUR TEST SERIES ADMISSION FORM</h1><div class="notice error">Page load error: '+esc(err.message||err)+'</div></div>';}}});
+</script>
+</body>
+</html>

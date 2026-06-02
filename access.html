@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTS — Payment Verified</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+  .card{background:white;border-radius:24px;padding:28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+  .logo{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+  .logo-icon{width:48px;height:48px;background:#1d4ed8;border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:16px}
+  .logo-text{font-size:16px;font-weight:900;color:#0f172a}
+  .logo-sub{font-size:12px;color:#64748b}
+  .success-badge{background:#ecfdf5;border:1px solid #bbf7d0;border-radius:16px;padding:16px;text-align:center;margin-bottom:20px}
+  .success-icon{font-size:40px;margin-bottom:8px}
+  .success-title{font-size:20px;font-weight:900;color:#065f46;margin-bottom:4px}
+  .success-sub{font-size:13px;color:#047857}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+  .info-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px}
+  .info-label{font-size:11px;color:#64748b;font-weight:700;margin-bottom:4px;text-transform:uppercase}
+  .info-value{font-size:14px;font-weight:800;color:#0f172a}
+  .section-title{font-size:15px;font-weight:900;color:#0f172a;margin-bottom:12px}
+  .btn{display:block;width:100%;padding:16px;border-radius:16px;font-size:15px;font-weight:800;text-align:center;text-decoration:none;border:none;cursor:pointer;margin-bottom:10px;transition:opacity 0.2s}
+  .btn:hover{opacity:0.9}
+  .btn-telegram{background:linear-gradient(135deg,#0088cc,#006aaa);color:white}
+  .btn-whatsapp{background:linear-gradient(135deg,#25d366,#128c7e);color:white}
+  .notice{border-radius:12px;padding:12px;font-size:13px;margin-bottom:12px}
+  .notice-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+  .notice-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+  .notice-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+  .notice-success{background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46}
+  .divider{height:1px;background:#e2e8f0;margin:20px 0}
+  .loading{text-align:center;padding:40px;color:#64748b}
+  .spinner{display:inline-block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#1d4ed8;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:12px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .trust-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .trust-pill{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:700;color:#475569}
+  @media(max-width:480px){.info-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">BTS</div>
+    <div>
+      <div class="logo-text">BILASPUR TEST SERIES</div>
+      <div class="logo-sub">Secure Access Portal</div>
+    </div>
+  </div>
+  <div class="loading" id="loadingDiv">
+    <div class="spinner"></div>
+    <div>Payment verify ho raha hai...</div>
+  </div>
+  <div id="contentDiv" style="display:none"></div>
+</div>
+
+<script>
+const API = 'https://mqorslvouzmrvciubpoq.supabase.co/functions/v1/admission-api';
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    token: p.get('token') || '',
+    session: p.get('session') || '',
+    admission_id: p.get('admission_id') || '',
+  };
+}
+
+function saveSession(token) {
+  try { sessionStorage.setItem('bts_session', token); } catch(e) {}
+}
+function getSession() {
+  try { return sessionStorage.getItem('bts_session') || ''; } catch(e) { return ''; }
+}
+
+function esc(str) {
+  return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function checkStatus() {
+  const p = getParams();
+  const session = getSession();
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'checkPaymentStatus',
+      access_token: p.token,
+      admission_id: p.admission_id,
+      session_token: session,
+    })
+  });
+  return await res.json();
+}
+
+function renderVerified(data) {
+  const inviteLink = data.telegram_invite_link || '';
+  const hasWhatsApp = data.group_whatsapp_link || '';
+  const joinStatus = String(data.telegram_join_status || '').toUpperCase();
+  const isApproved = joinStatus === 'APPROVED';
+
+  let tgSection = '';
+
+  if (inviteLink) {
+    if (isApproved) {
+      tgSection = `
+        <div class="notice notice-success">
+          ✅ Aap Telegram group mein join ho chuke hain!
+        </div>`;
+    } else {
+      tgSection = `
+        <div class="notice notice-info">
+          🔒 Yeh link sirf aapke liye hai — sirf aap hi join kar sakte hain.<br>
+          Link share mat karein.
+        </div>
+        <a class="btn btn-telegram" href="${esc(inviteLink)}" target="_blank">
+          📲 Join Telegram Group
+        </a>
+        <div class="notice notice-warn" style="margin-top:8px">
+          ⏱️ Link 24 ghante mein expire ho jaayega
+        </div>`;
+    }
+} else {
+    // Auto retry after 2 seconds
+    setTimeout(() => init(), 2000);
+    tgSection = `
+      <div class="notice notice-info">
+        ⏳ Telegram invite link generate ho raha hai...<br>
+        <span id="retryCountdown">2</span> seconds mein automatically check karega...
+      </div>`;
+    // Countdown
+    let count = 2;
+    const timer = setInterval(() => {
+      count--;
+      const el = document.getElementById('retryCountdown');
+      if (el) el.textContent = count;
+      if (count <= 0) clearInterval(timer);
+    }, 1000);
+  }
+
+  let waSection = '';
+  if (hasWhatsApp) {
+    waSection = `
+      <div class="divider"></div>
+      <div class="section-title">💬 WhatsApp Group</div>
+      <a class="btn btn-whatsapp" href="${esc(hasWhatsApp)}" target="_blank">
+        💬 Join WhatsApp Group
+      </a>
+      <div class="notice notice-warn">
+        ⚠️ WhatsApp link share mat karein — sirf Full Course students ke liye hai.
+      </div>`;
+  }
+
+  document.getElementById('contentDiv').innerHTML = `
+    <div class="success-badge">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Payment Verified!</div>
+      <div class="success-sub">Aapka admission confirm ho gaya hai</div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-label">Name</div>
+        <div class="info-value">${esc(data.name)}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Course</div>
+        <div class="info-value">${esc(data.subject_name)}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Plan</div>
+        <div class="info-value">${esc(data.plan_name)}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Amount Paid</div>
+        <div class="info-value">₹${esc(data.amount)}</div>
+      </div>
+    </div>
+
+    <div class="trust-row">
+      <span class="trust-pill">🔒 Secure</span>
+      <span class="trust-pill">⚡ Instant Access</span>
+      <span class="trust-pill">✅ Verified</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-title">📱 Telegram Group</div>
+    ${tgSection}
+    ${waSection}
+
+    <div class="divider"></div>
+    <div style="font-size:11px;color:#94a3b8;text-align:center">
+      Payment ID: ${esc(data.razorpay_payment_id || '')}<br>
+      Admission ID: ${esc(data.admission_id)}
+    </div>`;
+
+  document.getElementById('loadingDiv').style.display = 'none';
+  document.getElementById('contentDiv').style.display = 'block';
+}
+
+function renderPending() {
+  document.getElementById('contentDiv').innerHTML = `
+    <div class="notice notice-warn">
+      <b>⏳ Payment Pending</b><br>
+      Payment verify ho rahi hai. Thodi der mein check karein.
+    </div>
+    <button class="btn" style="background:#1d4ed8;color:white" onclick="init()">
+      🔄 Check Again
+    </button>`;
+  document.getElementById('loadingDiv').style.display = 'none';
+  document.getElementById('contentDiv').style.display = 'block';
+}
+
+function renderError(msg) {
+  document.getElementById('contentDiv').innerHTML = `
+    <div class="notice notice-error">
+      <b>❌ Error</b><br>${esc(msg)}
+    </div>
+    <button class="btn" style="background:#1d4ed8;color:white" onclick="init()">
+      🔄 Retry
+    </button>`;
+  document.getElementById('loadingDiv').style.display = 'none';
+  document.getElementById('contentDiv').style.display = 'block';
+}
+
+async function init() {
+  document.getElementById('loadingDiv').style.display = 'block';
+  document.getElementById('contentDiv').style.display = 'none';
+  try {
+    const data = await checkStatus();
+    if (data.access_session_token) saveSession(data.access_session_token);
+    if (data.verified === true || data.payment_state === 'VERIFIED') {
+      renderVerified(data);
+    } else if (data.payment_state === 'NOT_FOUND') {
+      renderError('Access link invalid hai ya expire ho gaya. Support se contact karein.');
+    } else {
+      renderPending();
+    }
+  } catch(err) {
+    renderError('Network error: ' + err.message);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
