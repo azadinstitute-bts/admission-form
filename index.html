@@ -195,7 +195,7 @@ window.addEventListener('load', function(){
 })();
 </script>
 <script>
-const PAGE = '<?= page ?>';
+const PAGE = new URLSearchParams(window.location.search).get('page') || '';
 const APP_VERSION = 'R6R13R8_R3R1_CONFIG_SAVE_RAZORPAY_PRESERVE_PATCH';
 const ADMIN_REMEMBER_STORAGE_KEY = 'AZAD_ADMIN_REMEMBER_DEVICE_TOKEN_R6R13';
 const ADMIN_REMEMBER_CREDENTIAL_PREFIX = 'AZAD_REMEMBER_TOKEN:';
