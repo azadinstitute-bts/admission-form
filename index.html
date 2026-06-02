@@ -1202,8 +1202,24 @@ function admissionRow(a){
 async function updateAdm(id,status){const remark=prompt('Remark / note:',status==='VERIFIED'?'Payment verified':''); if(remark===null)return; try{await callServer('adminUpdateAdmission',adminPassword,id,status,remark,false); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
 async function sendWa(id){try{const row=(adminData.admissions||[]).find(a=>String(a.admission_id)===String(id)); if(row && !canSendGroupLinkStatus(row.status)) throw new Error('Pehle payment verify karein.'); const r=await callServer('adminGetWhatsAppLink',adminPassword,id); window.open(r.url,'_blank'); await callServer('adminUpdateAdmission',adminPassword,id,'GROUP_LINK_SENT','WhatsApp link opened for sending',true); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
 
-function renderConfig(){
-  $('adminBody').innerHTML=`<div class="card"><h2>Courses & Access Setup</h2><p class="muted">Daily use me mostly <b>Group Links</b> edit karna hoga. Posts/Subjects/Plans advanced setup hain; unhe sirf course add/delete/change karte waqt edit karein.</p></div>
+async function renderConfig(){
+  if(!adminData.links || !adminData.posts){
+    $('adminBody').innerHTML='<div class="card"><div class="notice">Courses load ho rahi hain...</div></div>';
+    try{
+      const raw = await callServer('adminGetConfig', adminPassword);
+      const data = (typeof raw==='string')?JSON.parse(raw):raw;
+      adminData.posts = data.posts || [];
+      adminData.subjects = data.subjects || [];
+      adminData.plans = data.plans || [];
+      adminData.links = data.links || [];
+      adminData.settings = data.settings || {};
+      adminData.payment = data.payment || {};
+    }catch(err){
+      $('adminBody').innerHTML='<div class="card"><div class="notice error">'+esc(err.message||err)+'</div></div>';
+      return;
+    }
+  }
+  $('adminBody').innerHTML=  $('adminBody').innerHTML=`<div class="card"><h2>Courses & Access Setup</h2><p class="muted">Daily use me mostly <b>Group Links</b> edit karna hoga. Posts/Subjects/Plans advanced setup hain; unhe sirf course add/delete/change karte waqt edit karein.</p></div>
     <div class="adminSaveBar"><div><b>After edits:</b> Save Config → CLEAR_PUBLIC_CONFIG_CACHE_NOW()</div><button onclick="saveConfig()" class="ok">Save Config</button></div>
     ${renderEditableTable('Group Links','links',['link_id','post_id','subject_id','plan_id','whatsapp_link','telegram_link','telegram_chat_id','status'], true, 'Most used: Telegram chat IDs and WhatsApp links')}
     ${renderEditableTable('Plans','plans',['plan_id','post_id','subject_id','plan_name','amount','duration_days','status','sort_order'], false, 'Edit price, duration, active/hidden')}
