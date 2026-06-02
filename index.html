@@ -1138,7 +1138,7 @@ async function loadAdmissions(){
     else showMsg('adminMsg',esc(err.message||err),'error');
   }
 }
-function renderAdminTab(){ if(activeAdminTab==='dashboard') renderDashboard(); else if(activeAdminTab==='admissions') renderAdmissions(); else if(activeAdminTab==='config') (); else if(activeAdminTab==='payment') renderPaymentSettings(); else renderSecurity(); }
+function renderAdminTab(){ if(activeAdminTab==='dashboard') renderDashboard(); else if(activeAdminTab==='admissions') renderAdmissions(); else if(activeAdminTab==='config') renderConfig(); else if(activeAdminTab==='payment') renderPaymentSettings(); else renderSecurity(); }
 function renderDashboard(){
   const rows=adminData.admissions||[];
   const pending=rows.filter(a=>['PAYMENT_PENDING','SCREENSHOT_SUBMITTED','NEED_MORE_INFO'].includes(String(a.status||'').toUpperCase())).slice(0,6);
