@@ -1044,11 +1044,6 @@ async function startRazorpayAdmission(){
     requireStudentField('subject','Subject Group select करें.');
     requireStudentField('plan','Subscription Plan select करें.');
 
-    var typedPromo=String(val('promoCode')||'').trim().toUpperCase();
-    if(typedPromo && (!appliedPromoQuote || String(appliedPromoQuote.code||'').toUpperCase()!==typedPromo)){
-      throw {message:'Promo code lagane ke liye pehle Apply button dabayein.', fieldId:'promoCode'};
-    }
-
     // R3 ACCESS RETURN PATCH:
     // NO blank-tab popups, NO document.write, NO popup doc manipulation.
     // Full-screen overlay during the server call so the wait feels intentional,
@@ -1058,7 +1053,7 @@ async function startRazorpayAdmission(){
     if(btn){btn.disabled=true; btn.dataset.oldText=btn.innerHTML; btn.innerHTML='<span class="spinner"></span> Processing...';}
     showPayOverlay();
 
-    const payload={admissionCode:val('admissionCode'),name:val('name'),mobile:val('mobile'),email:val('email'),district:val('district'),post_id:val('post'),subject_id:val('subject'),plan_id:val('plan'),promo_code:appliedPromoQuote&&appliedPromoQuote.promo_applied?appliedPromoQuote.code:''};
+    const payload={admissionCode:val('admissionCode'),name:val('name'),mobile:val('mobile'),email:val('email'),district:val('district'),post_id:val('post'),subject_id:val('subject'),plan_id:val('plan'),promo_code:String(val('promoCode')||'').trim().toUpperCase()};
     const raw=await callServerWithTimeout(60000,'createRazorpayAdmissionSafe', payload);
     const res=(typeof raw==='string')?JSON.parse(raw):raw;
     if(!res || res.ok===false){ throw {message:(res&&res.error)||'Razorpay Payment Link create failed.'}; }
