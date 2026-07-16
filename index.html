@@ -82,7 +82,7 @@
     .paySummaryRow{display:flex;justify-content:space-between;gap:8px;padding:10px 0;font-size:14px;border-bottom:1px dashed #e2e8f0}
     .paySummaryRow:last-child{border-bottom:0}
     .paySummaryRow span:first-child{color:#64748b}
-    .paySummaryRow b{font-weight:800;color:#0f172a;text-align:right}
+    .paySummaryRow b{font-weight:800;color:#0f172a;text-align:right;overflow-wrap:anywhere;max-width:68%}
     .paySummaryAmt{font-size:18px;color:#1d4ed8;font-weight:900}
     .payCta{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#059669,#1d4ed8);color:white;border:0;border-radius:14px;padding:18px 22px;font-weight:900;font-size:17px;text-decoration:none;width:100%;max-width:440px;box-shadow:0 12px 28px rgba(4,120,87,.32);animation:ctaPulse 1.8s ease-in-out infinite;min-height:60px;cursor:pointer}
     .payCta:hover{filter:brightness(1.06)}
@@ -245,6 +245,8 @@ async function callServer(fn, ...args){
   'adminGetAdmissionsOnlySafe': 'adminGetAdmissions',
   'adminGetLiteSafe': 'adminGetAdmissions',
   'adminUpdateAdmission': 'adminUpdateAdmission',
+  'adminIssueStudentAppCode': 'adminIssueStudentAppCode',
+  'adminResetStudentDevice': 'adminResetStudentDevice',
   'adminSaveConfig': 'adminSaveConfig',
   'adminGetConfig': 'adminGetConfig',
   'adminValidateRememberTokenSafe': 'adminGetAdmissions',
@@ -305,6 +307,12 @@ async function callServer(fn, ...args){
         admission_id: args[1] || '',
         status: args[2] || '',
         remark: args[3] || '',
+      };
+    } else if (fn === 'adminIssueStudentAppCode' || fn === 'adminResetStudentDevice') {
+      body = {
+        action,
+        password: args[0] || '',
+        admission_id: args[1] || '',
       };
     } else if (fn === 'adminSaveConfig') {
       body = {
@@ -966,6 +974,7 @@ function renderPayReadyCard(res, payUrl){
     + '<div class="paySummaryRow"><span>Admission ID</span><b>' + esc(res.admission_id) + '</b></div>'
     + (nameText   ? '<div class="paySummaryRow"><span>Name</span><b>'   + esc(nameText)   + '</b></div>' : '')
     + (mobileText ? '<div class="paySummaryRow"><span>Mobile</span><b>' + esc(mobileText) + '</b></div>' : '')
+    + (res.app_access_code ? '<div class="paySummaryRow"><span>Student App code</span><b id="appAccessCode">' + esc(res.app_access_code) + '</b></div>' : '')
     + (planText   ? '<div class="paySummaryRow"><span>Plan</span><b>'   + esc(planText)   + '</b></div>' : '')
     + (res.promo_code ? '<div class="paySummaryRow"><span>Promo</span><b>' + esc(res.promo_code) + ' - ' + esc(res.promo_discount_percent||0) + '% off</b></div>' : '')
     + (res.promo_code ? '<div class="paySummaryRow"><span>Original</span><b>&#8377;' + esc(res.original_amount||res.amount) + '</b></div>' : '')
@@ -983,7 +992,7 @@ function renderPayReadyCard(res, payUrl){
     +   '</a>'
     +   '<div class="payCtaSub">UPI, card and net banking supported · Access unlocks after successful payment</div>'
     +   '<div class="payTrust"><span>&#x1F512; Razorpay secure checkout</span><span>&#x2705; Auto access after payment</span></div>'
-    +   '<button class="paySecondary" type="button" id="payCopyBtn">Copy Admission ID</button>'
+    +   '<button class="paySecondary" type="button" id="payCopyBtn">Copy Student App Code</button>'
     + '</div>';
 
   var formCard = $('formCard');
@@ -999,16 +1008,16 @@ function renderPayReadyCard(res, payUrl){
     copyBtn.onclick = function(){
       try{
         if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(String(res.admission_id || ''));
+          navigator.clipboard.writeText(String(res.app_access_code || res.admission_id || ''));
         } else {
           var ta = document.createElement('textarea');
-          ta.value = String(res.admission_id || '');
+          ta.value = String(res.app_access_code || res.admission_id || '');
           document.body.appendChild(ta); ta.select();
           try{ document.execCommand('copy'); }catch(e){}
           document.body.removeChild(ta);
         }
         copyBtn.innerHTML = '&#10003; Copied';
-        setTimeout(function(){ copyBtn.innerHTML = 'Copy Admission ID'; }, 1800);
+        setTimeout(function(){ copyBtn.innerHTML = 'Copy Student App Code'; }, 1800);
       }catch(e){}
     };
   }
@@ -1271,6 +1280,12 @@ function promoPaymentHtml(a){
   if(!a || !a.promo_code) return '&#8377;'+esc(a && a.amount || '');
   return '&#8377;'+esc(a.final_amount || a.amount)+'<br><span class="tiny">Original: &#8377;'+esc(a.original_amount || '')+'<br>Promo: '+esc(a.promo_code)+' - &#8377;'+esc(a.promo_discount_amount || 0)+' off</span>';
 }
+function studentAppActionsHtml(a){
+  const st=String(a.status||'').toUpperCase();
+  if(st!=='VERIFIED' && st!=='GROUP_LINK_SENT') return '';
+  const id=esc(a.admission_id);
+  return `<button class="secondary" onclick="issueAppCode('${id}')">Issue App Code</button><button class="warn" onclick="resetStudentDevice('${id}')">Reset Device</button>`;
+}
 function admissionCard(a){
   const st=esc(a.status||'');
   const mobile=String(a.mobile||'').replace(/\D/g,'');
@@ -1278,10 +1293,10 @@ function admissionCard(a){
   const wa=`https://wa.me/${mobile.length===10?'91'+mobile:mobile}`;
   const paidId = a.razorpay_payment_id || a.razorpay_payment_link_id || '';
   return `<div class="admCard"><div class="admHead"><div><div class="admName">${esc(a.name||'No name')}</div><div class="tiny">${esc(a.admission_id)} • ${esc(a.timestamp)}</div></div><span class="pill ${st}">${st}</span></div>
-    <div class="admMeta"><div class="metaBox"><span>Mobile</span><b>${esc(a.mobile)}</b></div><div class="metaBox"><span>Course</span><b>${esc(a.post_name)} / ${esc(a.subject_name)}</b><br>${esc(a.plan_name)}</div><div class="metaBox"><span>Amount</span><b>${promoPaymentHtml(a)}</b><br>${paidId?('Razorpay: '+esc(paidId)):'Payment ID pending'}</div><div class="metaBox"><span>Access</span>Telegram: ${esc(a.telegram_invite_status||a.access_status||'-')}<br>WhatsApp: ${esc(a.link_sent||'NO')}</div></div>
+    <div class="admMeta"><div class="metaBox"><span>Mobile</span><b>${esc(a.mobile)}</b></div><div class="metaBox"><span>Course</span><b>${esc(a.post_name)} / ${esc(a.subject_name)}</b><br>${esc(a.plan_name)}</div><div class="metaBox"><span>Amount</span><b>${promoPaymentHtml(a)}</b><br>${paidId?('Razorpay: '+esc(paidId)):'Payment ID pending'}</div><div class="metaBox"><span>Access</span>Student App: <b>${esc(a.student_app_device_status||'UNBOUND')}</b> ? Courses: <b>${esc(a.verified_course_count||0)}</b><br>Telegram: ${esc(a.telegram_invite_status||a.access_status||'-')} ? WhatsApp: ${esc(a.link_sent||'NO')}</div></div>
     <div class="admPrimaryBtns"><a class="btn secondary" target="_blank" href="${wa}">WhatsApp Student</a><a class="btn light" href="${tel}">Call</a>${sendGroupLinkActionHtml(a,false)}</div>
     <details class="manualTools"><summary>Manual tools</summary><div class="manualToolsBody admBtns">
-      ${a.screenshot_file_url?`<a class="btn light" target="_blank" href="${esc(a.screenshot_file_url)}">Proof</a>`:''}<button class="ok" onclick="updateAdm('${esc(a.admission_id)}','VERIFIED')">Mark Verified</button><button class="warn" onclick="updateAdm('${esc(a.admission_id)}','NEED_MORE_INFO')">Need Info</button><button class="danger" onclick="updateAdm('${esc(a.admission_id)}','REJECTED')">Reject</button>
+      ${a.screenshot_file_url?`<a class="btn light" target="_blank" href="${esc(a.screenshot_file_url)}">Proof</a>`:''}${studentAppActionsHtml(a)}<button class="ok" onclick="updateAdm('${esc(a.admission_id)}','VERIFIED')">Mark Verified</button><button class="warn" onclick="updateAdm('${esc(a.admission_id)}','NEED_MORE_INFO')">Need Info</button><button class="danger" onclick="updateAdm('${esc(a.admission_id)}','REJECTED')">Reject</button>
     </div></details></div>`;
 }
 
@@ -1290,6 +1305,22 @@ function admissionRow(a){
 }
 async function updateAdm(id,status){const remark=prompt('Remark / note:',status==='VERIFIED'?'Payment verified':''); if(remark===null)return; try{await callServer('adminUpdateAdmission',adminPassword,id,status,remark,false); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
 async function sendWa(id){try{const row=(adminData.admissions||[]).find(a=>String(a.admission_id)===String(id)); if(row && !canSendGroupLinkStatus(row.status)) throw new Error('Pehle payment verify karein.'); const r=await callServer('adminGetWhatsAppLink',adminPassword,id); window.open(r.url,'_blank'); await callServer('adminUpdateAdmission',adminPassword,id,'GROUP_LINK_SENT','WhatsApp link opened for sending',true); await loadAdmissions();}catch(err){showMsg('adminMsg',esc(err.message||err),'error')}}
+async function showStudentAppCode(result, message){
+  const code=String(result.app_access_code||'');
+  if(!code) throw new Error('App code response missing hai.');
+  try{await navigator.clipboard.writeText(code)}catch(_){ }
+  prompt(message+' Code clipboard me bhi copy kiya gaya hai:',code);
+  showToast('Student App code issued.','success');
+}
+async function issueAppCode(id){
+  try{const r=await callServer('adminIssueStudentAppCode',adminPassword,id); await showStudentAppCode(r,'Student App one-time code.'); await loadAdmissions()}
+  catch(err){showMsg('adminMsg',esc(err.message||err),'error')}
+}
+async function resetStudentDevice(id){
+  if(!confirm('Is student ke sabhi active app sessions revoke karke device reset karein?')) return;
+  try{const r=await callServer('adminResetStudentDevice',adminPassword,id); await showStudentAppCode(r,'Device reset complete. Naye device ke liye one-time code.'); await loadAdmissions()}
+  catch(err){showMsg('adminMsg',esc(err.message||err),'error')}
+}
 
 async function renderConfig(){
   if(!adminData.links || !adminData.posts){
@@ -1351,6 +1382,8 @@ function collectTable(key){const t=$('tbl_'+key); if(!t)return adminData[key]||[
 
 
 function renderSecurity(){
+  $('adminBody').innerHTML='<div class="card"><h2>Admin Password</h2><div class="notice">Admin password Supabase secret mein stored hai aur yahan display nahi kiya ja sakta. Is computer par <b>reset_admin_password.cmd</b> run karke secure prompts mein naya password set karein.</div><p><button class="secondary" onclick="adminLogout()">Logout / Forget this device</button></p></div>';
+  return;
   const appUrl = '<?= appUrl ?>';
   const studentLink = appUrl || location.href.split('?')[0];
   const adminLink = (studentLink.split('?')[0]) + '?page=admin';
