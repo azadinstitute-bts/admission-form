@@ -377,7 +377,7 @@ window.addEventListener('load', function(){
 </script>
 <script>
 const PAGE = new URLSearchParams(window.location.search).get('page') || '';
-const APP_VERSION = 'R6R13R8_R3R1_CONFIG_SAVE_RAZORPAY_PRESERVE_PATCH';
+const APP_VERSION = 'R6R13R8_R4_STICKY_PAY_EXISTING_LINK_FIX';
 const ADMIN_REMEMBER_STORAGE_KEY = 'AZAD_ADMIN_REMEMBER_DEVICE_TOKEN_R6R13';
 const ADMIN_REMEMBER_CREDENTIAL_PREFIX = 'AZAD_REMEMBER_TOKEN:';
 const CONFIG_FALLBACK_MS = 6500;
@@ -392,6 +392,11 @@ let activeAdminTab = 'dashboard';
 let adminSearch = '';
 let adminStatus = 'ALL';
 let appliedPromoQuote = null;
+// R4 sticky-payment state: after student details are saved, reuse the same
+// Razorpay link instead of creating a duplicate admission/payment link.
+let activeRazorpayPaymentUrl = '';
+let activeRazorpayPaymentAmount = 0;
+let activeRazorpayPaymentOpening = false;
 
 function $(id){return document.getElementById(id)}
 function esc(v){return String(v ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]))}
@@ -875,12 +880,33 @@ function getFinalPayableAmount(){
   if(!plan) return 0;
   return Number((appliedPromoQuote && appliedPromoQuote.final_amount) || plan.amount || 0);
 }
+function setMobilePaymentReadyState(payUrl, amount){
+  activeRazorpayPaymentUrl=String(payUrl||'').trim();
+  activeRazorpayPaymentAmount=Number(amount||0);
+  var bar=$('mobilePayBar'), cta=$('mobilePayCta'), amt=$('mobilePayAmount'), lbl=$('mobilePayLabel');
+  if(bar) bar.classList.add('show');
+  if(amt) amt.textContent=formatRs(activeRazorpayPaymentAmount);
+  if(lbl) lbl.textContent='Admission saved · Payment pending';
+  if(cta){
+    cta.disabled=!activeRazorpayPaymentUrl;
+    cta.textContent='Pay Now';
+    cta.dataset.action='open-payment-link';
+  }
+}
 function updateConversionUi(){
   var detailsReady=!!(val('name') && isValidIndianMobileInput(val('mobile')) && val('email') && isValidEmailInput(val('email')));
   var courseReady=!!(val('post') && val('subject') && val('plan'));
   setStepState('stepDetails', detailsReady ? 'done' : 'active');
   setStepState('stepCourse', courseReady ? 'done' : (detailsReady ? 'active' : ''));
   setStepState('stepPayment', courseReady ? 'active' : '');
+
+  // Once the admission has been saved, the sticky CTA must open the already
+  // created Razorpay link. It must not call createAdmission again.
+  if(activeRazorpayPaymentUrl){
+    setMobilePaymentReadyState(activeRazorpayPaymentUrl, activeRazorpayPaymentAmount || getFinalPayableAmount());
+    return;
+  }
+
   var bar=$('mobilePayBar'), cta=$('mobilePayCta'), amt=$('mobilePayAmount'), lbl=$('mobilePayLabel');
   var plan=getSelectedPlan();
   if(bar) bar.classList.toggle('show', !!plan);
@@ -889,9 +915,29 @@ function updateConversionUi(){
   if(cta){
     cta.disabled=!plan;
     cta.textContent=plan ? (isRazorpayEnabled() ? 'Pay Securely' : 'Submit Details') : 'Continue';
+    cta.dataset.action=plan ? 'create-admission' : 'select-plan';
   }
 }
+function openExistingRazorpayPayment(){
+  if(!activeRazorpayPaymentUrl || activeRazorpayPaymentOpening) return;
+  activeRazorpayPaymentOpening=true;
+  detachBeforeUnloadGuard();
+  var cta=$('mobilePayCta');
+  if(cta){cta.disabled=true; cta.textContent='Opening...';}
+  // Same-tab navigation is the most reliable behaviour on Android/iPhone and
+  // avoids popup blocking. Razorpay's configured redirect returns the student
+  // to the access page after payment.
+  window.location.assign(activeRazorpayPaymentUrl);
+  setTimeout(function(){
+    activeRazorpayPaymentOpening=false;
+    if(cta){cta.disabled=false; cta.textContent='Pay Now';}
+  },3000);
+}
 function mobilePrimaryAction(){
+  if(activeRazorpayPaymentUrl){
+    openExistingRazorpayPayment();
+    return;
+  }
   if(!getSelectedPlan()){
     var p=$('post'); if(p && p.scrollIntoView) p.scrollIntoView({behavior:'smooth',block:'center'});
     return;
@@ -1245,6 +1291,10 @@ function renderPayReadyCard(res, payUrl){
   } else {
     document.querySelector('.wrap').insertAdjacentHTML('afterbegin', html);
   }
+
+  // Keep one payment link for both CTAs. The sticky Pay Now button now opens
+  // this existing link instead of submitting student details a second time.
+  setMobilePaymentReadyState(payUrl, Number(res.amount || getFinalPayableAmount()));
 
   var copyBtn = $('payCopyBtn');
   if(copyBtn){
