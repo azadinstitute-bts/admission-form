@@ -3,6 +3,8 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
+  <title>Bilaspur Test Series — Secure Admission & Instant App Access</title>
+  <meta name="description" content="Bilaspur Test Series secure admission portal for CG Teacher and CTET courses. Payment के बाद instant Student App, Telegram और WhatsApp access.">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
@@ -153,6 +155,185 @@
 
     @media(max-width:760px){.buyerHero{padding:15px;border-radius:24px}.trustPills{grid-template-columns:1fr;gap:7px}.trustPill{text-align:left;display:flex;align-items:center;gap:9px;font-size:12px}.trustPill span{margin:0}.supportQuick{justify-content:stretch}.supportQuick a{width:100%;border-radius:14px}.miniFlow{grid-template-columns:1fr}.miniFlow div{text-align:left;display:flex;align-items:center;gap:9px}.miniFlow span{margin:0}.summaryLine{display:block}.summaryLine b{display:block;text-align:left;margin-top:2px}}
 
+
+    /* ===== PREMIUM ADMISSION FORM — PRODUCTION UI ===== */
+    :root{
+      --bts-navy:#071b3d;--bts-blue:#174fbd;--bts-blue2:#2f6ce5;--bts-gold:#f6b91a;
+      --bts-gold-soft:#fff7d7;--bts-paper:#ffffff;--bts-ink:#10213f;--bts-line:#dce5f2;
+    }
+    body{
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 8% 2%,rgba(47,108,229,.16),transparent 30%),
+        radial-gradient(circle at 95% 18%,rgba(246,185,26,.16),transparent 27%),
+        linear-gradient(180deg,#eef5ff 0%,#f8fbff 44%,#f4f7fb 100%);
+      color:var(--bts-ink);
+    }
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(7,27,61,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(7,27,61,.035) 1px,transparent 1px);background-size:28px 28px}
+    .wrap{max-width:920px;padding:24px 18px 70px;position:relative}
+    .buyerHero{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#061735 0%,#123c8d 58%,#1f5ed6 100%);
+      border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:28px 30px 22px;margin:0;
+      box-shadow:0 24px 60px rgba(7,27,61,.24);color:white;
+    }
+    .buyerHero:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-130px;top:-165px;background:rgba(246,185,26,.18);border:38px solid rgba(255,255,255,.035)}
+    .buyerHero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;left:-110px;bottom:-130px;background:rgba(255,255,255,.07)}
+    .heroBadge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);font-size:11px;font-weight:900;letter-spacing:.75px;color:#fff4bf;margin-bottom:17px}
+    .heroBadge span{width:7px;height:7px;border-radius:50%;background:#f6c62e;box-shadow:0 0 0 5px rgba(246,198,46,.12)}
+    .buyerHeroTop{position:relative;z-index:1;gap:17px;align-items:center}
+    .buyerLogo{width:76px;height:76px;flex:0 0 76px;border-radius:24px;background:white;border:4px solid rgba(255,255,255,.92);box-shadow:0 14px 30px rgba(0,0,0,.2);padding:3px}
+    .buyerLogo img{border-radius:17px;object-fit:contain}
+    .buyerTitle,#formTitle{font-size:29px!important;line-height:1.06;color:white;letter-spacing:.2px;margin:0 0 7px}
+    .buyerSub,#formSubtitle{font-size:14px;color:#dbeafe!important;font-weight:650;letter-spacing:.12px}
+    .trustPills{position:relative;z-index:1;margin-top:24px;gap:10px}
+    .trustPill{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:9px;text-align:left;padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:white;backdrop-filter:blur(5px)}
+    .trustPill span{grid-row:1/3;width:30px;height:30px;border-radius:10px;background:rgba(246,185,26,.16);display:flex;align-items:center;justify-content:center;margin:0;color:#ffd75a;font-size:16px}
+    .trustPill b{font-size:12px;line-height:1.2}.trustPill small{display:block;color:#cfe1ff;font-size:10.5px;margin-top:2px}
+    .heroNote{position:relative;z-index:1;margin-top:14px;color:#dbeafe;font-size:12px;font-weight:650}
+    .supportQuick{position:relative;z-index:1;justify-content:flex-start;margin-top:14px}
+    .supportQuick a{background:var(--bts-gold);color:#3d2c00;border-color:#ffd960;border-radius:13px;padding:10px 14px;box-shadow:0 9px 20px rgba(246,185,26,.18)}
+    #formCard.card{margin-top:18px;padding:28px 30px 30px;border:1px solid rgba(208,219,234,.95);border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 22px 55px rgba(15,40,80,.11)}
+    .sectionTitle{align-items:flex-start;gap:12px;margin:0 0 14px}.sectionTitle .dot{width:34px;height:34px;flex:0 0 34px;border-radius:12px;background:linear-gradient(135deg,var(--bts-blue),var(--bts-blue2));color:white;box-shadow:0 8px 18px rgba(23,79,189,.22)}
+    .sectionTitle b{font-size:19px;line-height:1.15;color:#0b2145}.sectionTitle small{display:block;color:#71819b;font-size:11.5px;font-weight:600;margin-top:4px}
+    .sectionLead{margin:-5px 0 14px 46px;color:#65758e;font-size:13px;line-height:1.55}
+    .formSteps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 22px 46px;padding:8px;border-radius:16px;background:#f3f7fd;border:1px solid #e0e9f5}
+    .formSteps div{display:flex;align-items:center;justify-content:center;gap:7px;color:#71819b;font-size:11.5px;font-weight:800;padding:6px}.formSteps span{width:21px;height:21px;border-radius:8px;background:white;border:1px solid #d9e3f1;display:flex;align-items:center;justify-content:center;color:#65758e}.formSteps .active{color:var(--bts-blue)}.formSteps .active span{background:var(--bts-gold);border-color:var(--bts-gold);color:#3d2c00}
+    .sectionDivider{height:1px;background:linear-gradient(90deg,transparent,#dbe5f2 10%,#dbe5f2 90%,transparent);margin:24px 0}
+    label{font-size:12px;font-weight:850;color:#243a5e;margin:12px 0 7px}
+    input,select,textarea{min-height:52px;border:1.5px solid #dbe4f0;border-radius:15px;background:#fbfdff;color:#10213f;font-size:14.5px;padding:13px 14px;transition:border-color .18s,box-shadow .18s,background .18s}
+    input::placeholder,textarea::placeholder{color:#a0acc0}
+    input:hover,select:hover,textarea:hover{border-color:#b8c9e2;background:#fff}
+    input:focus,select:focus,textarea:focus{border-color:var(--bts-blue2);box-shadow:0 0 0 4px rgba(47,108,229,.11);background:white}
+    .fieldHelp{font-size:11px;color:#7b8aa2;margin-top:5px}
+    #paymentBox.card{margin-top:24px!important;padding:22px;border-radius:24px;background:linear-gradient(145deg,#f8fbff,#fff9df);border:1px solid #dbe5f2;box-shadow:none}
+    .selectedSummary{border-radius:17px;background:white;border-color:#dce6f2;box-shadow:0 8px 20px rgba(19,52,102,.05)}
+    .summaryLine{padding:9px 2px}.summaryLine span{color:#71819b}.summaryLine b{color:#132a50}
+    .accessBadge{background:#edf8ef;color:#17723c;border-color:#c7ebd0}
+    #amountText{display:inline-flex;align-items:center;justify-content:center;min-width:155px;padding:10px 20px;margin:12px 0 14px;border-radius:18px;background:var(--bts-navy);color:white;text-align:left;font-size:35px;box-shadow:0 12px 25px rgba(7,27,61,.17)}
+    #promoBox.notice{border-radius:18px!important;background:white!important;border-color:#dce6f2!important;padding:15px!important}
+    button,.btn{border-radius:15px;min-height:51px;font-size:14px;box-shadow:none;transition:transform .15s,filter .15s,box-shadow .15s}
+    button:hover,.btn:hover{transform:translateY(-1px);filter:brightness(1.02)}
+    button.secondary,.btn.secondary{background:#edf2f8;color:#15325e;border:1px solid #d9e3ef}
+    button.ok,.btn.ok,#razorpayPayBtn{background:linear-gradient(135deg,var(--bts-blue),var(--bts-blue2));color:white;box-shadow:0 13px 26px rgba(23,79,189,.22)}
+    #razorpayPayBtn{position:relative;overflow:hidden;min-height:60px;font-size:16px}
+    #razorpayPayBtn:after{content:"🔒  Razorpay Secure";position:absolute;right:14px;font-size:10px;font-weight:750;color:#dbeafe}
+    .paymentTrust span{background:white;border-color:#dce6f2;color:#475e80}
+    .miniFlow div{background:white;border-color:#dce6f2;color:#334e72}.miniFlow span{color:var(--bts-blue)}
+    .notice{border-radius:16px}.toast{border-radius:15px}
+    @media(min-width:761px){.row{gap:16px}.row3{gap:13px}.buyerHero{padding-right:38px}}
+    @media(max-width:760px){
+      .wrap{padding:10px 9px 76px;max-width:570px}
+      .buyerHero{border-radius:25px;padding:20px 17px 17px}.heroBadge{margin-bottom:15px;font-size:9.8px;padding:6px 9px}
+      .buyerLogo{width:62px;height:62px;flex-basis:62px;border-radius:20px}.buyerTitle,#formTitle{font-size:22px!important}.buyerSub,#formSubtitle{font-size:12px!important}
+      .trustPills{grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:18px}.trustPill{display:flex;flex-direction:column;text-align:center;align-items:center;padding:9px 5px;gap:2px}.trustPill span{width:27px;height:27px}.trustPill small{display:none}.trustPill b{font-size:9.8px}
+      .heroNote{font-size:10.5px;line-height:1.4}.supportQuick a{width:100%;border-radius:13px}
+      #formCard.card{padding:21px 15px 24px;border-radius:24px;margin-top:13px}.sectionTitle b{font-size:17px}.sectionLead{margin-left:0;font-size:12px}.formSteps{margin-left:0}.formSteps div{font-size:10px;padding:5px 1px}.formSteps span{width:19px;height:19px}
+      .row,.row3{grid-template-columns:1fr;gap:0}.sectionDivider{margin:20px 0}.sectionTitle small{font-size:10.5px}
+      input,select,textarea{min-height:50px}.amount{font-size:32px}#paymentBox.card{padding:18px 13px}
+      #razorpayPayBtn:after{display:none}.miniFlow{grid-template-columns:repeat(3,1fr)}.miniFlow div{display:block!important;text-align:center!important;font-size:9.8px;padding:8px 3px}.miniFlow span{display:block;margin:0 0 2px!important}
+    }
+
+  
+
+    /* MOBILE CONVERSION R2 — UI ONLY; backend/API logic unchanged */
+    :root{--r2-navy:#071b3d;--r2-blue:#1554c0;--r2-gold:#f5b51b;--r2-ink:#10233f;--r2-soft:#f3f7fc;--r2-green:#118a55}
+    html{scroll-behavior:smooth}
+    body{background:radial-gradient(circle at 8% 0,#e7f0ff 0,transparent 34%),linear-gradient(180deg,#f8fbff,#eef3f9);padding-bottom:86px}
+    .wrap{max-width:1060px;padding:14px 16px 32px}
+    .buyerHero{min-height:auto!important;padding:22px 24px 20px!important;border-radius:28px!important;box-shadow:0 18px 50px rgba(7,27,61,.18)!important}
+    .buyerTitle{font-size:clamp(22px,4vw,34px)!important;letter-spacing:.2px}
+    .buyerSub{font-size:13px!important;line-height:1.5}
+    .heroNote{margin-top:12px!important;font-size:12px!important;opacity:.94}
+    .trustPills{margin-top:16px!important}
+    .trustPill{min-height:68px;background:rgba(255,255,255,.09)!important;border-color:rgba(255,255,255,.18)!important;backdrop-filter:blur(8px)}
+    .appLaunchCard{position:relative;z-index:1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;margin-top:16px;padding:14px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(240,247,255,.97));border:1px solid rgba(255,255,255,.65);box-shadow:0 12px 28px rgba(4,22,53,.14);color:var(--r2-ink)}
+    .appLaunchIcon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,var(--r2-navy),var(--r2-blue));color:#fff;font-size:22px;box-shadow:0 8px 18px rgba(21,84,192,.25)}
+    .appLaunchCopy b{display:block;font-size:14px}.appLaunchCopy span{display:block;margin-top:3px;font-size:11.5px;line-height:1.45;color:#52657f}
+    .appLaunchStatus{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:5px 9px;border-radius:999px;background:#fff7dc;border:1px solid #f7d77c;color:#7a5100;font-size:10.5px;font-weight:900}
+    .appLaunchAction{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 13px;border-radius:12px;background:#e8eef6;color:#6d7d92;border:1px solid #d7e0eb;font-size:11px;font-weight:900;white-space:nowrap}
+    .appLaunchAction.live{background:linear-gradient(135deg,#118a55,#087544);color:#fff;border-color:transparent;text-decoration:none}
+    #formCard{border-radius:26px!important;padding:22px!important;margin-top:16px!important;box-shadow:0 18px 48px rgba(21,42,76,.10)!important}
+    .sectionTitle{align-items:flex-start!important}.sectionTitle .dot{flex:0 0 auto!important}
+    .sectionLead{margin-top:3px!important;margin-bottom:12px!important}
+    .formSteps{position:sticky;top:8px;z-index:7;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border:1px solid #dfe8f3;border-radius:16px;padding:7px;box-shadow:0 8px 24px rgba(7,27,61,.08);margin:0 0 16px!important}
+    .formSteps>div{transition:.2s ease;color:#8290a4!important}.formSteps>div.active{color:var(--r2-blue)!important}.formSteps>div.done{color:var(--r2-green)!important}.formSteps>div.done span{background:var(--r2-green)!important;color:#fff!important}.formSteps>div.active span{background:var(--r2-blue)!important;color:#fff!important}
+    label{font-size:12px!important;letter-spacing:.1px}
+    input,select{min-height:52px!important;border-radius:14px!important;background:#fbfdff!important;border:1px solid #d7e1ed!important;padding:13px 14px!important;transition:border .15s,box-shadow .15s,background .15s}
+    input:focus,select:focus{background:#fff!important;border-color:#4780e4!important;box-shadow:0 0 0 4px rgba(71,128,228,.12)!important}
+    .courseHint{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;margin:5px 0 13px;border-radius:13px;background:#f5f8fc;border:1px solid #e1e8f1;color:#52657f;font-size:11.5px;line-height:1.45}
+    #paymentBox{border:1px solid #d9e5f3!important;background:linear-gradient(180deg,#fff,#f7faff)!important;padding:18px!important;margin-top:15px!important}
+    .selectedSummary{background:#fff!important;box-shadow:0 9px 22px rgba(7,27,61,.06)}
+    #amountText{font-size:38px!important;border-radius:18px!important;min-width:170px!important}
+    .promoDisclosure{margin:12px 0;border:1px solid #dfe7f0;border-radius:16px;background:#fff;overflow:hidden}
+    .promoDisclosure summary{list-style:none;cursor:pointer;padding:13px 14px;font-size:12.5px;font-weight:900;color:#24405f;display:flex;justify-content:space-between;align-items:center}
+    .promoDisclosure summary::-webkit-details-marker{display:none}.promoDisclosure summary:after{content:'+';font-size:19px;color:#62768f}.promoDisclosure[open] summary:after{content:'−'}
+    .promoDisclosureBody{padding:0 13px 13px}
+    #razorpayPayBtn{min-height:61px!important;font-size:16px!important;box-shadow:0 13px 28px rgba(21,84,192,.25)!important}
+    .appAccessPromise{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 3px}.appAccessPromise div{border-radius:13px;padding:10px 8px;text-align:center;background:#eef5ff;border:1px solid #d8e8ff;color:#274664;font-size:10.5px;font-weight:800;line-height:1.35}.appAccessPromise b{display:block;color:#0f356d;font-size:12px;margin-bottom:3px}
+    .siteFooter{margin-top:16px;padding:15px 4px 4px;text-align:center;color:#64748b;font-size:11px;line-height:1.6}.siteFooter a{color:#1b58b9;text-decoration:none;font-weight:800}.siteFooterLinks{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}.siteFooterLinks a{padding:6px 9px;border-radius:999px;background:#fff;border:1px solid #dfe7f0}
+    .mobilePayBar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:none;align-items:center;gap:10px;padding:10px max(12px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid #dce6f2;box-shadow:0 -10px 30px rgba(7,27,61,.12);backdrop-filter:blur(14px)}
+    .mobilePayBar.show{display:flex}.mobilePayInfo{min-width:0;flex:1}.mobilePayInfo small{display:block;color:#6b7c92;font-size:10px}.mobilePayInfo b{display:block;color:#0b2448;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mobilePayCta{border:0!important;min-height:48px!important;width:auto!important;padding:10px 17px!important;margin:0!important;border-radius:14px!important;font-size:13px!important;white-space:nowrap;background:linear-gradient(135deg,var(--r2-blue),#0d3e9a)!important;color:#fff!important}.mobilePayCta:disabled{background:#dbe3ed!important;color:#7c8ba0!important;box-shadow:none!important}
+    .statusMicro{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;color:#64748b;font-size:10.5px}
+    .statusMicro span{width:7px;height:7px;border-radius:50%;background:#20a266;box-shadow:0 0 0 4px rgba(32,162,102,.1)}
+    @media(max-width:760px){
+      body{padding-bottom:90px}.wrap{padding:10px 10px 24px}.buyerHero{padding:17px 15px 15px!important;border-radius:22px!important}.heroBadge{margin-bottom:11px!important}.buyerHeroTop{gap:12px!important}.buyerLogo{width:50px!important;height:50px!important}.buyerTitle{font-size:21px!important}.buyerSub{font-size:11.5px!important}.trustPills{grid-template-columns:repeat(3,1fr)!important;gap:6px!important}.trustPill{min-height:63px!important;padding:8px 5px!important;text-align:center!important;display:block!important}.trustPill span{margin:0 auto 3px!important}.trustPill b{font-size:10.5px!important}.trustPill small{font-size:8.8px!important}.heroNote{font-size:10.5px!important}.appLaunchCard{grid-template-columns:auto 1fr;padding:11px;gap:10px}.appLaunchAction{grid-column:1/-1;width:100%;min-height:38px}.appLaunchIcon{width:42px;height:42px}.appLaunchCopy b{font-size:12.5px}.appLaunchCopy span{font-size:10.5px}.supportQuick{margin-top:10px!important}.supportQuick a{min-height:39px!important;font-size:11px!important}.formSteps{top:5px;padding:5px}.formSteps>div{font-size:9.5px!important}.formSteps>div span{width:22px!important;height:22px!important}.row,.row3{grid-template-columns:1fr!important;gap:2px!important}#formCard{padding:16px 13px!important;border-radius:21px!important}.sectionTitle b{font-size:15px!important}.sectionLead{font-size:11.5px!important}.courseHint{font-size:10.5px}.appAccessPromise{grid-template-columns:1fr}.appAccessPromise div{text-align:left}.siteFooterLinks{gap:5px}.siteFooterLinks a{font-size:10px;padding:5px 8px}.mobilePayBar{display:flex}.mobilePayBar:not(.show){transform:translateY(105%);pointer-events:none}.mobilePayBar.show{transform:translateY(0)}
+    }
+    @media(min-width:761px){.mobilePayBar{display:none!important}.siteFooter{padding-bottom:18px}}
+
+
+    /* MOBILE CONVERSION R3 — CLEAN FORM FIRST; UI ONLY */
+    .compactAdmissionHeader{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      background:linear-gradient(135deg,#071b3d,#1554c0);color:#fff;
+      border-radius:21px;padding:13px 15px;box-shadow:0 12px 30px rgba(7,27,61,.16);
+      position:relative;overflow:hidden
+    }
+    .compactAdmissionHeader:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-88px;top:-92px;background:rgba(245,181,27,.18)}
+    .compactBrand{display:flex;align-items:center;gap:11px;min-width:0;position:relative;z-index:1}
+    .compactBrand .buyerLogo{width:48px!important;height:48px!important;flex:0 0 48px!important;border-radius:15px!important;border-width:2px!important;box-shadow:none!important}
+    .compactBrandText{min-width:0}.compactBrandTitle{font-size:18px;font-weight:950;line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .compactBrandSub{font-size:10.8px;color:#dbeafe;margin-top:3px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .compactSecureBadge{position:relative;z-index:1;flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:10px;font-weight:900;color:#fff6cf}
+    .compactLoad{margin:8px 0 0!important;padding:9px 11px!important;border-radius:12px!important;font-size:11px!important}
+    #formCard{margin-top:10px!important;padding-top:17px!important}
+    .formSteps{margin-bottom:12px!important}
+    .sectionLead{margin-bottom:9px!important}
+    .sectionDivider{margin:15px 0!important}
+    .courseHint{padding:8px 10px!important;margin-bottom:9px!important}
+    label{margin:8px 0 4px!important}
+    input,select{min-height:47px!important;padding:10px 12px!important}
+    #paymentBox{margin-top:10px!important;padding:14px!important}
+    #amountText{font-size:32px!important;margin:8px 0 10px!important;padding:8px 16px!important}
+    .selectedSummary{padding:10px!important}.summaryLine{padding:6px 1px!important}
+    .promoDisclosure{margin:9px 0!important}.promoDisclosure summary{padding:10px 12px!important}
+    #razorpayPayBtn{min-height:55px!important}
+    .paymentTrust.compactPaymentTrust{margin-top:8px!important;gap:5px!important}.paymentTrust.compactPaymentTrust span{font-size:9.5px!important;padding:5px 7px!important}
+    .bottomInfoSection{margin-top:13px;padding:17px;border-radius:23px;background:#fff;border:1px solid #dce6f2;box-shadow:0 12px 32px rgba(7,27,61,.07)}
+    .bottomInfoHead{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}.bottomInfoHeadIcon{width:35px;height:35px;flex:0 0 35px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#071b3d,#1554c0);color:#fff}
+    .bottomInfoHead b{display:block;font-size:16px;color:#10233f}.bottomInfoHead span{display:block;margin-top:3px;font-size:11px;line-height:1.45;color:#667992}
+    .bottomTrustPills{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important;margin:0 0 11px!important}
+    .bottomTrustPills .trustPill{min-height:auto!important;background:#f4f8fd!important;border:1px solid #dce7f4!important;color:#163354!important;backdrop-filter:none!important;padding:10px 8px!important}
+    .bottomTrustPills .trustPill span{background:#e5effd!important;color:#154ea9!important}.bottomTrustPills .trustPill small{color:#637791!important}
+    .bottomInfoSection .appLaunchCard{margin-top:0!important;background:linear-gradient(135deg,#f8fbff,#fff8dd)!important;border:1px solid #dce6f2!important;box-shadow:none!important}
+    .bottomInfoSection .supportQuick{margin-top:10px!important}.bottomInfoSection .supportQuick a{width:100%;margin:0!important}
+    .siteFooter{margin-top:10px!important}
+    @media(max-width:760px){
+      body{padding-bottom:83px!important}.wrap{padding:8px 8px 20px!important}
+      .compactAdmissionHeader{padding:10px 11px;border-radius:17px;gap:8px}.compactBrand{gap:8px}.compactBrand .buyerLogo{width:40px!important;height:40px!important;flex-basis:40px!important;border-radius:12px!important}.compactBrandTitle{font-size:15px}.compactBrandSub{font-size:9.5px}.compactSecureBadge{padding:6px 7px;font-size:8.8px}
+      #formCard{margin-top:8px!important;padding:13px 11px 15px!important;border-radius:18px!important}.formSteps{position:static!important;padding:4px!important;margin-bottom:9px!important;box-shadow:none!important}.formSteps>div{padding:3px 1px!important;font-size:9px!important}.formSteps>div span{width:20px!important;height:20px!important}
+      .sectionTitle{gap:8px!important;margin-bottom:7px!important}.sectionTitle .dot{width:29px!important;height:29px!important;flex-basis:29px!important;border-radius:10px!important}.sectionTitle b{font-size:14.5px!important}.sectionTitle small{display:none!important}.sectionLead{display:none!important}.sectionDivider{margin:12px 0!important}.courseHint{display:none!important}
+      label{font-size:11px!important;margin:6px 0 3px!important}.fieldHelp{font-size:10px!important;margin-top:3px!important}input,select{min-height:44px!important;padding:9px 11px!important;border-radius:12px!important;font-size:14px!important}
+      #paymentBox{padding:11px!important;border-radius:16px!important;margin-top:8px!important}.selectedSummary{border-radius:13px!important;padding:8px!important}.summaryLine{font-size:11px!important;padding:4px 0!important}#amountText{font-size:29px!important;min-width:135px!important;border-radius:14px!important;padding:7px 13px!important}
+      .promoDisclosure{border-radius:13px!important}.promoDisclosure summary{padding:9px 10px!important;font-size:11px!important}.promoDisclosureBody{padding:0 9px 9px!important}
+      #razorpayPayBtn{min-height:52px!important;font-size:15px!important}.paymentTrust.compactPaymentTrust{display:flex!important;justify-content:center!important;flex-wrap:wrap!important}.miniFlow,.statusMicro{display:none!important}
+      #submitBtn{min-height:50px!important;margin-top:6px!important}
+      .bottomInfoSection{padding:13px 11px;border-radius:18px;margin-top:9px}.bottomInfoHead{margin-bottom:9px}.bottomInfoHeadIcon{width:31px;height:31px;flex-basis:31px}.bottomInfoHead b{font-size:14px}.bottomInfoHead span{font-size:10px}.bottomTrustPills{gap:5px!important}.bottomTrustPills .trustPill{padding:8px 4px!important;text-align:center!important;display:flex!important;flex-direction:column!important;align-items:center!important}.bottomTrustPills .trustPill b{font-size:9.5px!important}.bottomTrustPills .trustPill small{display:none!important}.bottomTrustPills .trustPill span{width:26px!important;height:26px!important;margin:0 0 3px!important}
+      .bottomInfoSection .appLaunchCard{grid-template-columns:auto 1fr!important;padding:10px!important}.bottomInfoSection .appLaunchAction{grid-column:1/-1!important;width:100%!important}.bottomInfoSection .appLaunchCopy span{font-size:10px!important}
+      .siteFooterLinks{display:none!important}.siteFooter{font-size:9.5px!important;padding-top:7px!important}
+    }
+
   </style>
 </head>
 <script>
@@ -231,6 +412,11 @@ function normalizeClientError(err){
   if(err.details) return err.details;
   try{return JSON.stringify(err)}catch(e){return String(err)}
 }
+// APP LINK UPDATE: Play Store / official app URL publish hone ke baad sirf yahan paste karein.
+const BTS_STUDENT_APP_URL = '';
+const BTS_SITE_URL = 'https://bilaspurtestseries.com/';
+const BTS_TEACHER_URL = 'https://bilaspurtestseries.com/teacher.html';
+const BTS_TELEGRAM_URL = 'https://t.me/bilaspur_test_series';
 const SUPABASE_API = 'https://mqorslvouzmrvciubpoq.supabase.co/functions/v1/admission-api';
 
 async function callServer(fn, ...args){
@@ -392,49 +578,62 @@ function initAdminPage(){
 }
 
 function renderAdmissionShell(){
+  const appIsLive = /^https?:\/\//i.test(BTS_STUDENT_APP_URL);
   $('app').innerHTML = `
-    <div class="buyerHero">
-      <div class="buyerHeroTop">
+    <div class="compactAdmissionHeader">
+      <div class="compactBrand">
         <div class="buyerLogo logoFallback" id="brandLogoShell">BTS</div>
-        <div>
-          <div class="buyerTitle" id="formTitle">BILASPUR TEST SERIES</div>
-          <div class="buyerSub" id="formSubtitle">Secure admission portal</div>
+        <div class="compactBrandText">
+          <div class="compactBrandTitle" id="formTitle">BILASPUR TEST SERIES</div>
+          <div class="compactBrandSub" id="formSubtitle">CG Teacher & CTET • Admission Portal</div>
         </div>
       </div>
-      <div class="trustPills">
-        <div class="trustPill"><span>🔒</span>Razorpay secure payment</div>
-        <div class="trustPill"><span>⚡</span>Instant Telegram access</div>
-        <div class="trustPill"><span>✅</span>Full course includes WhatsApp</div>
+      <div class="compactSecureBadge">🔒 Secure</div>
+    </div>
+    <div id="loadMsg" class="notice compactLoad">Form taiyar ho raha hai...<div class="loadProgress"><span></span></div></div>
+    <div id="formCard" class="card hide"></div>
+    <section class="bottomInfoSection">
+      <div class="bottomInfoHead"><div class="bottomInfoHeadIcon">✓</div><div><b>Admission के बाद क्या मिलेगा?</b><span>Form पूरा करने के बाद नीचे दी गई सुविधाएं आपके plan की eligibility के अनुसार मिलेंगी।</span></div></div>
+      <div class="trustPills bottomTrustPills">
+        <div class="trustPill"><span>🔒</span><b>Secure Payment</b><small>Razorpay protected</small></div>
+        <div class="trustPill"><span>📱</span><b>Student App</b><small>Instant login access</small></div>
+        <div class="trustPill"><span>⚡</span><b>Groups Access</b><small>Telegram + eligible WhatsApp</small></div>
+      </div>
+      <div class="appLaunchCard">
+        <div class="appLaunchIcon">📲</div>
+        <div class="appLaunchCopy">
+          <b>BTS Student App</b>
+          <span>Payment verify होते ही App login details और eligible Telegram/WhatsApp access तुरंत मिलेगा।</span>
+          <em class="appLaunchStatus">${appIsLive ? '● APP LIVE' : '● APP LINK COMING SHORTLY'}</em>
+        </div>
+        ${appIsLive ? `<a class="appLaunchAction live" target="_blank" rel="noopener" href="${esc(BTS_STUDENT_APP_URL)}">Install App</a>` : `<span class="appLaunchAction">Install link जल्द सक्रिय होगा</span>`}
       </div>
       <div id="supportQuickSlot"></div>
-      <div id="loadMsg" class="notice" style="margin-top:12px">Form taiyar ho raha hai...<div class="loadProgress"><span></span></div></div>
+    </section>
+    <div class="siteFooter">
+      <div class="siteFooterLinks">
+        <a target="_blank" rel="noopener" href="${BTS_SITE_URL}">Official Website</a>
+        <a target="_blank" rel="noopener" href="${BTS_TEACHER_URL}">Courses & Fees</a>
+        <a target="_blank" rel="noopener" href="${BTS_TELEGRAM_URL}">Demo Telegram</a>
+      </div>
+      Bilaspur Test Series • Azad Institute Venture<br>Payment सुरक्षित है; सहायता के लिए WhatsApp Support का उपयोग करें।
     </div>
-    <div id="formCard" class="card hide"></div>`;
+    <div id="mobilePayBar" class="mobilePayBar">
+      <div class="mobilePayInfo"><small id="mobilePayLabel">Plan चुनें</small><b id="mobilePayAmount">₹0</b></div>
+      <button id="mobilePayCta" class="mobilePayCta" type="button" disabled onclick="mobilePrimaryAction()">Continue</button>
+    </div>`;
 
   let formRendered = false;
-  const fallbackTimer = setTimeout(()=>{
-    if(!publicConfig){
-      showConfigSlowBlock();
-    }
-  }, CONFIG_FALLBACK_MS);
-
-  // Safety: do not open hardcoded payment config if Apps Script is slow/failed.
-  // The payment form renders only after a real server config returns successfully.
+  const fallbackTimer = setTimeout(()=>{ if(!publicConfig){ showConfigSlowBlock(); } }, CONFIG_FALLBACK_MS);
   callServer('getPublicConfig').then(cfg=>{
     if(!cfg || cfg.ok === false) throw new Error((cfg && cfg.error) || 'Config load failed.');
     publicConfig = normalizePublicConfig(cfg);
     clearTimeout(fallbackTimer);
-    if(!formRendered){
-      formRendered = true;
-      renderAdmissionForm();
-    } else {
-      applyLoadedConfigVisuals();
-    }
+    if(!formRendered){ formRendered = true; renderAdmissionForm(); }
+    else { applyLoadedConfigVisuals(); }
   }).catch(err=>{
     clearTimeout(fallbackTimer);
-    if(!publicConfig){
-      showConfigSlowBlock();
-    }
+    if(!publicConfig){ showConfigSlowBlock(); }
   });
 }
 
@@ -591,47 +790,51 @@ function renderSelectedPlanSummary(plan){
 }
 function renderStudentFieldHtml(cfg, codeRequired){
   return `
-    <div class="sectionTitle"><span class="dot">1</span><b>Student Details</b></div>
-    <p class="muted" style="margin-top:-6px">Details bharein, course select karein, phir secure payment karein.</p>
+    <div class="formSteps" id="formSteps"><div id="stepDetails" class="active"><span>1</span>Details</div><div id="stepCourse"><span>2</span>Course</div><div id="stepPayment"><span>3</span>Payment</div></div>
+    <div class="sectionTitle"><span class="dot">1</span><div><b>Student Details</b><small>Admission और app login के लिए सही जानकारी दें</small></div></div>
+    <p class="sectionLead">इसी mobile number पर payment confirmation, Student App access और support updates मिलेंगे।</p>
     <div id="studentMsg" class="notice hide"></div>
-    ${codeRequired ? `<label>Admission Code</label><input id="admissionCode" placeholder="Admission code">` : ''}
-    <div class="row"><div><label>Student Name *</label><input id="name" placeholder="Full name"></div><div><label>Mobile / WhatsApp Number *</label><input id="mobile" inputmode="numeric" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
-    <div class="row"><div><label>Email ID *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com"></div><div><label>District / City</label><input id="district" placeholder="District / City"></div></div>
-    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><b>Choose Course</b></div>
+    ${codeRequired ? `<label>Admission Code</label><input id="admissionCode" placeholder="Admission code" oninput="updateConversionUi()">` : ''}
+    <div class="row"><div><label>Student Name *</label><input id="name" autocomplete="name" placeholder="पूरा नाम / Full name" oninput="updateConversionUi()"></div><div><label>Mobile / WhatsApp Number *</label><input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange();updateConversionUi()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
+    <div class="row"><div><label>Email ID *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com" oninput="updateConversionUi()"></div><div><label>District / City</label><input id="district" autocomplete="address-level2" placeholder="District / City"></div></div>
+    <div class="sectionDivider"></div>
+    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><div><b>Choose Course</b><small>अपना सही वर्ग, विषय और subscription plan चुनें</small></div></div>
+    <div class="courseHint"><span>💡</span><span>Course बदलने पर Subject और Plan दोबारा चुनना होगा। Payment से पहले नीचे पूरा summary दिखेगा।</span></div>
     <div class="row3">
-      <div><label>Varg / Post *</label><select id="post" onchange="onPostChange()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
-      <div><label>Subject Group *</label><select id="subject" onchange="onSubjectChange()"><option value="">Select Varg first</option></select></div>
-      <div><label>Subscription Plan *</label><select id="plan" onchange="onPlanChange()"><option value="">Select Subject first</option></select></div>
+      <div><label>Varg / Post *</label><select id="post" onchange="onPostChange();updateConversionUi()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
+      <div><label>Subject Group *</label><select id="subject" onchange="onSubjectChange();updateConversionUi()"><option value="">Select Varg first</option></select></div>
+      <div><label>Subscription Plan *</label><select id="plan" onchange="onPlanChange();updateConversionUi()"><option value="">Select Subject first</option></select></div>
     </div>
     <div id="paymentBox" class="card hide" style="margin-left:0;margin-right:0">
-      <div class="sectionTitle"><span class="dot">3</span><b>Secure Payment</b></div>
+      <div class="sectionTitle"><span class="dot">3</span><div><b>Secure Payment</b><small>Payment verify होते ही access portal खुलेगा</small></div></div>
       <div id="selectedPlanSlot"></div>
       <div class="amount" id="amountText">₹0</div>
-      <div id="promoBox" class="notice hide" style="background:#f8fafc;border-color:#e2e8f0;margin:10px 0">
-        <label style="margin-top:0">Promo Code</label>
-        <div class="row" style="grid-template-columns:1fr auto;align-items:end">
-          <input id="promoCode" placeholder="Promo code" oninput="clearAppliedPromo(false)">
-          <button type="button" class="secondary" onclick="applyPromoCode()">Apply</button>
+      <details id="promoBox" class="promoDisclosure hide">
+        <summary>क्या आपके पास Promo Code है?</summary>
+        <div class="promoDisclosureBody">
+          <div class="row" style="grid-template-columns:1fr auto;align-items:end">
+            <input id="promoCode" placeholder="Promo code" oninput="clearAppliedPromo(false)">
+            <button type="button" class="secondary" onclick="applyPromoCode()">Apply</button>
+          </div>
+          <div id="promoMsg" class="fieldHelp">Promo eligibility plan और mobile number के अनुसार check होगी।</div>
+          <div id="promoSummary" class="hide" style="margin-top:8px"></div>
         </div>
-        <div id="promoMsg" class="fieldHelp">Full Course plans par promo code valid hoga. Mobile number required hai.</div>
-        <div id="promoSummary" class="hide" style="margin-top:8px"></div>
-      </div>
+      </details>
       <div id="razorpayPayBox" class="hide">
         <p><button id="razorpayPayBtn" class="ok full" onclick="startRazorpayAdmission()">Pay Securely</button></p>
-        <div class="paymentTrust"><span>🔒 Razorpay protected</span><span>⚡ Instant access after payment</span></div>
-        <div class="miniFlow"><div><span>1</span>Pay securely</div><div><span>2</span>Auto verification</div><div><span>3</span>Get access</div></div>
+        <div class="paymentTrust compactPaymentTrust"><span>🔒 Razorpay protected</span><span>⚡ Auto verification</span></div>
       </div>
       <div id="manualPayBox">
         <p class="muted">UPI ID: <b id="upiText"></b> | Receiver: <b id="receiverText"></b></p>
         <div id="qrBox"></div><p><a id="payBtn" class="btn" href="#" target="_blank">Pay Now</a></p>
-        <p id="paymentNoteHelp" class="muted">Payment note/remark me apna latest mobile number जरूर लिखें.</p>
-        <label>UTR / Transaction ID *</label><input id="utr" placeholder="Payment UTR / Transaction ID">
-        <label>Payment Screenshot / PDF *</label><input id="screenshot" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange="onScreenshotChange()"><div id="screenshotHelp" class="fieldHelp">Payment screenshot/PDF upload करना जरूरी है.</div>
-        <p class="muted">Screenshot/PDF max 5 MB. Payment verify hone ke baad group link bheja jayega.</p>
+        <p id="paymentNoteHelp" class="muted">Payment note/remark में अपना latest mobile number जरूर लिखें.</p>
+        <label>UTR / Transaction ID *</label><input id="utr" placeholder="Payment UTR / Transaction ID" oninput="updateConversionUi()">
+        <label>Payment Screenshot / PDF *</label><input id="screenshot" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange="onScreenshotChange();updateConversionUi()"><div id="screenshotHelp" class="fieldHelp">Payment screenshot/PDF upload करना जरूरी है.</div>
+        <p class="muted">Screenshot/PDF max 5 MB. Verification के बाद access portal उपलब्ध होगा.</p>
       </div>
     </div>
     <div id="submitStatusBox" class="submitStatusBox"></div>
-    <button id="submitBtn" class="full" onclick="submitStudentForm()">Submit Admission Request</button>`;
+    <button id="submitBtn" class="full hide" onclick="submitStudentForm()">Submit Admission Request</button>`;
 }
 
 function renderAdmissionForm(){
@@ -659,15 +862,51 @@ function renderAdmissionForm(){
     <div id="fieldLoading" class="notice hide">Information image load ho rahi hai...<div class="loadProgress"><span></span></div></div>
     <div id="fieldsSlot" class="${hasInfoImages ? 'hide' : ''}">${renderStudentFieldHtml(cfg, codeRequired)}</div>`;
   if(hasInfoImages) showStudentFieldsAfterImageReady(); else showStudentFields();
+  setTimeout(updateConversionUi,0);
 }
+
+function setStepState(id, state){
+  var el=$(id); if(!el) return;
+  el.classList.remove('active','done');
+  if(state) el.classList.add(state);
+}
+function getFinalPayableAmount(){
+  var plan=getSelectedPlan();
+  if(!plan) return 0;
+  return Number((appliedPromoQuote && appliedPromoQuote.final_amount) || plan.amount || 0);
+}
+function updateConversionUi(){
+  var detailsReady=!!(val('name') && isValidIndianMobileInput(val('mobile')) && val('email') && isValidEmailInput(val('email')));
+  var courseReady=!!(val('post') && val('subject') && val('plan'));
+  setStepState('stepDetails', detailsReady ? 'done' : 'active');
+  setStepState('stepCourse', courseReady ? 'done' : (detailsReady ? 'active' : ''));
+  setStepState('stepPayment', courseReady ? 'active' : '');
+  var bar=$('mobilePayBar'), cta=$('mobilePayCta'), amt=$('mobilePayAmount'), lbl=$('mobilePayLabel');
+  var plan=getSelectedPlan();
+  if(bar) bar.classList.toggle('show', !!plan);
+  if(amt) amt.textContent=plan ? formatRs(getFinalPayableAmount()) : '₹0';
+  if(lbl) lbl.textContent=plan ? (getSelectText('plan') || 'Selected plan') : 'Plan चुनें';
+  if(cta){
+    cta.disabled=!plan;
+    cta.textContent=plan ? (isRazorpayEnabled() ? 'Pay Securely' : 'Submit Details') : 'Continue';
+  }
+}
+function mobilePrimaryAction(){
+  if(!getSelectedPlan()){
+    var p=$('post'); if(p && p.scrollIntoView) p.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(isRazorpayEnabled()) startRazorpayAdmission(); else submitStudentForm();
+}
+
 function onPostChange(){
   const post=val('post'); const subs=publicConfig.subjects.filter(s=>String(s.post_id)===post);
   $('subject').innerHTML='<option value="">Select Subject</option>'+subs.map(s=>`<option value="${esc(s.subject_id)}">${esc(s.subject_name)}</option>`).join('');
-  $('plan').innerHTML='<option value="">Select Subject first</option>'; $('paymentBox').classList.add('hide');
+  $('plan').innerHTML='<option value="">Select Subject first</option>'; $('paymentBox').classList.add('hide'); updateConversionUi();
 }
 function onSubjectChange(){
   const post=val('post'), sub=val('subject'); const plans=publicConfig.plans.filter(p=>String(p.post_id)===post && String(p.subject_id)===sub);
-  $('plan').innerHTML='<option value="">Select Plan</option>'+plans.map(p=>`<option value="${esc(p.plan_id)}">${esc(p.plan_name)} - ₹${esc(p.amount)}</option>`).join(''); $('paymentBox').classList.add('hide');
+  $('plan').innerHTML='<option value="">Select Plan</option>'+plans.map(p=>`<option value="${esc(p.plan_id)}">${esc(p.plan_name)} - ₹${esc(p.amount)}</option>`).join(''); $('paymentBox').classList.add('hide'); updateConversionUi();
 }
 function isRazorpayEnabled(){
   return !!(publicConfig && publicConfig.payment && String(publicConfig.payment.RAZORPAY_ENABLED||'FALSE').toUpperCase()==='TRUE' && String(publicConfig.payment.PAYMENT_PROVIDER||'').toUpperCase()==='RAZORPAY');
@@ -694,6 +933,8 @@ function updatePaymentAmountDisplay(){
   if($('amountText')) $('amountText').textContent=formatRs(finalAmount);
   var payBtn=$('razorpayPayBtn');
   if(payBtn) payBtn.innerHTML='Pay Securely '+formatRs(finalAmount);
+  var mobileAmt=$('mobilePayAmount'); if(mobileAmt) mobileAmt.textContent=formatRs(finalAmount);
+  updateConversionUi();
   var summary=$('promoSummary');
   if(summary && appliedPromoQuote && appliedPromoQuote.promo_applied){
     summary.classList.remove('hide');
@@ -732,7 +973,7 @@ async function applyPromoCode(){
 }
 function onPlanChange(){
   clearAppliedPromo(false);
-  const plan=publicConfig.plans.find(p=>String(p.plan_id)===val('plan')); if(!plan){$('paymentBox').classList.add('hide');return}
+  const plan=publicConfig.plans.find(p=>String(p.plan_id)===val('plan')); if(!plan){$('paymentBox').classList.add('hide');updateConversionUi();return}
   $('paymentBox').classList.remove('hide');
   var slot=$('selectedPlanSlot'); if(slot) slot.innerHTML=renderSelectedPlanSummary(plan);
   updatePaymentAmountDisplay();
@@ -742,6 +983,7 @@ function onPlanChange(){
     if(razorBox) razorBox.classList.remove('hide');
     if(submitBtn) submitBtn.classList.add('hide');
     if(promoBox) promoBox.classList.remove('hide');
+    updateConversionUi();
     return;
   }
   if(manualBox) manualBox.classList.remove('hide');
@@ -751,6 +993,7 @@ function onPlanChange(){
   $('upiText').textContent=publicConfig.payment.UPI_ID||''; $('receiverText').textContent=publicConfig.payment.RECEIVER_NAME||'';
   const qr=publicConfig.payment.QR_IMAGE_URL||''; $('qrBox').innerHTML = qr ? `<img class="qr" src="${esc(qr)}" alt="Payment QR">` : `<div class="notice">QR image set nahi hai. Pay Now / UPI ID use karein.</div>`;
   updateUpiPayLink();
+  updateConversionUi();
 }
 function onMobileChange(){
   clearAppliedPromo(false);
@@ -990,8 +1233,8 @@ function renderPayReadyCard(res, payUrl){
     +   '<a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
     +     '<span>&#x1F512;</span> Pay Securely on Razorpay'
     +   '</a>'
-    +   '<div class="payCtaSub">UPI, card and net banking supported · Access unlocks after successful payment</div>'
-    +   '<div class="payTrust"><span>&#x1F512; Razorpay secure checkout</span><span>&#x2705; Auto access after payment</span></div>'
+    +   '<div class="payCtaSub">UPI, card and net banking supported · Student App credentials और group access payment के बाद तुरंत unlock होंगे</div>'
+    +   '<div class="payTrust"><span>&#x1F512; Razorpay secure checkout</span><span>&#x2705; Instant app + group access</span></div>'
     +   '<button class="paySecondary" type="button" id="payCopyBtn">Copy Student App Code</button>'
     + '</div>';
 
@@ -1029,7 +1272,7 @@ function renderPayReadyCard(res, payUrl){
       detachBeforeUnloadGuard();
       ctaBtn.style.animation = 'none';
       var sub = ctaBtn.nextElementSibling;
-      if(sub) sub.innerHTML = 'Secure payment tab opened. Complete payment to unlock access.';
+      if(sub) sub.innerHTML = 'Secure payment tab opened. Payment पूरा करें; access portal automatically खुलेगा.';
     });
   }
 

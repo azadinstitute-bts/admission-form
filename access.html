@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BTS — Payment Verified</title>
+<title>BTS — Verified Access & Student App Login</title>
+<meta name="description" content="Bilaspur Test Series verified student access portal with Student App login and private group access.">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
@@ -47,25 +48,68 @@
   .copy-btn{display:inline-flex;width:auto;padding:10px 12px;border-radius:10px;background:#062b5c;color:white;font-size:12px;font-weight:900;margin:8px 6px 0 0}
   .app-note{font-size:11px;color:#64748b;line-height:1.45;margin-top:10px}
   @media(max-width:480px){.info-grid{grid-template-columns:1fr}}
+
+
+  /* ACCESS PORTAL R2 — professional mobile UI; API logic unchanged */
+  :root{--navy:#071b3d;--blue:#1554c0;--gold:#f5b51b;--green:#108554;--ink:#10233f;--muted:#65758b}
+  body{display:block;background:radial-gradient(circle at 12% 0,#dceaff 0,transparent 34%),linear-gradient(180deg,#f8fbff,#edf3f9);padding:18px 12px 36px;color:var(--ink)}
+  .pageShell{max-width:760px;margin:0 auto}
+  .card{max-width:none;border-radius:28px;padding:0;overflow:hidden;border:1px solid #dfe7f0;box-shadow:0 22px 65px rgba(7,27,61,.14)}
+  .accessHeader{position:relative;padding:22px 24px 20px;background:linear-gradient(135deg,#071b3d,#0b3474 65%,#1554c0);color:#fff;overflow:hidden}
+  .accessHeader:after{content:'';position:absolute;width:210px;height:210px;border-radius:50%;right:-95px;top:-110px;background:rgba(245,181,27,.18);border:26px solid rgba(255,255,255,.05)}
+  .logo{position:relative;z-index:1;margin:0}.logo-icon{border-color:rgba(255,255,255,.65);box-shadow:0 8px 20px rgba(0,0,0,.18)}.logo-text{color:#fff;font-size:17px}.logo-sub{color:#c9daf4;margin-top:2px}
+  .portalBadge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;margin-top:15px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);font-size:10.5px;font-weight:900;color:#fff}
+  .contentPad{padding:22px 24px 24px}
+  .loading{padding:46px 18px}.spinner{border-top-color:var(--blue)}
+  .success-badge{background:linear-gradient(135deg,#eafbf3,#f7fffb);border-color:#bdebd3;border-radius:20px;padding:18px;margin-bottom:15px}.success-icon{width:54px;height:54px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff;font-size:27px;box-shadow:0 10px 22px rgba(16,133,84,.22)}.success-title{font-size:22px}.success-sub{font-size:12.5px}
+  .info-grid{gap:8px;margin-bottom:15px}.info-box{border-radius:15px;background:#f8fbff;border-color:#dfe8f3;padding:12px}.info-label{font-size:9.5px}.info-value{font-size:13px;line-height:1.35}
+  .trust-row{justify-content:center;margin-bottom:17px}.trust-pill{background:#fff;border-color:#dbe5ef;padding:6px 9px}
+  .app-access{position:relative;border:1px solid #c8dcfa;background:linear-gradient(145deg,#f3f8ff,#fff);border-radius:22px;padding:18px;margin:15px 0;box-shadow:0 12px 30px rgba(21,84,192,.08)}
+  .app-access-head{display:flex;gap:11px;align-items:flex-start;margin-bottom:12px}.app-access-icon{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,var(--navy),var(--blue));color:#fff;font-size:21px;flex:0 0 auto}.app-access-title{color:#0b3777;margin:0;font-size:16px}.app-access-sub{color:#52657f;margin:4px 0 0;font-size:11.5px}
+  .app-publish-pill{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:6px 9px;border-radius:999px;background:#fff7dc;border:1px solid #f5d77e;color:#765000;font-size:10px;font-weight:900}
+  .credentialPanel{border:1px solid #dce7f5;border-radius:16px;background:#fff;overflow:hidden}.credential-row{padding:11px 12px;border-color:#e4ebf4}.credential-label{color:#65758b}.credential-value{color:#0b2448;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .copyActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.copy-btn{display:flex;justify-content:center;width:100%;margin:0;border-radius:12px;background:#eaf1fb;color:#17498c;border:1px solid #d4e1f1;min-height:43px}
+  .appDownload{display:flex;align-items:center;justify-content:center;min-height:51px;margin-top:10px;border-radius:14px;background:#dfe7f1;color:#78889d;font-size:13px;font-weight:900;text-decoration:none;border:1px solid #d4dde8}.appDownload.live{background:linear-gradient(135deg,#108554,#087144);color:#fff;border-color:transparent;box-shadow:0 10px 22px rgba(16,133,84,.22)}
+  .app-note{padding:10px 11px;border-radius:12px;background:#f6f8fb;color:#617188}
+  .accessSection{border:1px solid #dfe7f0;border-radius:19px;padding:15px;margin-top:13px;background:#fff}.section-title{display:flex;align-items:center;gap:7px;margin-bottom:10px}.btn{min-height:52px;border-radius:14px;margin-bottom:8px}.btn-telegram{box-shadow:0 10px 22px rgba(0,136,204,.18)}.btn-whatsapp{box-shadow:0 10px 22px rgba(37,211,102,.18)}
+  .portalFooter{margin-top:17px;text-align:center;color:#708096;font-size:10.5px;line-height:1.65}.portalFooter a{display:inline-flex;margin:4px 3px 0;padding:6px 9px;border-radius:999px;background:#fff;border:1px solid #dfe7f0;color:#1b58b9;text-decoration:none;font-weight:800}
+  .paymentIds{padding:10px;border-radius:12px;background:#f7f9fc;color:#8290a2!important;word-break:break-all}
+  @media(max-width:520px){body{padding:8px 8px 24px}.card{border-radius:22px}.accessHeader{padding:17px 15px}.logo-icon{width:50px;height:50px;flex-basis:50px}.logo-text{font-size:15px}.contentPad{padding:15px 12px 18px}.success-badge{padding:15px}.success-title{font-size:19px}.info-grid{grid-template-columns:1fr 1fr}.app-access{padding:14px}.copyActions{grid-template-columns:1fr}.credential-row{align-items:flex-start}.credential-value{font-size:12px}.accessSection{padding:12px}.portalFooter a{font-size:9.5px}}
+
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">
-    <div class="logo-icon"><img src="bts-logo.png" alt="Bilaspur Test Series logo"></div>
-    <div>
-      <div class="logo-text">BILASPUR TEST SERIES</div>
-      <div class="logo-sub">Secure Access Portal</div>
+<div class="pageShell">
+  <div class="card">
+    <div class="accessHeader">
+      <div class="logo">
+        <div class="logo-icon"><img src="bts-logo.png" alt="Bilaspur Test Series logo"></div>
+        <div>
+          <div class="logo-text">BILASPUR TEST SERIES</div>
+          <div class="logo-sub">Verified Student Access Portal</div>
+        </div>
+      </div>
+      <div class="portalBadge">🔒 Secure verification • Instant access</div>
+    </div>
+    <div class="contentPad">
+      <div class="loading" id="loadingDiv">
+        <div class="spinner"></div>
+        <div><b>Payment verify हो रहा है...</b><br><span style="font-size:11px">यह प्रक्रिया सामान्यतः कुछ सेकंड लेती है।</span></div>
+      </div>
+      <div id="contentDiv" style="display:none"></div>
     </div>
   </div>
-  <div class="loading" id="loadingDiv">
-    <div class="spinner"></div>
-    <div>Payment verify ho raha hai...</div>
+  <div class="portalFooter">
+    Bilaspur Test Series • Azad Institute Venture<br>
+    <a href="https://bilaspurtestseries.com/" target="_blank" rel="noopener">Official Website</a>
+    <a href="https://bilaspurtestseries.com/teacher.html" target="_blank" rel="noopener">Courses</a>
+    <a href="https://wa.me/919981957779?text=Namaste%2C%20mujhe%20BTS%20access%20portal%20me%20help%20chahiye." target="_blank" rel="noopener">WhatsApp Support</a>
   </div>
-  <div id="contentDiv" style="display:none"></div>
 </div>
 
 <script>
+// APP LINK UPDATE: Play Store / official app URL publish hone ke baad sirf yahan paste karein.
+const BTS_STUDENT_APP_URL = '';
 const API = 'https://mqorslvouzmrvciubpoq.supabase.co/functions/v1/admission-api';
 
 function getParams() {
@@ -134,120 +178,85 @@ function renderVerified(data) {
   const isApproved = joinStatus === 'APPROVED';
   const appCode = data.access_code_consumed ? '' : String(data.app_access_code || params.token || '');
   const appMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
+  const appIsLive = /^https?:\/\//i.test(BTS_STUDENT_APP_URL);
 
   let tgSection = '';
-
   if (inviteLink) {
     if (isApproved) {
-      tgSection = `
-        <div class="notice notice-success">
-          ✅ Aap Telegram group mein join ho chuke hain!
-        </div>`;
+      tgSection = `<div class="notice notice-success">✅ आप Telegram group में join हो चुके हैं।</div>`;
     } else {
       tgSection = `
-        <div class="notice notice-info">
-          🔒 Yeh link sirf aapke liye hai — sirf aap hi join kar sakte hain.<br>
-          Link share mat karein.
-        </div>
-        <a class="btn btn-telegram" href="${esc(inviteLink)}" target="_blank">
-          📲 Join Telegram Group
-        </a>
-        <div class="notice notice-warn" style="margin-top:8px">
-          ⏱️ Link 24 ghante mein expire ho jaayega
-        </div>`;
+        <div class="notice notice-info">🔒 यह private link केवल आपके admission के लिए है। इसे share न करें।</div>
+        <a class="btn btn-telegram" href="${esc(inviteLink)}" target="_blank" rel="noopener">📲 Join Telegram Group</a>
+        <div class="notice notice-warn" style="margin-top:8px">⏱️ Invite link 24 घंटे में expire हो सकता है।</div>`;
     }
-} else {
-    // Auto retry after 2 seconds
+  } else {
     setTimeout(() => init(), 2000);
-    tgSection = `
-      <div class="notice notice-info">
-        ⏳ Telegram invite link generate ho raha hai...<br>
-        <span id="retryCountdown">2</span> seconds mein automatically check karega...
-      </div>`;
-    // Countdown
+    tgSection = `<div class="notice notice-info">⏳ Telegram invite link generate हो रहा है…<br><span id="retryCountdown">2</span> seconds में automatically check होगा।</div>`;
     let count = 2;
-    const timer = setInterval(() => {
-      count--;
-      const el = document.getElementById('retryCountdown');
-      if (el) el.textContent = count;
-      if (count <= 0) clearInterval(timer);
-    }, 1000);
+    const timer = setInterval(() => { count--; const el = document.getElementById('retryCountdown'); if (el) el.textContent = count; if (count <= 0) clearInterval(timer); }, 1000);
   }
 
   let waSection = '';
   if (hasWhatsApp) {
     waSection = `
-      <div class="divider"></div>
-      <div class="section-title">💬 WhatsApp Group</div>
-      <a class="btn btn-whatsapp" href="${esc(hasWhatsApp)}" target="_blank">
-        💬 Join WhatsApp Group
-      </a>
-      <div class="notice notice-warn">
-        ⚠️ WhatsApp link share mat karein — sirf Full Course students ke liye hai.
+      <div class="accessSection">
+        <div class="section-title">💬 WhatsApp Group <span style="font-size:10px;color:#64748b">Full Course access</span></div>
+        <a class="btn btn-whatsapp" href="${esc(hasWhatsApp)}" target="_blank" rel="noopener">💬 Join WhatsApp Group</a>
+        <div class="notice notice-warn">WhatsApp group link share न करें।</div>
       </div>`;
   }
 
   const appAccessSection = appCode ? `
     <div class="app-access">
-      <div class="app-access-title">Student App Login Details</div>
-      <div class="app-access-sub">BTS Student App me login karne ke liye ye mobile number aur one-time access code use karein.</div>
-      <div class="credential-row">
-        <div class="credential-label">Mobile</div>
-        <div class="credential-value">${esc(appMobile || data.mobile)}</div>
+      <div class="app-access-head">
+        <div class="app-access-icon">📱</div>
+        <div><div class="app-access-title">BTS Student App Login Ready</div><div class="app-access-sub">Payment verified है। आपका mobile और one-time access code तैयार है।</div></div>
       </div>
-      <div class="credential-row">
-        <div class="credential-label">Access Code</div>
-        <div class="credential-value">${esc(appCode)}</div>
+      <div class="app-publish-pill">${appIsLive ? '● APP LIVE — INSTALL NOW' : '● APP LINK LAUNCHING SHORTLY'}</div>
+      <div class="credentialPanel">
+        <div class="credential-row"><div class="credential-label">Login Mobile</div><div class="credential-value">${esc(appMobile || data.mobile)}</div></div>
+        <div class="credential-row"><div class="credential-label">One-time Access Code</div><div class="credential-value">${esc(appCode)}</div></div>
       </div>
-      <button class="copy-btn" onclick="copyText('${esc(appMobile || data.mobile)}')">Copy Mobile</button>
-      <button class="copy-btn" onclick="copyText('${esc(appCode)}')">Copy Code</button>
-      <div class="app-note">Code app me first successful login ke baad isi device se bind ho jayega. Same account ko dusre device par use karne ke liye support/device reset lagega.</div>
+      <div class="copyActions">
+        <button class="copy-btn" onclick="copyText('${esc(appMobile || data.mobile)}')">Copy Mobile</button>
+        <button class="copy-btn" onclick="copyText('${esc(appCode)}')">Copy Access Code</button>
+      </div>
+      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Install BTS Student App</a>` : `<span class="appDownload">App install link जल्द सक्रिय होगा</span>`}
+      <div class="app-note">पहली successful login के बाद code इसी device से bind हो सकता है। Device बदलने पर support से reset कराना पड़ सकता है।</div>
     </div>` : `
-    <div class="notice notice-warn">
-      Student App code already use ho chuka hai. App me existing login active hona chahiye. Device reset ke liye support se contact karein.
+    <div class="app-access">
+      <div class="app-access-head"><div class="app-access-icon">📱</div><div><div class="app-access-title">Student App Account Active</div><div class="app-access-sub">One-time code पहले उपयोग हो चुका है। Existing device पर login active होना चाहिए।</div></div></div>
+      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Open / Install BTS Student App</a>` : `<span class="appDownload">App install link जल्द सक्रिय होगा</span>`}
+      <div class="app-note">Device reset या login सहायता के लिए नीचे WhatsApp Support उपयोग करें।</div>
     </div>`;
 
   document.getElementById('contentDiv').innerHTML = `
     <div class="success-badge">
-      <div class="success-icon">✅</div>
-      <div class="success-title">Payment Verified!</div>
-      <div class="success-sub">Aapka admission confirm ho gaya hai</div>
+      <div class="success-icon">✓</div>
+      <div class="success-title">Payment Verified</div>
+      <div class="success-sub">Admission confirmed — आपका instant access तैयार है</div>
     </div>
 
     <div class="info-grid">
-      <div class="info-box">
-        <div class="info-label">Name</div>
-        <div class="info-value">${esc(data.name)}</div>
-      </div>
-      <div class="info-box">
-        <div class="info-label">Course</div>
-        <div class="info-value">${esc(data.subject_name)}</div>
-      </div>
-      <div class="info-box">
-        <div class="info-label">Plan</div>
-        <div class="info-value">${esc(data.plan_name)}</div>
-      </div>
-      <div class="info-box">
-        <div class="info-label">Amount Paid</div>
-        <div class="info-value">₹${esc(data.amount)}</div>
-      </div>
+      <div class="info-box"><div class="info-label">Student Name</div><div class="info-value">${esc(data.name)}</div></div>
+      <div class="info-box"><div class="info-label">Course / Subject</div><div class="info-value">${esc(data.subject_name)}</div></div>
+      <div class="info-box"><div class="info-label">Subscription Plan</div><div class="info-value">${esc(data.plan_name)}</div></div>
+      <div class="info-box"><div class="info-label">Amount Paid</div><div class="info-value">₹${esc(data.amount)}</div></div>
     </div>
 
-    <div class="trust-row">
-      <span class="trust-pill">🔒 Secure</span>
-      <span class="trust-pill">⚡ Instant Access</span>
-      <span class="trust-pill">✅ Verified</span>
-    </div>
+    <div class="trust-row"><span class="trust-pill">🔒 Secure</span><span class="trust-pill">⚡ Instant Access</span><span class="trust-pill">✅ Auto Verified</span></div>
 
     ${appAccessSection}
 
-    <div class="divider"></div>
-    <div class="section-title">Telegram Group</div>
-    ${tgSection}
+    <div class="accessSection">
+      <div class="section-title">📨 Telegram Group</div>
+      ${tgSection}
+    </div>
     ${waSection}
 
     <div class="divider"></div>
-    <div style="font-size:11px;color:#94a3b8;text-align:center">
+    <div class="paymentIds" style="font-size:10px;text-align:center">
       Payment ID: ${esc(data.razorpay_payment_id || '')}<br>
       Admission ID: ${esc(data.admission_id)}
     </div>`;
@@ -258,25 +267,26 @@ function renderVerified(data) {
 
 function renderPending() {
   document.getElementById('contentDiv').innerHTML = `
-    <div class="notice notice-warn">
-      <b>⏳ Payment Pending</b><br>
-      Payment verify ho rahi hai. Thodi der mein check karein.
+    <div class="success-badge" style="background:#fffaf0;border-color:#f7df9c">
+      <div class="success-icon" style="background:#c78608">⌛</div>
+      <div class="success-title" style="color:#7a4c00">Payment Verification Pending</div>
+      <div class="success-sub" style="color:#8b631b">Payment gateway से confirmation मिलते ही access automatically दिखाई देगा।</div>
     </div>
-    <button class="btn" style="background:#1d4ed8;color:white" onclick="init()">
-      🔄 Check Again
-    </button>`;
+    <div class="notice notice-info">इस page को बंद किए बिना कुछ सेकंड बाद दोबारा check करें। सफल payment दोबारा करने की जरूरत नहीं है।</div>
+    <button class="btn" style="background:linear-gradient(135deg,#1554c0,#0b3c91);color:white" onclick="init()">🔄 Check Payment Again</button>`;
   document.getElementById('loadingDiv').style.display = 'none';
   document.getElementById('contentDiv').style.display = 'block';
 }
 
 function renderError(msg) {
   document.getElementById('contentDiv').innerHTML = `
-    <div class="notice notice-error">
-      <b>❌ Error</b><br>${esc(msg)}
+    <div class="success-badge" style="background:#fff6f6;border-color:#fecaca">
+      <div class="success-icon" style="background:#b42318">!</div>
+      <div class="success-title" style="color:#991b1b">Access Check Failed</div>
+      <div class="success-sub" style="color:#a33a3a">${esc(msg)}</div>
     </div>
-    <button class="btn" style="background:#1d4ed8;color:white" onclick="init()">
-      🔄 Retry
-    </button>`;
+    <div class="notice notice-info">Payment सफल हुआ हो तो दोबारा payment न करें। Retry करें या WhatsApp Support से संपर्क करें।</div>
+    <button class="btn" style="background:linear-gradient(135deg,#1554c0,#0b3c91);color:white" onclick="init()">🔄 Retry Verification</button>`;
   document.getElementById('loadingDiv').style.display = 'none';
   document.getElementById('contentDiv').style.display = 'block';
 }
