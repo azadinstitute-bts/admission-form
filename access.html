@@ -76,6 +76,28 @@
   .paymentIds{padding:10px;border-radius:12px;background:#f7f9fc;color:#8290a2!important;word-break:break-all}
   @media(max-width:520px){body{padding:8px 8px 24px}.card{border-radius:22px}.accessHeader{padding:17px 15px}.logo-icon{width:50px;height:50px;flex-basis:50px}.logo-text{font-size:15px}.contentPad{padding:15px 12px 18px}.success-badge{padding:15px}.success-title{font-size:19px}.info-grid{grid-template-columns:1fr 1fr}.app-access{padding:14px}.copyActions{grid-template-columns:1fr}.credential-row{align-items:flex-start}.credential-value{font-size:12px}.accessSection{padding:12px}.portalFooter a{font-size:9.5px}}
 
+
+  /* R9 — ORIGINAL LOGO BOX, BETTER IMAGE FIT; UI ONLY */
+  .logo{gap:12px!important;align-items:center!important}
+  .logo-icon{
+    width:56px!important;height:56px!important;flex:0 0 56px!important;
+    border-radius:50%!important;padding:0!important;overflow:hidden!important;
+    border:2px solid rgba(255,255,255,.72)!important;background:#fff!important;
+    box-shadow:0 8px 20px rgba(0,0,0,.18)!important
+  }
+  .logo-icon img{
+    width:100%!important;height:100%!important;display:block!important;
+    object-fit:cover!important;transform:scale(1.035);transform-origin:center
+  }
+  .logo-text{font-size:17px!important}
+  .logo-sub{font-size:12px!important}
+  @media(max-width:520px){
+    .logo{gap:12px!important}
+    .logo-icon{width:50px!important;height:50px!important;flex-basis:50px!important}
+    .logo-text{font-size:15px!important}
+    .logo-sub{font-size:12px!important}
+  }
+
 </style>
 </head>
 <body>
@@ -109,8 +131,14 @@
 
 <script>
 // APP LINK UPDATE: Play Store / official app URL publish hone ke baad sirf yahan paste karein.
-const BTS_STUDENT_APP_URL = '';
+const BTS_STUDENT_APP_URL = 'https://azadinstitute-bts.github.io/bts-student-app/';
 const API = 'https://mqorslvouzmrvciubpoq.supabase.co/functions/v1/admission-api';
+const STATUS_TIMEOUT_MS = 20000;
+const TELEGRAM_RETRY_DELAY_MS = 3000;
+const TELEGRAM_MAX_RETRIES = 5;
+let statusRequestInFlight = false;
+let telegramRetryTimer = null;
+let telegramRetryCount = 0;
 
 function getParams() {
   const p = new URLSearchParams(window.location.search);
@@ -156,18 +184,97 @@ function fallbackCopy(text) {
 
 async function checkStatus() {
   const p = getParams();
-  const session = getSession();
-  const res = await fetch(API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'checkPaymentStatus',
-      access_token: p.token,
-      admission_id: p.admission_id,
-      session_token: session,
-    })
-  });
-  return await res.json();
+  const querySession = String(p.session || '').trim();
+  if (querySession) saveSession(querySession);
+  const session = querySession || getSession();
+
+  if (!p.token && !p.admission_id && !session) {
+    throw new Error('Access link में verification details नहीं मिलीं। कृपया payment के बाद मिला original link खोलें।');
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), STATUS_TIMEOUT_MS);
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'checkPaymentStatus',
+        access_token: p.token,
+        admission_id: p.admission_id,
+        session_token: session,
+      }),
+      signal: controller.signal,
+    });
+    let data;
+    try { data = await res.json(); }
+    catch(e) { throw new Error('Server से invalid response मिला।'); }
+    if (!res.ok) throw new Error((data && (data.error || data.message)) || ('Verification failed (' + res.status + ')'));
+    if (data && data.ok === false) throw new Error(data.error || data.message || 'Verification failed.');
+    return data || {};
+  } catch(err) {
+    if (err && err.name === 'AbortError') throw new Error('Verification में ज्यादा समय लग रहा है। कृपया Retry करें।');
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function clearTelegramRetry() {
+  if (telegramRetryTimer) clearTimeout(telegramRetryTimer);
+  telegramRetryTimer = null;
+}
+
+function scheduleTelegramRetry() {
+  clearTelegramRetry();
+  if (telegramRetryCount >= TELEGRAM_MAX_RETRIES) {
+    const box = document.getElementById('telegramPendingBox');
+    if (box) box.innerHTML = '⏳ Telegram invite तैयार होने में थोड़ा समय लग रहा है। नीचे दिए button से दोबारा check करें।';
+    const btn = document.getElementById('telegramRetryBtn');
+    if (btn) btn.style.display = 'block';
+    return;
+  }
+  telegramRetryCount += 1;
+  let remaining = Math.ceil(TELEGRAM_RETRY_DELAY_MS / 1000);
+  const countEl = document.getElementById('retryCountdown');
+  if (countEl) countEl.textContent = remaining;
+  const interval = setInterval(() => {
+    remaining -= 1;
+    const el = document.getElementById('retryCountdown');
+    if (el) el.textContent = Math.max(remaining, 0);
+    if (remaining <= 0) clearInterval(interval);
+  }, 1000);
+  telegramRetryTimer = setTimeout(refreshTelegramStatus, TELEGRAM_RETRY_DELAY_MS);
+}
+
+async function refreshTelegramStatus() {
+  if (statusRequestInFlight) return;
+  statusRequestInFlight = true;
+  const btn = document.getElementById('telegramRetryBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  try {
+    const data = await checkStatus();
+    if (data.access_session_token) saveSession(data.access_session_token);
+    if (data.verified === true || data.payment_state === 'VERIFIED') {
+      const approved = String(data.telegram_join_status || '').toUpperCase() === 'APPROVED';
+      if (data.telegram_invite_link || approved) {
+        telegramRetryCount = 0;
+        clearTelegramRetry();
+        renderVerified(data);
+      } else {
+        const box = document.getElementById('telegramPendingBox');
+        if (box) box.innerHTML = '⏳ Telegram invite link generate हो रहा है… <span id="retryCountdown">3</span> seconds में फिर check होगा।';
+        scheduleTelegramRetry();
+      }
+    }
+  } catch(err) {
+    const box = document.getElementById('telegramPendingBox');
+    if (box) box.textContent = 'Telegram link check नहीं हो पाया। नीचे Retry करें।';
+    if (btn) btn.style.display = 'block';
+  } finally {
+    statusRequestInFlight = false;
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Check Telegram Link'; }
+  }
 }
 
 function renderVerified(data) {
@@ -176,7 +283,7 @@ function renderVerified(data) {
   const hasWhatsApp = data.group_whatsapp_link || '';
   const joinStatus = String(data.telegram_join_status || '').toUpperCase();
   const isApproved = joinStatus === 'APPROVED';
-  const appCode = data.access_code_consumed ? '' : String(data.app_access_code || params.token || '');
+  const appCode = data.access_code_consumed ? '' : String(data.app_access_code || '');
   const appMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
   const appIsLive = /^https?:\/\//i.test(BTS_STUDENT_APP_URL);
 
@@ -191,10 +298,8 @@ function renderVerified(data) {
         <div class="notice notice-warn" style="margin-top:8px">⏱️ Invite link 24 घंटे में expire हो सकता है।</div>`;
     }
   } else {
-    setTimeout(() => init(), 2000);
-    tgSection = `<div class="notice notice-info">⏳ Telegram invite link generate हो रहा है…<br><span id="retryCountdown">2</span> seconds में automatically check होगा।</div>`;
-    let count = 2;
-    const timer = setInterval(() => { count--; const el = document.getElementById('retryCountdown'); if (el) el.textContent = count; if (count <= 0) clearInterval(timer); }, 1000);
+    tgSection = `<div class="notice notice-info" id="telegramPendingBox">⏳ Telegram invite link generate हो रहा है…<br><span id="retryCountdown">3</span> seconds में फिर check होगा।</div>
+      <button class="btn" id="telegramRetryBtn" type="button" style="display:none;background:linear-gradient(135deg,#1554c0,#0b3c91);color:white">🔄 Check Telegram Link</button>`;
   }
 
   let waSection = '';
@@ -222,12 +327,12 @@ function renderVerified(data) {
         <button class="copy-btn" onclick="copyText('${esc(appMobile || data.mobile)}')">Copy Mobile</button>
         <button class="copy-btn" onclick="copyText('${esc(appCode)}')">Copy Access Code</button>
       </div>
-      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Install BTS Student App</a>` : `<span class="appDownload">App install link जल्द सक्रिय होगा</span>`}
+      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Download BTS Student App</a>` : `<span class="appDownload">App download link जल्द सक्रिय होगा</span>`}
       <div class="app-note">पहली successful login के बाद code इसी device से bind हो सकता है। Device बदलने पर support से reset कराना पड़ सकता है।</div>
     </div>` : `
     <div class="app-access">
       <div class="app-access-head"><div class="app-access-icon">📱</div><div><div class="app-access-title">Student App Account Active</div><div class="app-access-sub">One-time code पहले उपयोग हो चुका है। Existing device पर login active होना चाहिए।</div></div></div>
-      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Open / Install BTS Student App</a>` : `<span class="appDownload">App install link जल्द सक्रिय होगा</span>`}
+      ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener">📲 Open / Download BTS Student App</a>` : `<span class="appDownload">App download link जल्द सक्रिय होगा</span>`}
       <div class="app-note">Device reset या login सहायता के लिए नीचे WhatsApp Support उपयोग करें।</div>
     </div>`;
 
@@ -263,6 +368,9 @@ function renderVerified(data) {
 
   document.getElementById('loadingDiv').style.display = 'none';
   document.getElementById('contentDiv').style.display = 'block';
+  const retryBtn = document.getElementById('telegramRetryBtn');
+  if (retryBtn) retryBtn.onclick = refreshTelegramStatus;
+  if (!inviteLink && !isApproved) scheduleTelegramRetry();
 }
 
 function renderPending() {
@@ -292,20 +400,26 @@ function renderError(msg) {
 }
 
 async function init() {
+  if (statusRequestInFlight) return;
+  statusRequestInFlight = true;
+  clearTelegramRetry();
   document.getElementById('loadingDiv').style.display = 'block';
   document.getElementById('contentDiv').style.display = 'none';
   try {
     const data = await checkStatus();
     if (data.access_session_token) saveSession(data.access_session_token);
     if (data.verified === true || data.payment_state === 'VERIFIED') {
+      telegramRetryCount = 0;
       renderVerified(data);
     } else if (data.payment_state === 'NOT_FOUND') {
-      renderError('Access link invalid hai ya expire ho gaya. Support se contact karein.');
+      renderError('Access link invalid है या expire हो गया। Support से संपर्क करें।');
     } else {
       renderPending();
     }
   } catch(err) {
-    renderError('Network error: ' + err.message);
+    renderError((err && err.message) || 'Network error');
+  } finally {
+    statusRequestInFlight = false;
   }
 }
 
