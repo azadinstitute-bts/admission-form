@@ -359,7 +359,7 @@
     }
 
   </style>
-</head>
+<link rel="stylesheet" href="student-pages.css"></head>
 <script>
 window.addEventListener('load', function(){
   var loader = document.getElementById('pageLoader');
@@ -443,7 +443,7 @@ function normalizeClientError(err){
   try{return JSON.stringify(err)}catch(e){return String(err)}
 }
 // APP LINK UPDATE: Play Store / official app URL publish hone ke baad sirf yahan paste karein.
-const BTS_STUDENT_APP_URL = 'https://azadinstitute-bts.github.io/bts-student-app/';
+const BTS_STUDENT_APP_URL = 'https://play.google.com/store/apps/details?id=in.azadinstitute.btsstudent';
 const BTS_SITE_URL = 'https://bilaspurtestseries.com/';
 const BTS_TEACHER_URL = 'https://bilaspurtestseries.com/teacher.html';
 const BTS_TELEGRAM_URL = 'https://t.me/bilaspur_test_series';
@@ -615,7 +615,7 @@ function renderAdmissionShell(){
         <div class="buyerLogo logoFallback" id="brandLogoShell">BTS</div>
         <div class="compactBrandText">
           <div class="compactBrandTitle" id="formTitle">BILASPUR TEST SERIES</div>
-          <div class="compactBrandSub" id="formSubtitle">CG Teacher & CTET • Admission Portal</div>
+          <div class="compactBrandSub" id="formSubtitle">CG शिक्षक भर्ती एवं CTET · एडमिशन फॉर्म</div>
         </div>
       </div>
       <div class="compactSecureBadge">🔒 Secure</div>
@@ -623,11 +623,11 @@ function renderAdmissionShell(){
     <div id="loadMsg" class="notice compactLoad">Form taiyar ho raha hai...<div class="loadProgress"><span></span></div></div>
     <div id="formCard" class="card hide"></div>
     <section class="bottomInfoSection">
-      <div class="bottomInfoHead"><div class="bottomInfoHeadIcon">✓</div><div><b>Admission के बाद क्या मिलेगा?</b><span>Form पूरा करने के बाद नीचे दी गई सुविधाएं आपके plan की eligibility के अनुसार मिलेंगी।</span></div></div>
+      <div class="bottomInfoHead"><div class="bottomInfoHeadIcon">✓</div><div><b>Admission के बाद क्या मिलेगा?</b><span>एडमिशन पूरा होने पर आपके चुने हुए प्लान के अनुसार ये सुविधाएँ मिलेंगी।</span></div></div>
       <div class="trustPills bottomTrustPills">
         <div class="trustPill"><span>🔒</span><b>Secure Payment</b><small>Razorpay protected</small></div>
-        <div class="trustPill"><span>📱</span><b>Student App</b><small>Instant login access</small></div>
-        <div class="trustPill"><span>⚡</span><b>Groups Access</b><small>Telegram + eligible WhatsApp</small></div>
+        <div class="trustPill"><span>📱</span><b>Student App</b><small>टेस्ट और रिज़ल्ट देखें</small></div>
+        <div class="trustPill"><span>⚡</span><b>Groups Access</b><small>आपके प्लान के अनुसार groups</small></div>
       </div>
       <div class="appLaunchCard">
         <div class="appLaunchIcon">📲</div>
@@ -636,9 +636,9 @@ function renderAdmissionShell(){
           <span>Payment verify होते ही App login details और eligible Telegram/WhatsApp access तुरंत मिलेगा।</span>
           <em class="appLaunchStatus">${appIsLive ? '● APP LIVE' : '● APP LINK COMING SHORTLY'}</em>
         </div>
-        ${appIsLive ? `<a class="appLaunchAction live" target="_blank" rel="noopener" href="${esc(BTS_STUDENT_APP_URL)}">Download App</a>` : `<span class="appLaunchAction">App download link जल्द सक्रिय होगा</span>`}
+        ${appIsLive ? `<a class="appLaunchAction live" target="_blank" rel="noopener" href="${esc(BTS_STUDENT_APP_URL)}"><img class="btsPlayBadge" src="google-play-hi.png" alt="Google Play से BTS Student App डाउनलोड करें" width="190" height="74"></a>` : `<span class="appLaunchAction">App download link जल्द सक्रिय होगा</span>`}
       </div>
-      <div id="supportQuickSlot"></div>
+      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><p class="btsAdmissionNote">एडमिशन इसी वेबसाइट से या customer support की सहायता से होगा। Student App टेस्ट देने के लिए है।</p><div id="supportQuickSlot"></div>
     </section>
     <div class="siteFooter">
       <div class="siteFooterLinks">
@@ -820,23 +820,23 @@ function renderSelectedPlanSummary(plan){
 }
 function renderStudentFieldHtml(cfg, codeRequired){
   return `
-    <div class="formSteps" id="formSteps"><div id="stepDetails" class="active"><span>1</span>Details</div><div id="stepCourse"><span>2</span>Course</div><div id="stepPayment"><span>3</span>Payment</div></div>
-    <div class="sectionTitle"><span class="dot">1</span><div><b>Student Details</b><small>Admission और app login के लिए सही जानकारी दें</small></div></div>
+    <div class="formSteps" id="formSteps"><div id="stepDetails" class="active"><span>1</span>आपकी जानकारी</div><div id="stepCourse"><span>2</span>अपना कोर्स</div><div id="stepPayment"><span>3</span>भुगतान</div></div>
+    <div class="sectionTitle"><span class="dot">1</span><div><b>अपनी जानकारी भरें</b><small>Admission और app login के लिए सही जानकारी दें</small></div></div>
     <p class="sectionLead">इसी mobile number पर payment confirmation, Student App access और support updates मिलेंगे।</p>
     <div id="studentMsg" class="notice hide"></div>
-    ${codeRequired ? `<label>Admission Code</label><input id="admissionCode" placeholder="Admission code" oninput="updateConversionUi()">` : ''}
-    <div class="row"><div><label>Student Name *</label><input id="name" autocomplete="name" placeholder="पूरा नाम / Full name" oninput="updateConversionUi()"></div><div><label>Mobile / WhatsApp Number *</label><input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange();updateConversionUi()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
-    <div class="row"><div><label>Email ID *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com" oninput="updateConversionUi()"></div><div><label>District / City</label><input id="district" autocomplete="address-level2" placeholder="District / City"></div></div>
+    ${codeRequired ? `<label for="admissionCode">Admission Code</label><input id="admissionCode" placeholder="Admission code" oninput="updateConversionUi()">` : ''}
+    <div class="row"><div><label for="name">विद्यार्थी का पूरा नाम *</label><input id="name" autocomplete="name" placeholder="पूरा नाम / Full name" oninput="updateConversionUi()"></div><div><label for="mobile">मोबाइल / WhatsApp नंबर *</label><input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange();updateConversionUi()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
+    <div class="row"><div><label for="email">ईमेल पता *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com" oninput="updateConversionUi()"></div><div><label for="district">जिला / शहर</label><input id="district" autocomplete="address-level2" placeholder="District / City"></div></div>
     <div class="sectionDivider"></div>
-    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><div><b>Choose Course</b><small>अपना सही वर्ग, विषय और subscription plan चुनें</small></div></div>
-    <div class="courseHint"><span>💡</span><span>Course बदलने पर Subject और Plan दोबारा चुनना होगा। Payment से पहले नीचे पूरा summary दिखेगा।</span></div>
+    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><div><b>अपना कोर्स चुनें</b><small>अपनी परीक्षा, विषय और उपलब्ध प्लान चुनें</small></div></div>
+    <div class="courseHint"><span>💡</span><span>वर्ग बदलने पर विषय और प्लान फिर चुनें। भुगतान से पहले नीचे अपनी जानकारी और शुल्क जाँच लें।</span></div>
     <div class="row3">
-      <div><label>Varg / Post *</label><select id="post" onchange="onPostChange();updateConversionUi()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
-      <div><label>Subject Group *</label><select id="subject" onchange="onSubjectChange();updateConversionUi()"><option value="">Select Varg first</option></select></div>
-      <div><label>Subscription Plan *</label><select id="plan" onchange="onPlanChange();updateConversionUi()"><option value="">Select Subject first</option></select></div>
+      <div><label for="post">वर्ग / परीक्षा *</label><select id="post" onchange="onPostChange();updateConversionUi()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
+      <div><label for="subject">विषय / विषय समूह *</label><select id="subject" onchange="onSubjectChange();updateConversionUi()"><option value="">Select Varg first</option></select></div>
+      <div><label for="plan">कोर्स का प्लान *</label><select id="plan" onchange="onPlanChange();updateConversionUi()"><option value="">Select Subject first</option></select></div>
     </div>
     <div id="paymentBox" class="card hide" style="margin-left:0;margin-right:0">
-      <div class="sectionTitle"><span class="dot">3</span><div><b>Secure Payment</b><small>Payment verify होते ही access portal खुलेगा</small></div></div>
+      <div class="sectionTitle"><span class="dot">3</span><div><b>विवरण जाँचें और भुगतान करें</b><small>Payment verify होते ही access portal खुलेगा</small></div></div>
       <div id="selectedPlanSlot"></div>
       <div class="amount" id="amountText">₹0</div>
       <details id="promoBox" class="promoDisclosure hide">
@@ -850,7 +850,7 @@ function renderStudentFieldHtml(cfg, codeRequired){
           <div id="promoSummary" class="hide" style="margin-top:8px"></div>
         </div>
       </details>
-      <div id="razorpayPayBox" class="hide">
+      <div id="razorpayPayBox" class="hide"><aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और आपके कोर्स के WhatsApp व Telegram group links मिलेंगे।</p></aside>
         <p><button id="razorpayPayBtn" class="ok full" onclick="startRazorpayAdmission()">Pay Securely</button></p>
         <div class="paymentTrust compactPaymentTrust"><span>🔒 Razorpay protected</span><span>⚡ Auto verification</span></div>
       </div>
@@ -858,8 +858,8 @@ function renderStudentFieldHtml(cfg, codeRequired){
         <p class="muted">UPI ID: <b id="upiText"></b> | Receiver: <b id="receiverText"></b></p>
         <div id="qrBox"></div><p><a id="payBtn" class="btn" href="#" target="_blank">Pay Now</a></p>
         <p id="paymentNoteHelp" class="muted">Payment note/remark में अपना latest mobile number जरूर लिखें.</p>
-        <label>UTR / Transaction ID *</label><input id="utr" placeholder="Payment UTR / Transaction ID" oninput="updateConversionUi()">
-        <label>Payment Screenshot / PDF *</label><input id="screenshot" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange="onScreenshotChange();updateConversionUi()"><div id="screenshotHelp" class="fieldHelp">Payment screenshot/PDF upload करना जरूरी है.</div>
+        <label for="utr">UTR / भुगतान का Transaction ID *</label><input id="utr" placeholder="Payment UTR / Transaction ID" oninput="updateConversionUi()">
+        <label for="screenshot">भुगतान का Screenshot / PDF *</label><input id="screenshot" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" onchange="onScreenshotChange();updateConversionUi()"><div id="screenshotHelp" class="fieldHelp">Payment screenshot/PDF upload करना जरूरी है.</div>
         <p class="muted">Screenshot/PDF max 5 MB. Verification के बाद access portal उपलब्ध होगा.</p>
       </div>
     </div>
@@ -1298,10 +1298,10 @@ function renderPayReadyCard(res, payUrl){
   var html = ''
     + '<div class="payReadyCard" id="payReadyCard">'
     +   '<div class="payReadyIcon">&#10003;</div>'
-    +   '<div class="payReadyTitle">Admission Details Saved</div>'
-    +   '<div class="payReadySub">Review your details and complete payment securely on Razorpay.</div>'
+    +   '<div class="payReadyTitle">आपकी जानकारी सेव हो गई है</div>'
+    +   '<div class="payReadySub">नाम, मोबाइल नंबर, कोर्स और शुल्क जाँचें। फिर नीचे दिए बटन से भुगतान करें।</div>'
     +   '<div class="paySummary">' + rowsHtml + '</div>'
-    +   '<a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
+    +   '<aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और आपके कोर्स के WhatsApp व Telegram group links मिलेंगे।</p></aside><div class="btsPaymentAck"><label class="btsAckLabel" for="paymentReturnUnderstood"><input type="checkbox" id="paymentReturnUnderstood" aria-describedby="paymentReturnHint"><span>मैं समझ गया/गई हूँ: भुगतान के बाद इसी browser page पर वापस आकर लगभग 5 सेकंड रुकना है।</span></label><p id="paymentReturnHint">भुगतान वाला पेज खोलने के लिए ऊपर दिए बॉक्स पर टिक करें।</p></div><a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
     +     '<span>&#x1F512;</span> Pay Securely on Razorpay'
     +   '</a>'
     +   '<div class="payCtaSub">UPI, card and net banking supported · Student App credentials और group access payment के बाद तुरंत unlock होंगे</div>'
@@ -1320,6 +1320,7 @@ function renderPayReadyCard(res, payUrl){
   // Keep one payment link for both CTAs. The sticky Pay Now button now opens
   // this existing link instead of submitting student details a second time.
   setMobilePaymentReadyState(payUrl, Number(res.amount || getFinalPayableAmount()));
+  bindPaymentReturnAcknowledgement();
 
   var copyBtn = $('payCopyBtn');
   if(copyBtn){
@@ -1347,7 +1348,7 @@ function renderPayReadyCard(res, payUrl){
       detachBeforeUnloadGuard();
       ctaBtn.style.animation = 'none';
       var sub = ctaBtn.nextElementSibling;
-      if(sub) sub.innerHTML = 'Secure payment tab opened. Payment पूरा करें; access portal automatically खुलेगा.';
+      if(sub) sub.innerHTML = 'भुगतान पूरा करके वापस इसी browser page पर आएँ। लगभग 5 सेकंड में आपका Access Page अपने-आप खुल जाएगा।';
     });
   }
 
@@ -1355,6 +1356,33 @@ function renderPayReadyCard(res, payUrl){
     var newCard = $('payReadyCard');
     if(newCard) newCard.scrollIntoView({behavior:'smooth', block:'start'});
   }catch(e){}
+}
+
+function bindPaymentReturnAcknowledgement(){
+  const checkbox = document.getElementById('paymentReturnUnderstood');
+  const payLink = document.getElementById('payCtaBtn');
+  const mobileButton = document.getElementById('mobilePayCta');
+  const hint = document.getElementById('paymentReturnHint');
+  if(!checkbox || !payLink) return;
+  const existingPaymentUrl = payLink.getAttribute('href');
+  function syncAcknowledgement(){
+    const ready = checkbox.checked;
+    payLink.setAttribute('aria-disabled', String(!ready));
+    if(ready) payLink.setAttribute('href', existingPaymentUrl);
+    else payLink.removeAttribute('href');
+    if(mobileButton) mobileButton.disabled = !ready;
+    if(hint) hint.hidden = ready;
+  }
+  function requireAcknowledgement(event){
+    if(checkbox.checked) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    checkbox.focus();
+  }
+  payLink.addEventListener('click', requireAcknowledgement, true);
+  if(mobileButton) mobileButton.addEventListener('click', requireAcknowledgement, true);
+  checkbox.addEventListener('change', syncAcknowledgement);
+  syncAcknowledgement();
 }
 
 async function startRazorpayAdmission(){
