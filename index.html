@@ -799,9 +799,20 @@ function getSelectText(id){
   if(!el || el.selectedIndex < 0) return '';
   return (el.options[el.selectedIndex].text || '').trim();
 }
+function isMega15Plan(plan){
+  var name = String((plan && plan.plan_name) || '').toLowerCase();
+  var id = String((plan && plan.plan_id) || '').toLowerCase();
+  return id.indexOf('mega15') >= 0 || name.indexOf('15 mega') >= 0;
+}
+function isPromoEligiblePlan(plan){
+  var name = String((plan && plan.plan_name) || '').toLowerCase();
+  var id = String((plan && plan.plan_id) || '').toLowerCase();
+  return id.indexOf('_full') >= 0 || name.indexOf('full course') >= 0;
+}
 function getPlanAccessLabel(plan){
   var name = String((plan && plan.plan_name) || '').toLowerCase();
   var id = String((plan && plan.plan_id) || '').toLowerCase();
+  if(isMega15Plan(plan)) return 'Student App • Final 15 Mega Tests';
   if(name.indexOf('full') >= 0 || id.indexOf('_full') >= 0) return 'Telegram + WhatsApp Group';
   return 'Telegram Channel';
 }
@@ -811,11 +822,16 @@ function renderSelectedPlanSummary(plan){
   var subjectText=getSelectText('subject');
   var planText=getSelectText('plan');
   var access=getPlanAccessLabel(plan);
+  var megaRows=isMega15Plan(plan)
+    ? '<div class="summaryLine"><span>Validity</span><b>परीक्षा तक</b></div>'
+      + '<div class="summaryLine"><span>Promo</span><b>लागू नहीं</b></div>'
+    : '';
   return '<div class="selectedSummary" id="selectedPlanSummary">'
     + '<div class="summaryLine"><span>Course</span><b>' + esc(postText || '-') + '</b></div>'
     + '<div class="summaryLine"><span>Subject</span><b>' + esc(subjectText || '-') + '</b></div>'
     + '<div class="summaryLine"><span>Plan</span><b>' + esc(planText || '-') + '</b></div>'
     + '<div class="summaryLine"><span>Access</span><b><span class="accessBadge">✅ ' + esc(access) + '</span></b></div>'
+    + megaRows
     + '</div>';
 }
 function renderStudentFieldHtml(cfg, codeRequired){
@@ -850,7 +866,7 @@ function renderStudentFieldHtml(cfg, codeRequired){
           <div id="promoSummary" class="hide" style="margin-top:8px"></div>
         </div>
       </details>
-      <div id="razorpayPayBox" class="hide"><aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और आपके कोर्स के WhatsApp व Telegram group links मिलेंगे।</p></aside>
+      <div id="razorpayPayBox" class="hide"><aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और चुने हुए plan के अनुसार Student App / group access मिलेगा।</p></aside>
         <p><button id="razorpayPayBtn" class="ok full" onclick="startRazorpayAdmission()">Pay Securely</button></p>
         <div class="paymentTrust compactPaymentTrust"><span>🔒 Razorpay protected</span><span>⚡ Auto verification</span></div>
       </div>
@@ -1020,6 +1036,7 @@ async function applyPromoCode(){
     clearAllFieldErrors();
     var plan=getSelectedPlan();
     if(!plan) throw {message:'Plan select karein.', fieldId:'plan'};
+    if(!isPromoEligiblePlan(plan)) throw {message:'इस plan पर Promo Code लागू नहीं है.', fieldId:'promoCode'};
     if(!isRazorpayEnabled()) throw {message:'Promo code sirf Razorpay payment par valid hai.'};
     if(!isValidIndianMobileInput(val('mobile'))) throw {message:'Promo apply karne ke liye valid mobile number required hai.', fieldId:'mobile'};
     var code=String(val('promoCode')||'').trim().toUpperCase();
@@ -1053,7 +1070,10 @@ function onPlanChange(){
     if(manualBox) manualBox.classList.add('hide');
     if(razorBox) razorBox.classList.remove('hide');
     if(submitBtn) submitBtn.classList.add('hide');
-    if(promoBox) promoBox.classList.remove('hide');
+    if(promoBox){
+      if(isPromoEligiblePlan(plan)) promoBox.classList.remove('hide');
+      else promoBox.classList.add('hide');
+    }
     updateConversionUi();
     return;
   }
@@ -1301,7 +1321,7 @@ function renderPayReadyCard(res, payUrl){
     +   '<div class="payReadyTitle">आपकी जानकारी सेव हो गई है</div>'
     +   '<div class="payReadySub">नाम, मोबाइल नंबर, कोर्स और शुल्क जाँचें। फिर नीचे दिए बटन से भुगतान करें।</div>'
     +   '<div class="paySummary">' + rowsHtml + '</div>'
-    +   '<aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और आपके कोर्स के WhatsApp व Telegram group links मिलेंगे।</p></aside><div class="btsPaymentAck"><label class="btsAckLabel" for="paymentReturnUnderstood"><input type="checkbox" id="paymentReturnUnderstood" aria-describedby="paymentReturnHint"><span>मैं समझ गया/गई हूँ: भुगतान के बाद इसी browser page पर वापस आकर लगभग 5 सेकंड रुकना है।</span></label><p id="paymentReturnHint">भुगतान वाला पेज खोलने के लिए ऊपर दिए बॉक्स पर टिक करें।</p></div><a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
+    +   '<aside class="btsPaymentReturn" aria-label="भुगतान के बाद क्या करें"><strong class="btsReturnTitle">भुगतान के बाद यहाँ वापस आएँ</strong><ol class="btsReturnSteps"><li><b>भुगतान पूरा करें</b><span>अपने payment app में भुगतान करें।</span></li><li><b>वापस browser में आएँ</b><span>इसी पेज वाला browser tab दोबारा खोलें।</span></li><li><b>लगभग 5 सेकंड रुकें</b><span>आपका Access Page अपने-आप खुल जाएगा।</span></li></ol><p>वहीं आपका Access Code और चुने हुए plan के अनुसार Student App / group access मिलेगा।</p></aside><div class="btsPaymentAck"><label class="btsAckLabel" for="paymentReturnUnderstood"><input type="checkbox" id="paymentReturnUnderstood" aria-describedby="paymentReturnHint"><span>मैं समझ गया/गई हूँ: भुगतान के बाद इसी browser page पर वापस आकर लगभग 5 सेकंड रुकना है।</span></label><p id="paymentReturnHint">भुगतान वाला पेज खोलने के लिए ऊपर दिए बॉक्स पर टिक करें।</p></div><a class="payCta" target="_blank" rel="noopener" href="' + esc(payUrl) + '" id="payCtaBtn">'
     +     '<span>&#x1F512;</span> Pay Securely on Razorpay'
     +   '</a>'
     +   '<div class="payCtaSub">UPI, card and net banking supported · Student App credentials और group access payment के बाद तुरंत unlock होंगे</div>'
