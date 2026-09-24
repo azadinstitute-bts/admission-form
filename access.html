@@ -257,7 +257,8 @@ async function refreshTelegramStatus() {
     if (data.access_session_token) saveSession(data.access_session_token);
     if (data.verified === true || data.payment_state === 'VERIFIED') {
       const approved = String(data.telegram_join_status || '').toUpperCase() === 'APPROVED';
-      if (data.telegram_invite_link || approved) {
+      const megaOnly = /15 mega tests/i.test(String(data.plan_name || ''));
+      if (data.telegram_invite_link || approved || megaOnly) {
         telegramRetryCount = 0;
         clearTelegramRetry();
         renderVerified(data);
@@ -283,12 +284,15 @@ function renderVerified(data) {
   const hasWhatsApp = data.group_whatsapp_link || '';
   const joinStatus = String(data.telegram_join_status || '').toUpperCase();
   const isApproved = joinStatus === 'APPROVED';
+  const isMegaOnlyPlan = /15 mega tests/i.test(String(data.plan_name || ''));
   const appCode = data.access_code_consumed ? '' : String(data.app_access_code || '');
   const appMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
   const appIsLive = /^https?:\/\//i.test(BTS_STUDENT_APP_URL);
 
   let tgSection = '';
-  if (inviteLink) {
+  if (isMegaOnlyPlan) {
+    tgSection = '<div class="notice notice-info">🎯 यह Final 15 Mega Tests plan Student App access के लिए है। Telegram/WhatsApp group access इस plan में शामिल नहीं है।</div>';
+  } else if (inviteLink) {
     if (isApproved) {
       tgSection = `<div class="notice notice-success">✅ आप Telegram group में join हो चुके हैं।</div>`;
     } else {
@@ -301,6 +305,8 @@ function renderVerified(data) {
     tgSection = `<div class="notice notice-info" id="telegramPendingBox">⏳ Telegram invite link generate हो रहा है…<br><span id="retryCountdown">3</span> seconds में फिर check होगा।</div>
       <button class="btn" id="telegramRetryBtn" type="button" style="display:none;background:linear-gradient(135deg,#1554c0,#0b3c91);color:white">🔄 Check Telegram Link</button>`;
   }
+
+  const tgHeading = isMegaOnlyPlan ? '🎯 Mega Test Access' : '📨 Telegram Group';
 
   let waSection = '';
   if (hasWhatsApp) {
@@ -340,7 +346,7 @@ function renderVerified(data) {
     <div class="success-badge">
       <div class="success-icon">✓</div>
       <div class="success-title">भुगतान की पुष्टि हो गई है</div>
-      <div class="success-sub">आपका एडमिशन पूरा हो गया है। नीचे अपना Access Code और group links देखें।</div>
+      <div class="success-sub">आपका एडमिशन पूरा हो गया है। नीचे अपना Access Code और चुने हुए plan का access देखें।</div>
     </div>
 
     <div class="info-grid">
@@ -355,7 +361,7 @@ function renderVerified(data) {
     ${appAccessSection}
 
     <div class="accessSection">
-      <div class="section-title">📨 Telegram Group</div>
+      <div class="section-title">${tgHeading}</div>
       ${tgSection}
     </div>
     ${waSection}
@@ -370,7 +376,7 @@ function renderVerified(data) {
   document.getElementById('contentDiv').style.display = 'block';
   const retryBtn = document.getElementById('telegramRetryBtn');
   if (retryBtn) retryBtn.onclick = refreshTelegramStatus;
-  if (!inviteLink && !isApproved) scheduleTelegramRetry();
+  if (!isMegaOnlyPlan && !inviteLink && !isApproved) scheduleTelegramRetry();
 }
 
 function renderPending() {
