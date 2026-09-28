@@ -813,6 +813,7 @@ function getPlanAccessLabel(plan){
   var name = String((plan && plan.plan_name) || '').toLowerCase();
   var id = String((plan && plan.plan_id) || '').toLowerCase();
   if(isMega15Plan(plan)) return 'Student App • Final 15 Mega Tests';
+  if(id === 'cg_si_mains_full_2026') return 'Student App + Web Test Portal';
   if(name.indexOf('full') >= 0 || id.indexOf('_full') >= 0) return 'Telegram + WhatsApp Group';
   return 'Telegram Channel';
 }
