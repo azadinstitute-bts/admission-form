@@ -184,11 +184,14 @@ function fallbackCopy(text) {
 
 async function checkStatus() {
   const p = getParams();
-  const querySession = String(p.session || '').trim();
+  // The payment-return token identifies this admission. A remembered session
+  // from an older admission must not override it or display another code.
+  const accessToken = String(p.token || '').trim();
+  const querySession = accessToken ? '' : String(p.session || '').trim();
   if (querySession) saveSession(querySession);
-  const session = querySession || getSession();
+  const session = accessToken ? '' : (querySession || getSession());
 
-  if (!p.token && !p.admission_id && !session) {
+  if (!accessToken && !p.admission_id && !session) {
     throw new Error('Access link में verification details नहीं मिलीं। कृपया payment के बाद मिला original link खोलें।');
   }
 
@@ -200,7 +203,7 @@ async function checkStatus() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'checkPaymentStatus',
-        access_token: p.token,
+        access_token: accessToken,
         admission_id: p.admission_id,
         session_token: session,
       }),
