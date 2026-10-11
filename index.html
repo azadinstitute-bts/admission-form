@@ -828,10 +828,15 @@ function renderSelectedPlanSummary(plan){
   var subjectText=getSelectText('subject');
   var planText=getSelectText('plan');
   var access=getPlanAccessLabel(plan);
-  var megaRows=isMegaPlan(plan)
-    ? '<div class="summaryLine"><span>Validity</span><b>' + (getMegaTestCount(plan) === 20 ? '30 नवंबर 2026 तक' : 'परीक्षा तक') + '</b></div>'
-      + '<div class="summaryLine"><span>Promo</span><b>लागू नहीं</b></div>'
-    : '';
+  var targetValidity = /^(varg2|varg3)$/.test(String(plan.post_id || ''))
+    && (isMegaPlan(plan) || isPromoEligiblePlan(plan)) && plan.valid_until;
+  var validityRows = targetValidity
+    ? '<div class="summaryLine"><span>Course validity</span><b>'
+      + esc(new Date(plan.valid_until).toLocaleDateString('hi-IN', {timeZone:'Asia/Kolkata',day:'numeric',month:'long',year:'numeric'}))
+      + ', ' + esc(new Date(plan.valid_until).toLocaleTimeString('en-GB', {timeZone:'Asia/Kolkata',hour12:false})) + ' IST तक</b></div>'
+    : (isMegaPlan(plan) ? '<div class="summaryLine"><span>Validity</span><b>' + (getMegaTestCount(plan) === 20 ? '30 नवंबर 2026 तक' : 'परीक्षा तक') + '</b></div>' : '');
+  var megaRows = validityRows + (isMegaPlan(plan)
+    ? '<div class="summaryLine"><span>Promo</span><b>लागू नहीं</b></div>' : '');
   return '<div class="selectedSummary" id="selectedPlanSummary">'
     + '<div class="summaryLine"><span>Course</span><b>' + esc(postText || '-') + '</b></div>'
     + '<div class="summaryLine"><span>Subject</span><b>' + esc(subjectText || '-') + '</b></div>'
