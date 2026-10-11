@@ -291,10 +291,18 @@ function renderVerified(data) {
   const appCode = data.access_code_consumed ? '' : String(data.app_access_code || '');
   const appMobile = String(data.mobile || '').replace(/\D/g, '').slice(-10);
   const appIsLive = /^https?:\/\//i.test(BTS_STUDENT_APP_URL);
+  const isVarg23Course = /(?:varg|वर्ग)\s*[23]/i.test(String(data.post_name || ''));
+  const isFullOrMega = /full (?:course|test series)|15 mega tests/i.test(String(data.plan_name || ''));
+  const displayedPlanName = isVarg23Course && isFullOrMega
+    ? String(data.plan_name || '').replace(/Valid Till Exam|3\.5 Months/gi, 'Valid Till 31 December 2026')
+    : String(data.plan_name || '');
+  const courseValidityNote = isVarg23Course && isFullOrMega
+    ? '<div class="notice notice-info">कोर्स की वैधता: 31 दिसंबर 2026, रात 11:59:59 IST तक।</div>' : '';
+
 
   let tgSection = '';
   if (isMegaOnlyPlan) {
-    tgSection = '<div class="notice notice-info">🎯 यह ' + esc(data.plan_name || 'Mega Tests') + ' पैक Student App access के लिए है। Telegram/WhatsApp group access इस plan में शामिल नहीं है।</div>';
+    tgSection = '<div class="notice notice-info">🎯 यह ' + esc(displayedPlanName || 'Mega Tests') + ' पैक Student App access के लिए है। Telegram/WhatsApp group access इस plan में शामिल नहीं है।</div>';
   } else if (inviteLink) {
     if (isApproved) {
       tgSection = `<div class="notice notice-success">✅ आप Telegram group में join हो चुके हैं।</div>`;
@@ -337,12 +345,12 @@ function renderVerified(data) {
         <button class="copy-btn" onclick="copyText('${esc(appCode)}')">Copy Access Code</button>
       </div>
       ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener"><img class="btsPlayBadge" src="google-play-hi.png" alt="Google Play से BTS Student App डाउनलोड करें" width="190" height="74"></a>` : `<span class="appDownload">App download link जल्द सक्रिय होगा</span>`}
-      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><div class="app-note">पहली successful login के बाद code इसी device से bind हो सकता है। Device बदलने पर support से reset कराना पड़ सकता है।</div>
+      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><div class="app-note">एक समय पर केवल एक device पर login करें—App या website, दोनों पर यही नियम है। जिस device पर पहली बार login करें, आगे उसी device पर टेस्ट दें। अपना Access Code किसी दूसरे device पर आज़माएँ या साझा न करें। Device बदलना हो तो पहले WhatsApp Support से device reset कराएँ।</div>
     </div>` : `
     <div class="app-access">
       <div class="app-access-head"><div class="app-access-icon">📱</div><div><div class="app-access-title">Student App Account Active</div><div class="app-access-sub">One-time code पहले उपयोग हो चुका है। Existing device पर login active होना चाहिए।</div></div></div>
       ${appIsLive ? `<a class="appDownload live" href="${esc(BTS_STUDENT_APP_URL)}" target="_blank" rel="noopener"><img class="btsPlayBadge" src="google-play-hi.png" alt="Google Play से BTS Student App डाउनलोड करें" width="190" height="74"></a>` : `<span class="appDownload">App download link जल्द सक्रिय होगा</span>`}
-      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><div class="app-note">Device reset या login सहायता के लिए नीचे WhatsApp Support उपयोग करें।</div>
+      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><div class="app-note">एक समय पर केवल एक device पर login करें—App या website, दोनों पर यही नियम है। जिस device पर पहली बार login करें, आगे उसी device पर टेस्ट दें। अपना Access Code किसी दूसरे device पर आज़माएँ या साझा न करें। Device बदलना हो तो पहले WhatsApp Support से device reset कराएँ।</div>
     </div>`;
 
   document.getElementById('contentDiv').innerHTML = `
@@ -355,11 +363,13 @@ function renderVerified(data) {
     <div class="info-grid">
       <div class="info-box"><div class="info-label">विद्यार्थी का नाम</div><div class="info-value">${esc(data.name)}</div></div>
       <div class="info-box"><div class="info-label">कोर्स / विषय</div><div class="info-value">${esc(data.subject_name)}</div></div>
-      <div class="info-box"><div class="info-label">आपका प्लान</div><div class="info-value">${esc(data.plan_name)}</div></div>
+      <div class="info-box"><div class="info-label">आपका प्लान</div><div class="info-value">${esc(displayedPlanName)}</div></div>
       <div class="info-box"><div class="info-label">भुगतान की राशि</div><div class="info-value">₹${esc(data.amount)}</div></div>
     </div>
 
     <div class="trust-row"><span class="trust-pill">🔒 Secure</span><span class="trust-pill">⚡ Instant Access</span><span class="trust-pill">✅ Auto Verified</span></div>
+
+    ${courseValidityNote}
 
     ${appAccessSection}
 
