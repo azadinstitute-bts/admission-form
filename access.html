@@ -99,7 +99,24 @@
   }
 
 </style>
-<link rel="stylesheet" href="student-pages.css"></head>
+<link rel="stylesheet" href="student-pages.css"><!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '28576915491967306');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=28576915491967306&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
 <body class="btsAccessPage">
 <div class="pageShell">
   <div class="card">
@@ -281,7 +298,31 @@ async function refreshTelegramStatus() {
   }
 }
 
+
+function trackMetaPurchase(data) {
+  try {
+    if (!data || typeof fbq !== 'function') return;
+    var paymentId = String(data.razorpay_payment_id || data.admission_id || '').trim();
+    var amount = Number(data.amount || 0);
+    if (!paymentId || !isFinite(amount) || amount <= 0) return;
+    var storageKey = 'BTS_META_PURCHASE_' + paymentId;
+    if (localStorage.getItem(storageKey) === '1') return;
+    var contentId = String(data.plan_id || data.plan_name || 'BTS_TEST_SERIES');
+    fbq('track', 'Purchase', {
+      value: amount,
+      currency: 'INR',
+      content_ids: [contentId],
+      content_name: String(data.plan_name || 'BTS Test Series'),
+      content_category: String(data.post_name || data.subject_name || 'Online Test Series'),
+      content_type: 'product',
+      num_items: 1
+    }, {eventID: 'bts_purchase_' + paymentId});
+    localStorage.setItem(storageKey, '1');
+  } catch (e) {}
+}
+
 function renderVerified(data) {
+  trackMetaPurchase(data);
   const params = getParams();
   const inviteLink = data.telegram_invite_link || '';
   const hasWhatsApp = data.group_whatsapp_link || '';
