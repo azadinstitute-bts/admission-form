@@ -331,7 +331,7 @@
       #submitBtn{min-height:50px!important;margin-top:6px!important}
       .bottomInfoSection{padding:13px 11px;border-radius:18px;margin-top:9px}.bottomInfoHead{margin-bottom:9px}.bottomInfoHeadIcon{width:31px;height:31px;flex-basis:31px}.bottomInfoHead b{font-size:14px}.bottomInfoHead span{font-size:10px}.bottomTrustPills{gap:5px!important}.bottomTrustPills .trustPill{padding:8px 4px!important;text-align:center!important;display:flex!important;flex-direction:column!important;align-items:center!important}.bottomTrustPills .trustPill b{font-size:9.5px!important}.bottomTrustPills .trustPill small{display:none!important}.bottomTrustPills .trustPill span{width:26px!important;height:26px!important;margin:0 0 3px!important}
       .bottomInfoSection .appLaunchCard{grid-template-columns:auto 1fr!important;padding:10px!important}.bottomInfoSection .appLaunchAction{grid-column:1/-1!important;width:100%!important}.bottomInfoSection .appLaunchCopy span{font-size:10px!important}
-      .siteFooterLinks{display:none!important}.siteFooter{font-size:9.5px!important;padding-top:7px!important}
+      .siteFooterLinks{display:flex!important;flex-wrap:wrap;gap:8px}.siteFooterLinks a{min-height:44px;display:inline-flex;align-items:center;justify-content:center;white-space:normal;max-width:100%;font-size:12px}.siteFooter{font-size:9.5px!important;padding-top:7px!important}
     }
 
   
@@ -655,7 +655,7 @@ function renderAdmissionShell(){
         </div>
         ${appIsLive ? `<a class="appLaunchAction live" target="_blank" rel="noopener" href="${esc(BTS_STUDENT_APP_URL)}"><img class="btsPlayBadge" src="google-play-hi.png" alt="Google Play से BTS Student App डाउनलोड करें" width="190" height="74"></a>` : `<span class="appLaunchAction">App download link जल्द सक्रिय होगा</span>`}
       </div>
-      <p class="btsIphoneRoute">iPhone / iPad उपयोगकर्ता <a href="https://azadinstitute-bts.github.io/bts-daily-tests/" target="_blank" rel="noopener">वेबसाइट से टेस्ट दें →</a></p><p class="btsAdmissionNote">इस वेबसाइट की फीस के लिए यहाँ के फॉर्म से एडमिशन लें। भुगतान के बाद मिले मोबाइल नंबर और Access Code से Student App में भी login कर सकते हैं। सहायता के लिए customer support से संपर्क करें।</p><div id="supportQuickSlot"></div>
+      <p class="btsIphoneRoute">किसी भी मोबाइल, टैबलेट या कंप्यूटर पर <a href="https://bilaspurtestseries.com/bts-daily-tests/#/login" target="_blank" rel="noopener">मेरे टेस्ट / Login →</a></p><p class="btsAdmissionNote">इस वेबसाइट की फीस के लिए यहाँ के फॉर्म से एडमिशन लें। भुगतान के बाद मिले मोबाइल नंबर और Access Code से Student App में भी login कर सकते हैं। सहायता के लिए customer support से संपर्क करें।</p><p class="fieldHelp"><a href="https://bilaspurtestseries.com/help.html#access">भुगतान हो गया, Access Code नहीं मिला?</a></p><div id="supportQuickSlot"></div>
     </section>
     <div class="siteFooter">
       <div class="siteFooterLinks">
@@ -832,26 +832,40 @@ function isPromoEligiblePlan(plan){
   return id.indexOf('_full') >= 0 || name.indexOf('full course') >= 0;
 }
 function getPlanAccessLabel(plan){
-  var name = String((plan && plan.plan_name) || '').toLowerCase();
-  var id = String((plan && plan.plan_id) || '').toLowerCase();
-  if(isMegaPlan(plan)) return getMegaTestCount(plan) === 15 ? 'Student App • Final 15 Mega Tests' : 'Student App • 20 Mega Tests';
-  if(id === 'cg_si_mains_full_2026') return 'Student App + Web Test Portal';
-  if(name.indexOf('full') >= 0 || id.indexOf('_full') >= 0) return 'Telegram + WhatsApp Group';
-  return 'Telegram Channel';
+  return 'Student App + Website पर टेस्ट';
 }
+const BTS_PLAN_BREAKDOWN = {"cg_si_mains_full_2026": {"topic": 28, "weekly": 0, "mega": 18, "total": 46}, "ctet_paper1_full": {"mega": 13, "topic": 33, "weekly": 6, "total": 52}, "ctet_paper2_sst_full": {"mega": 13, "topic": 33, "weekly": 6, "total": 52}, "ctet_paper2_math_science_full": {"mega": 13, "topic": 33, "weekly": 6, "total": 52}, "varg1_political_science_mega20_plan": {"topic": 0, "weekly": 0, "mega": 20, "total": 20}, "varg2_sst_full": {"topic": 81, "weekly": 13, "mega": 15, "total": 109}, "varg2_maths_full": {"topic": 81, "weekly": 13, "mega": 15, "total": 109}, "varg1_mathematics_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_hindi_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_english_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_biology_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_commerce_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_chemistry_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg1_physics_full": {"topic": 111, "weekly": 18, "mega": 15, "total": 144}, "varg3_mega15_plan": {"topic": 0, "weekly": 0, "mega": 15, "total": 15}, "varg2_hindi_full": {"topic": 52, "weekly": 8, "mega": 15, "total": 75}, "varg2_english_full": {"topic": 52, "weekly": 8, "mega": 15, "total": 75}, "varg3_common_full": {"mega": 15, "topic": 69, "weekly": 11, "total": 95}, "varg2_maths_mega15_plan": {"topic": 0, "weekly": 0, "mega": 15, "total": 15}, "varg2_sst_mega15_plan": {"topic": 0, "weekly": 0, "mega": 15, "total": 15}, "varg2_hindi_mega15_plan": {"topic": 0, "weekly": 0, "mega": 15, "total": 15}, "varg2_english_mega15_plan": {"topic": 0, "weekly": 0, "mega": 15, "total": 15}, "varg1_economics_mega20_plan": {"topic": 0, "weekly": 0, "mega": 20, "total": 20}, "varg1_geography_mega20_plan": {"topic": 0, "weekly": 0, "mega": 20, "total": 20}, "varg1_history_mega20_plan": {"topic": 0, "weekly": 0, "mega": 20, "total": 20}};
 function renderSelectedPlanSummary(plan){
   if(!plan) return '';
   var postText=getSelectText('post');
   var subjectText=getSelectText('subject');
   var planText=getSelectText('plan');
   var access=getPlanAccessLabel(plan);
-  var targetValidity = /^(varg2|varg3)$/.test(String(plan.post_id || ''))
-    && (isMegaPlan(plan) || isPromoEligiblePlan(plan)) && plan.valid_until;
-  var validityRows = targetValidity
-    ? '<div class="summaryLine"><span>Course validity</span><b>'
-      + esc(new Date(plan.valid_until).toLocaleDateString('hi-IN', {timeZone:'Asia/Kolkata',day:'numeric',month:'long',year:'numeric'}))
-      + ', ' + esc(new Date(plan.valid_until).toLocaleTimeString('en-GB', {timeZone:'Asia/Kolkata',hour12:false})) + ' IST तक</b></div>'
-    : (isMegaPlan(plan) ? '<div class="summaryLine"><span>Validity</span><b>' + (getMegaTestCount(plan) === 20 ? '30 नवंबर 2026 तक' : 'परीक्षा तक') + '</b></div>' : '');
+  var until = plan.valid_until;
+  var validityText = String(plan.post_id) === 'ctet'
+    ? 'भुगतान की पुष्टि से 60 दिन'
+    : (String(plan.post_id) === 'cg_si'
+      ? 'भुगतान की पुष्टि से 105 दिन'
+      : (until
+        ? new Date(until).toLocaleDateString('hi-IN', {timeZone:'Asia/Kolkata',day:'numeric',month:'long',year:'numeric'}) + ', रात 11:59:59 IST तक'
+        : 'अंतिम तिथि के लिए सहायता लें'));
+  var validityRows = '<div class="summaryLine"><span>Access कब तक?</span><b>' + esc(validityText) + '</b></div>';
+  var releaseText = isMegaPlan(plan)
+    ? 'कोर्स सक्रिय होते ही इस पैक के सभी ' + getMegaTestCount(plan) + ' टेस्ट एक साथ खुलेंगे। तारीख का इंतज़ार नहीं।'
+    : (String(plan.post_id) === 'cg_si'
+      ? 'कोर्स सक्रिय होते ही सभी 46 टेस्ट एक साथ खुलेंगे। तारीख का इंतज़ार नहीं।'
+      : 'टेस्ट कोर्स की समय-सारणी के अनुसार खुलते हैं');
+  validityRows += '<div class="summaryLine"><span>टेस्ट कब मिलेंगे?</span><b>' + releaseText + '</b></div>';
+  var breakdown=BTS_PLAN_BREAKDOWN[String(plan.plan_id)];
+  if(breakdown){
+    var parts=[];
+    if(breakdown.topic) parts.push(breakdown.topic + ' टॉपिक / संयुक्त अभ्यास');
+    if(breakdown.weekly) parts.push(breakdown.weekly + ' साप्ताहिक');
+    if(breakdown.mega) parts.push(breakdown.mega + ' मेगा');
+    validityRows += '<div class="summaryLine"><span>नियोजित टेस्ट</span><b>' + breakdown.total + ' कुल · ' + parts.join(' + ') + '</b></div>';
+  }
+  validityRows += '<div class="summaryLine"><span>पाठ्यक्रम</span><b>चुने हुए पद / पेपर के पूरे पाठ्यक्रम का अभ्यास</b></div>'
+    + '<div class="summaryLine"><span>अभ्यास के विकल्प</span><b>मोबाइल, टैबलेट या कंप्यूटर के browser में online टेस्ट दें। Student App में भी टेस्ट दें या PDF डाउनलोड करके प्रिंट पर अपने स्थान पर offline अभ्यास करें।</b></div>';
   var megaRows = validityRows + (isMegaPlan(plan)
     ? '<div class="summaryLine"><span>Promo</span><b>लागू नहीं</b></div>' : '');
   return '<div class="selectedSummary" id="selectedPlanSummary">'
@@ -864,26 +878,25 @@ function renderSelectedPlanSummary(plan){
 }
 function renderStudentFieldHtml(cfg, codeRequired){
   return `
-    <div class="formSteps" id="formSteps"><div id="stepDetails" class="active"><span>1</span>आपकी जानकारी</div><div id="stepCourse"><span>2</span>अपना कोर्स</div><div id="stepPayment"><span>3</span>भुगतान</div></div>
-    <div class="sectionTitle"><span class="dot">1</span><div><b>अपनी जानकारी भरें</b><small>Admission और app login के लिए सही जानकारी दें</small></div></div>
+    <div class="formSteps" id="formSteps"><div id="stepCourse" class="active"><span>1</span>अपना कोर्स</div><div id="stepDetails"><span>2</span>आपकी जानकारी</div><div id="stepPayment"><span>3</span>भुगतान</div></div>
+    <div id="studentMsg" class="notice hide" role="status"></div>
+    <div class="sectionTitle" style="margin-top:18px"><span class="dot">1</span><div><b>अपना कोर्स चुनें</b><small>अपनी परीक्षा, विषय और उपलब्ध प्लान चुनें</small></div></div>
+    <div class="courseHint"><span>💡</span><span>वर्ग बदलने पर विषय और प्लान फिर चुनें। भुगतान से पहले नीचे अपनी जानकारी और शुल्क जाँच लें।</span></div>
+    <div class="row3">
+      <div><label for="post">वर्ग / परीक्षा *</label><select id="post" onchange="onPostChange();updateConversionUi()"><option value="">परीक्षा चुनें</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
+      <div><label for="subject">विषय / विषय समूह *</label><select id="subject" onchange="onSubjectChange();updateConversionUi()"><option value="">पहले परीक्षा चुनें</option></select></div>
+      <div><label for="plan">कोर्स का प्लान *</label><select id="plan" onchange="onPlanChange();updateConversionUi()"><option value="">पहले विषय चुनें</option></select></div>
+    </div>
+    <div id="paymentBox" class="card hide" style="margin-left:0;margin-right:0">
+      <div id="selectedPlanSlot"></div>
+      <div class="amount" id="amountText">₹0</div><p class="fieldHelp">इस चुने हुए कोर्स / plan की कुल वेबसाइट फीस।</p>
+      <div class="sectionDivider"></div>
+    <div class="sectionTitle"><span class="dot">2</span><div><b>अपनी जानकारी भरें</b><small>Admission और app login के लिए सही जानकारी दें</small></div></div>
     <p class="sectionLead">इसी mobile number पर payment confirmation, Student App access और support updates मिलेंगे।</p>
-    <p class="sectionLead">App में सीधे purchase करने पर कीमत थोड़ी अधिक हो सकती है। उसी कोर्स और plan का content website और App से खरीदने पर समान मिलता है। भुगतान से पहले अंतिम कीमत देखें।</p>
-    <div id="studentMsg" class="notice hide"></div>
     ${codeRequired ? `<label for="admissionCode">Admission Code</label><input id="admissionCode" placeholder="Admission code" oninput="updateConversionUi()">` : ''}
     <div class="row"><div><label for="name">विद्यार्थी का पूरा नाम *</label><input id="name" autocomplete="name" placeholder="पूरा नाम / Full name" oninput="updateConversionUi()"></div><div><label for="mobile">मोबाइल / WhatsApp नंबर *</label><input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10 digit mobile, जैसे 9876543210" oninput="onMobileChange();updateConversionUi()"><div id="mobileHelp" class="fieldHelp">91 के साथ भी डाल सकते हैं, जैसे 919876543210</div></div></div>
     <div class="row"><div><label for="email">ईमेल पता *</label><input id="email" type="email" autocomplete="email" placeholder="student@example.com" oninput="updateConversionUi()"></div><div><label for="district">जिला / शहर</label><input id="district" autocomplete="address-level2" placeholder="District / City"></div></div>
-    <div class="sectionDivider"></div>
-    <div class="sectionTitle" style="margin-top:18px"><span class="dot">2</span><div><b>अपना कोर्स चुनें</b><small>अपनी परीक्षा, विषय और उपलब्ध प्लान चुनें</small></div></div>
-    <div class="courseHint"><span>💡</span><span>वर्ग बदलने पर विषय और प्लान फिर चुनें। भुगतान से पहले नीचे अपनी जानकारी और शुल्क जाँच लें।</span></div>
-    <div class="row3">
-      <div><label for="post">वर्ग / परीक्षा *</label><select id="post" onchange="onPostChange();updateConversionUi()"><option value="">Select</option>${cfg.posts.map(p=>`<option value="${esc(p.post_id)}">${esc(p.post_name)}</option>`).join('')}</select></div>
-      <div><label for="subject">विषय / विषय समूह *</label><select id="subject" onchange="onSubjectChange();updateConversionUi()"><option value="">Select Varg first</option></select></div>
-      <div><label for="plan">कोर्स का प्लान *</label><select id="plan" onchange="onPlanChange();updateConversionUi()"><option value="">Select Subject first</option></select></div>
-    </div>
-    <div id="paymentBox" class="card hide" style="margin-left:0;margin-right:0">
-      <div class="sectionTitle"><span class="dot">3</span><div><b>विवरण जाँचें और भुगतान करें</b><small>Payment verify होते ही access portal खुलेगा</small></div></div>
-      <div id="selectedPlanSlot"></div>
-      <div class="amount" id="amountText">₹0</div>
+<div class="sectionDivider"></div><div class="sectionTitle"><span class="dot">3</span><div><b>विवरण जाँचें और भुगतान करें</b><small>Payment verify होने के बाद Access Page खुलेगा।</small></div></div><p class="fieldHelp">पहले से Full Course लिया है? उसी विषय के शामिल Mega Tests के लिए दोबारा भुगतान न करें। <a href="https://bilaspurtestseries.com/help.html#refund" target="_blank" rel="noopener">बदलाव / refund की जानकारी</a></p>
       <details id="promoBox" class="promoDisclosure hide">
         <summary>क्या आपके पास Promo Code है?</summary>
         <div class="promoDisclosureBody">
@@ -926,18 +939,33 @@ function renderAdmissionForm(){
   }
   const codeRequired = String(cfg.settings.ADMISSION_CODE_REQUIRED||'NO').toUpperCase()==='YES';
   $('formCard').classList.remove('hide');
-  const hasInfoImages = getInfoImageUrls(cfg.settings).length > 0;
+  const hasInfoImages = false;
   if(hasInfoImages){
     showMsg('loadMsg','Information image load ho rahi hai...<div class="loadProgress"><span></span></div>','');
   } else {
     $('loadMsg').classList.add('hide');
   }
   $('formCard').innerHTML = `
-    <div id="infoImagesSlot">${renderInfoImages(cfg.settings)}</div>
+    ${getInfoImageUrls(cfg.settings).length ? '<details class="admissionInfo"><summary>कोर्स की अतिरिक्त जानकारी / पोस्टर</summary><div id="infoImagesSlot">' + renderInfoImages(cfg.settings) + '</div></details>' : ''}
     <div id="fieldLoading" class="notice hide">Information image load ho rahi hai...<div class="loadProgress"><span></span></div></div>
     <div id="fieldsSlot" class="${hasInfoImages ? 'hide' : ''}">${renderStudentFieldHtml(cfg, codeRequired)}</div>`;
   if(hasInfoImages) showStudentFieldsAfterImageReady(); else showStudentFields();
+  applyCourseSelectionFromUrl();
   setTimeout(updateConversionUi,0);
+}
+
+function applyCourseSelectionFromUrl(){
+  const query=new URLSearchParams(location.search);
+  const post=query.get('post'), subject=query.get('subject'), plan=query.get('plan');
+  if(!post && !subject && !plan) return;
+  if(!publicConfig.posts.some(p=>String(p.post_id)===post)) return;
+  $('post').value=post; onPostChange();
+  if(!publicConfig.subjects.some(s=>String(s.post_id)===post && String(s.subject_id)===subject)) return;
+  $('subject').value=subject; onSubjectChange();
+  if(!publicConfig.plans.some(p=>String(p.post_id)===post && String(p.subject_id)===subject && String(p.plan_id)===plan)) {
+    showMsg('studentMsg','यह plan अभी उपलब्ध नहीं है। नीचे उपलब्ध plan चुनें।',''); return;
+  }
+  $('plan').value=plan; onPlanChange();
 }
 
 function setStepState(id, state){
@@ -966,9 +994,9 @@ function setMobilePaymentReadyState(payUrl, amount){
 function updateConversionUi(){
   var detailsReady=!!(val('name') && isValidIndianMobileInput(val('mobile')) && val('email') && isValidEmailInput(val('email')));
   var courseReady=!!(val('post') && val('subject') && val('plan'));
-  setStepState('stepDetails', detailsReady ? 'done' : 'active');
-  setStepState('stepCourse', courseReady ? 'done' : (detailsReady ? 'active' : ''));
-  setStepState('stepPayment', courseReady ? 'active' : '');
+  setStepState('stepCourse', courseReady ? 'done' : 'active');
+  setStepState('stepDetails', detailsReady ? 'done' : (courseReady ? 'active' : ''));
+  setStepState('stepPayment', courseReady && detailsReady ? 'active' : '');
 
   // Once the admission has been saved, the sticky CTA must open the already
   // created Razorpay link. It must not call createAdmission again.
@@ -1017,12 +1045,12 @@ function mobilePrimaryAction(){
 
 function onPostChange(){
   const post=val('post'); const subs=publicConfig.subjects.filter(s=>String(s.post_id)===post);
-  $('subject').innerHTML='<option value="">Select Subject</option>'+subs.map(s=>`<option value="${esc(s.subject_id)}">${esc(s.subject_name)}</option>`).join('');
-  $('plan').innerHTML='<option value="">Select Subject first</option>'; $('paymentBox').classList.add('hide'); updateConversionUi();
+  $('subject').innerHTML='<option value="">विषय चुनें</option>'+subs.map(s=>`<option value="${esc(s.subject_id)}">${esc(s.subject_name)}</option>`).join('');
+  $('plan').innerHTML='<option value="">पहले विषय चुनें</option>'; $('paymentBox').classList.add('hide'); updateConversionUi();
 }
 function onSubjectChange(){
   const post=val('post'), sub=val('subject'); const plans=publicConfig.plans.filter(p=>String(p.post_id)===post && String(p.subject_id)===sub);
-  $('plan').innerHTML='<option value="">Select Plan</option>'+plans.map(p=>`<option value="${esc(p.plan_id)}">${esc(p.plan_name)} - ₹${esc(p.amount)}</option>`).join(''); $('paymentBox').classList.add('hide'); updateConversionUi();
+  $('plan').innerHTML='<option value="">Plan चुनें</option>'+plans.map(p=>`<option value="${esc(p.plan_id)}">${esc(isMegaPlan(p) ? getMegaTestCount(p) + " Mega Tests" : "Full Course")} - ₹${esc(p.amount)}</option>`).join(''); $('paymentBox').classList.add('hide'); updateConversionUi();
 }
 function isRazorpayEnabled(){
   return !!(publicConfig && publicConfig.payment && String(publicConfig.payment.RAZORPAY_ENABLED||'FALSE').toUpperCase()==='TRUE' && String(publicConfig.payment.PAYMENT_PROVIDER||'').toUpperCase()==='RAZORPAY');
