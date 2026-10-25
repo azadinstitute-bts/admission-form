@@ -2,6 +2,7 @@
 <html>
 <head>
   <base target="_top">
+  <script defer src="https://bilaspurtestseries.com/assets/bts-pamphlet.js"></script>
   <meta charset="UTF-8">
   <title>Bilaspur Test Series — Secure Admission & Instant App Access</title>
   <meta name="description" content="Bilaspur Test Series secure admission portal for CG Teacher and CTET courses. Payment के बाद instant Student App, Telegram और WhatsApp access.">
@@ -1494,6 +1495,7 @@ async function startRazorpayAdmission(){
       throw {message:'Razorpay Payment Link invalid hai: '+payUrl};
     }
 
+    try { window.BTSPamphlet && window.BTSPamphlet.trackAdmission(res.admission_id); } catch (_) {}
     hidePayOverlay();
     renderPayReadyCard(res, payUrl);
 
